@@ -1,0 +1,44 @@
+{
+    "name": "laravel/forge-cli",
+    "description": "The Laravel Forge CLI.",
+    "keywords": ["laravel", "forge", "cli"],
+    "license": "MIT",
+    "support": {
+        "issues": "https://github.com/laravel/forge-cli/issues",
+        "source": "https://github.com/laravel/forge-cli"
+    },
+    "authors": [
+        {
+            "name": "Taylor Otwell",
+            "email": "taylor@laravel.com"
+        }
+    ],
+    "require": {
+        "php": "^7.3|^8.0"
+    },
+    "require-dev": {
+        "laravel-zero/framework": "^8.9",
+        "mockery/mockery": "^1.4",
+        "nunomaduro/larastan": "^0.7.10",
+        "pestphp/pest": "^1.9"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "sort-packages": true,
+        "platform": {
+            "php": "7.3"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "bin": ["/build/forge"]
+}

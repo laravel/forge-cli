@@ -1,0 +1,16 @@
+includes:
+    - ./vendor/nunomaduro/larastan/extension.neon
+
+parameters:
+
+    paths:
+        - app
+        - bootstrap
+        - config
+
+    level: 6
+
+    ignoreErrors:
+        - '#Undefined variable: \$this#'
+
+    checkMissingIterableValueType: false
