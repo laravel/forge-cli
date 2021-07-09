@@ -1,5 +1,7 @@
+/builds/forge
+/phpunit.xml
+/tests/.laravel-forge
 /vendor
 composer.lock
-/phpunit.xml
 .phpunit.result.cache
-/tests/.laravel-forge
+
