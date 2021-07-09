@@ -10,7 +10,4 @@ parameters:
 
     level: 6
 
-    ignoreErrors:
-        - '#Undefined variable: \$this#'
-
     checkMissingIterableValueType: false
