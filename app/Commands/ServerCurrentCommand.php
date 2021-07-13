@@ -16,7 +16,7 @@ class ServerCurrentCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Determine your current server context';
+    protected $description = 'Determine your current server';
 
     /**
      * Execute the console command.

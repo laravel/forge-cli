@@ -16,7 +16,7 @@ class ServerSwitchCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Switch to a different server context';
+    protected $description = 'Switch to a different server';
 
     /**
      * Execute the console command.
