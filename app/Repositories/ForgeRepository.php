@@ -42,11 +42,13 @@ class ForgeRepository
      * Sets the client.
      *
      * @param  \Laravel\Forge\Forge  $client
-     * @return void
+     * @return $this
      */
     public function setClient($client)
     {
         $this->client = $client;
+
+        return $this;
     }
 
     /**
