@@ -2,6 +2,9 @@
 
 namespace App\Commands;
 
+use App\Exceptions\LogicException;
+use App\Exceptions\UnauthorizedException;
+
 class LoginCommand extends Command
 {
     /**
@@ -25,9 +28,49 @@ class LoginCommand extends Command
      */
     public function handle()
     {
-        $email = $this->ask('Email Address');
-        $password = $this->secret('Password');
+        $token = $this->ask('API Token');
 
-        $this->info("Your are now logged as [$email].");
+        $this->config->set('token', $token);
+
+        $email = $this->ensureApiTokenIsValid($token);
+
+        $this->ensureCurrentTeamIsSet();
+
+        $this->info("Authenticated successfully as [$email].");
+    }
+
+    /**
+     * Ensure the given api token is valid.
+     *
+     * @param  string  $token
+     * @return string
+     */
+    protected function ensureApiTokenIsValid($token)
+    {
+        try {
+            return $this->forge->user()->email;
+        } catch (UnauthorizedException $e) {
+            $this->config->flush();
+
+            throw $e;
+        }
+    }
+
+    /**
+     * Ensure the current team is set in the configuration file.
+     *
+     * @return void
+     */
+    protected function ensureCurrentTeamIsSet()
+    {
+        $server = collect($this->forge->servers())->first();
+
+        if ($server == null) {
+            throw new LogicException(
+                'Please create a server first.'
+            );
+        }
+
+        $this->config->set('server', $server->id);
     }
 }

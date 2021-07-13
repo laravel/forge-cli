@@ -1,9 +1,48 @@
 <?php
 
-it('authenticate users', function () {
+it('authenticates users', function () {
+    $this->client->shouldReceive('user')->andReturn((object) [
+        'email' => 'nuno@laravel.com',
+    ]);
+
+    $this->client->shouldReceive('servers')->andReturn([
+        (object) ['id' => 1],
+    ]);
+
     $this->artisan('login')
-        ->expectsQuestion('Email Address', 'nuno@laravel.com')
-        ->expectsQuestion('Password', '123123123')
-        ->expectsOutput("Your are now logged as [nuno@laravel.com].")
-        ->assertExitCode(0);
+        ->expectsQuestion('API Token', '123123213')
+        ->expectsOutput('Authenticated successfully as [nuno@laravel.com].');
 });
+
+it('sets current server', function () {
+    $this->client->shouldReceive('user')->andReturn((object) [
+        'email' => 'nuno@laravel.com',
+    ]);
+
+    $this->client->shouldReceive('servers')->andReturn([
+        (object) ['id' => 1],
+    ]);
+
+    $this->artisan('login')->expectsQuestion('API Token', '123123213');
+
+    expect($this->config->get('server'))->toBe(1);
+});
+
+it('ensures at least one server', function () {
+    $this->client->shouldReceive('user')->andReturn((object) [
+        'email' => 'nuno@laravel.com',
+    ]);
+
+    $this->client->shouldReceive('servers')->andReturn([]);
+
+    $this->artisan('login')->expectsQuestion('API Token', '123123213');
+})->throws('Please create a server first.');
+
+it('may consider the api token invalid', function () {
+    $this->client->shouldReceive('user')->andThrow(
+        new Exception('Unauthorized')
+    );
+
+    $this->artisan('login')
+        ->expectsQuestion('API Token', '123123213');
+})->throws('Your API Token is invalid.');
