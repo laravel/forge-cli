@@ -13,7 +13,7 @@ it('gets current server', function () {
         ->expectsOutput('You are currently within the [production] server context.');
 });
 
-it('current server gets deleted', function () {
+it('may fail if current server no longer exists', function () {
     $this->client->shouldReceive('server')->with(1)->andThrow(
         new NotFoundException('The resource you are looking for could not be found.'),
     );
