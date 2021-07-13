@@ -3,7 +3,7 @@
 use App\Repositories\ConfigRepository;
 
 it('sets and gets values', function () {
-    $config = resolve(ConfigRepository::class);
+    $config = resolve(ConfigRepository::class)->flush();
 
     $config->set('string', 'bar')
         ->set('int', 10)

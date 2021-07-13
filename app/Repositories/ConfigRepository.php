@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\File;
 
 class ConfigRepository
 {
@@ -40,6 +41,18 @@ class ConfigRepository
         }
 
         return [];
+    }
+
+    /**
+     * Flush the configuration.
+     *
+     * @return $this
+     */
+    public function flush()
+    {
+        File::delete($this->path);
+
+        return $this;
     }
 
     /**

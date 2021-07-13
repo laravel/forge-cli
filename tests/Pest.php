@@ -1,7 +1,9 @@
 <?php
 
 use App\Repositories\ConfigRepository;
+use App\Repositories\ForgeRepository;
 use Illuminate\Support\Facades\File;
+use Laravel\Forge\Forge;
 use LaravelZero\Framework\Testing\TestCase;
 use Tests\CreatesApplication;
 
@@ -17,8 +19,17 @@ use Tests\CreatesApplication;
 */
 
 uses(TestCase::class, CreatesApplication::class)
-    ->afterEach(function () {
+    ->beforeEach(function () {
         File::deleteDirectory(base_path('tests/.laravel-forge'));
+
+        $this->client = Mockery::mock(Forge::class);
+        $this->client->shouldReceive('setApiKey')->zeroOrMoreTimes();
+        $this->config = resolve(ConfigRepository::class);
+        $this->config->set('token', '123123213');
+
+        $this->forge = tap(resolve(ForgeRepository::class))->setClient(
+            $this->client
+        );
     })->afterEach(function () {
         File::deleteDirectory(base_path('tests/.laravel-forge'));
     })->in('Feature', 'Unit');
