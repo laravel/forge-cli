@@ -27,20 +27,14 @@ class DatabaseStatusCommand extends Command
     {
         $serverId = $this->currentServer()->id;
 
-        if (is_null($id = $this->option('id'))) {
-            $name = $this->choice(
-                'Which database would you like to know the current status?',
-                ($databases = collect($this->forge->databases(
-                    $serverId,
-                )))->mapWithKeys(function ($database) {
-                    return [$database->id => $database->name];
-                })->all()
-            );
+        $databaseId = $this->askForId(
+            'Which database would you like to know the current status?',
+            function () use ($serverId) {
+                return $this->forge->databases($serverId);
+            }
+        );
 
-            $id = $databases->where('name', $name)->first()->id;
-        }
-
-        $database = $this->forge->database($serverId, $id);
+        $database = $this->forge->database($serverId, $databaseId);
 
         $this->info(
             'The database <comment>['.$database->name.']</comment> is <comment>['.$database->status.']</comment>.'
