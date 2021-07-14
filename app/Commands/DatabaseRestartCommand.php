@@ -12,7 +12,7 @@ class DatabaseRestartCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'database:restart {--id= : The ID of the database}';
+    protected $signature = 'database:restart';
 
     /**
      * The description of the command.
@@ -58,7 +58,7 @@ class DatabaseRestartCommand extends Command
      */
     public function restartMysql($serverId)
     {
-        if ($restarting = $this->confirm('While the <comment>[MySQL]</comment> service restarts, the database will be unavailable. Wish to proceed?')) {
+        if ($restarting = $this->confirm('While the <comment>[MySQL]</comment> service restarts, the database may become unavailable. Wish to proceed?')) {
             $this->forge->rebootMysql($serverId);
         }
 
@@ -73,7 +73,7 @@ class DatabaseRestartCommand extends Command
      */
     public function restartPostgres($serverId)
     {
-        if ($restarting = $this->confirm('While the <comment>[PostgreSQL]</comment> service restarts, the database will be unavailable. Wish to proceed?')) {
+        if ($restarting = $this->confirm('While the <comment>[PostgreSQL]</comment> service restarts, the database may become unavailable. Wish to proceed?')) {
             $this->forge->rebootPostgres($serverId);
         }
 

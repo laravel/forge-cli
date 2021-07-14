@@ -12,14 +12,14 @@ class DatabaseStatusCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'database:status {--id= : The ID of the database}';
+    protected $signature = 'database:status';
 
     /**
      * The description of the command.
      *
      * @var string
      */
-    protected $description = 'Get the current status of a database';
+    protected $description = 'Get the current status of the database';
 
     /**
      * Execute the console command.
