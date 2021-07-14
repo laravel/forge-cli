@@ -2,10 +2,10 @@
 
 namespace App\Providers;
 
+use App\Clients\Forge;
 use App\Repositories\ConfigRepository;
 use App\Repositories\ForgeRepository;
 use Illuminate\Support\ServiceProvider;
-use Laravel\Forge\Forge;
 
 class ForgeServiceProvider extends ServiceProvider
 {

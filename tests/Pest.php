@@ -1,10 +1,10 @@
 <?php
 
+use App\Clients\Forge;
 use App\Repositories\ConfigRepository;
 use App\Repositories\ForgeRepository;
 use App\Support\Shell;
 use Illuminate\Support\Facades\File;
-use Laravel\Forge\Forge;
 use LaravelZero\Framework\Testing\TestCase;
 use Tests\CreatesApplication;
 

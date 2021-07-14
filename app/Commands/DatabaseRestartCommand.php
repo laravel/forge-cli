@@ -2,8 +2,8 @@
 
 namespace App\Commands;
 
-use App\Exceptions\NotFoundException;
 use App\Exceptions\LogicException;
+use App\Exceptions\NotFoundException;
 
 class DatabaseRestartCommand extends Command
 {

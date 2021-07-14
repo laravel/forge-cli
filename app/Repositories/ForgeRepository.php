@@ -7,7 +7,7 @@ use Exception;
 use Laravel\Forge\Exceptions\NotFoundException;
 
 /**
- * @mixin \Laravel\Forge\Forge
+ * @mixin \App\Clients\Forge
  */
 class ForgeRepository
 {
