@@ -2,6 +2,8 @@
 
 namespace App\Commands;
 
+use App\Exceptions\MissingSshKeyException;
+
 class SshCommand extends Command
 {
     /**
@@ -21,15 +23,21 @@ class SshCommand extends Command
     /**
      * Execute the console command.
      *
-     * @return void
+     * @return int|never
      */
     public function handle()
     {
         $server = $this->currentServer();
 
-        $this->shell->passthru(sprintf(
+        $exitCode = $this->shell->passthru(sprintf(
             'ssh -t forge@%s',
             $server->ipAddress,
         ));
+
+        if ($exitCode == 255) {
+            MissingSshKeyException::raise();
+        }
+
+        return $exitCode;
     }
 }
