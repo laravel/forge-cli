@@ -18,8 +18,7 @@ trait InteractsWithIO
 
             $name = $this->choice($question, $answers->mapWithKeys(function ($resource) {
                 return [$resource->id => $resource->name];
-            })->all()
-            );
+            })->all());
 
             $id = $answers->where('name', $name)->first()->id;
         }
