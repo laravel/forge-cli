@@ -14,10 +14,10 @@ it('allows to know the database status with an menu', function () {
         (object) ['id' => 2, 'name' => 'database-b', 'status' => 'installed'],
     );
 
-    $exitCode = $this->artisan('database:status')
+    $this->artisan('database:status')
         ->expectsChoice('Which database would you like to know the current status?', 'database-b', [
             'database-a', 'database-b',
-        ])->expectsOutput('The database [database-b] is [installed].')->run();
+        ])->expectsOutput('The database [database-b] is [installed].');
 });
 
 it('allows to know the database status with an option', function () {
@@ -29,7 +29,6 @@ it('allows to know the database status with an option', function () {
         (object) ['id' => 2, 'name' => 'database-b', 'status' => 'installed'],
     );
 
-    $exitCode = $this->artisan('database:status', ['--id' => 2])
-        ->expectsOutput('The database [database-b] is [installed].')
-        ->run();
+    $this->artisan('database:status', ['--id' => 2])
+        ->expectsOutput('The database [database-b] is [installed].');
 });
