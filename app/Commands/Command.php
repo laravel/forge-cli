@@ -76,8 +76,9 @@ abstract class Command extends BaseCommand
     public function serviceStatus($server, $name)
     {
         [$exitCode] = $this->shell->exec(sprintf(
-            'ssh -t forge@%s systemctl is-active --quiet azdzad 2>/dev/null',
+            'ssh -t forge@%s systemctl is-active --quiet %s 2>/dev/null',
             $server->ipAddress,
+            $name,
         ));
 
         switch ($exitCode) {
