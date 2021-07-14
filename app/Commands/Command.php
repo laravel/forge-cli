@@ -2,6 +2,7 @@
 
 namespace App\Commands;
 
+use App\Exceptions\MissingSshKeyException;
 use App\Repositories\ConfigRepository;
 use App\Repositories\ForgeRepository;
 use App\Support\Shell;
@@ -63,5 +64,29 @@ abstract class Command extends BaseCommand
         return $this->forge->server(
             $this->config->get('server')
         );
+    }
+
+    /**
+     * Gets the given service status.
+     *
+     * @param  \Laravel\Forge\Resources\Server  $server
+     * @param  string  $name
+     * @return string
+     */
+    public function serviceStatus($server, $name)
+    {
+        [$exitCode] = $this->shell->exec(sprintf(
+            'ssh -t forge@%s systemctl is-active --quiet azdzad 2>/dev/null',
+            $server->ipAddress,
+        ));
+
+        switch ($exitCode) {
+            case 0:
+                return '<comment>[active]</comment>';
+            case 255:
+                MissingSshKeyException::raise();
+        }
+
+        return '<fg=red>[inactive]</>';
     }
 }

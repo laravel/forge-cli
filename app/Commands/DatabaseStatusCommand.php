@@ -2,6 +2,9 @@
 
 namespace App\Commands;
 
+use App\Exceptions\LogicException;
+use App\Exceptions\NotFoundException;
+
 class DatabaseStatusCommand extends Command
 {
     /**
@@ -25,19 +28,23 @@ class DatabaseStatusCommand extends Command
      */
     public function handle()
     {
-        $serverId = $this->currentServer()->id;
+        $server = $this->currentServer();
 
-        $databaseId = $this->askForId(
-            'Which database would you like to know the current status?',
-            function () use ($serverId) {
-                return $this->forge->databases($serverId);
-            }
-        );
+        // @phpstan-ignore-next-line
+        $databaseType = $server->databaseType;
 
-        $database = $this->forge->database($serverId, $databaseId);
+        if (is_null($databaseType)) {
+            throw new NotFoundException('No database available.');
+        }
 
-        $this->info(
-            'The database <comment>['.$database->name.']</comment> is <comment>['.$database->status.']</comment>.'
-        );
+        if (in_array($databaseType, ['mysql', 'mysql8', 'mariadb'])) {
+            $status = $this->serviceStatus($server, 'mysql');
+        } elseif (in_array($databaseType, ['postgres', 'postgres13'])) {
+            $status = $this->serviceStatus($server, 'postgres');
+        } else {
+            throw new LogicException('Checking the status of ['.$databaseType.'] databases is not supported.');
+        }
+
+        $this->info('The database is '.$status.'.');
     }
 }

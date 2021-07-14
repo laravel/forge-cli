@@ -1,34 +1,19 @@
 <?php
 
-it('allows to know the database status with an menu', function () {
+it('can display the database status', function () {
     $this->client->shouldReceive('server')->andReturn(
-        (object) ['id' => 1, 'name' => 'production'],
+        (object) ['id' => 1, 'name' => 'production', 'databaseType' => 'mysql', 'ipAddress' => '123.456.789.222'],
     );
 
-    $this->client->shouldReceive('databases')->andReturn([
-        (object) ['id' => 1, 'name' => 'database-a', 'status' => 'installed'],
-        (object) ['id' => 2, 'name' => 'database-b', 'status' => 'installed'],
-    ]);
+    $this->shell->shouldReceive('exec')->andReturn([0]);
 
-    $this->client->shouldReceive('database')->andReturn(
-        (object) ['id' => 2, 'name' => 'database-b', 'status' => 'installed'],
-    );
-
-    $this->artisan('database:status')
-        ->expectsChoice('Which database would you like to know the current status?', 'database-b', [
-            'database-a', 'database-b',
-        ])->expectsOutput('The database [database-b] is [installed].');
+    $this->artisan('database:status')->expectsOutput('The database is [active].');
 });
 
-it('allows to know the database status with an option', function () {
+it('can not restart when there is no databases', function () {
     $this->client->shouldReceive('server')->andReturn(
-        (object) ['id' => 1, 'name' => 'production'],
+        (object) ['id' => 1, 'name' => 'production', 'databaseType' => null],
     );
 
-    $this->client->shouldReceive('database')->andReturn(
-        (object) ['id' => 2, 'name' => 'database-b', 'status' => 'installed'],
-    );
-
-    $this->artisan('database:status', ['--id' => 2])
-        ->expectsOutput('The database [database-b] is [installed].');
-});
+    $this->artisan('database:status');
+})->throws('No database available.');
