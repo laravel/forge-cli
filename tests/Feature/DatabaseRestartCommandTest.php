@@ -28,10 +28,18 @@ it('can restart postgres databases', function () {
         )->expectsOutput('Database restart initiated successfully.');
 });
 
+it('can not restart when there is no databases', function () {
+    $this->client->shouldReceive('server')->andReturn(
+        (object) ['id' => 1, 'name' => 'production', 'databaseType' => null],
+    );
+
+    $this->artisan('database:restart');
+})->throws('No database available.');
+
 it('can not restart unknown databases', function () {
     $this->client->shouldReceive('server')->andReturn(
         (object) ['id' => 1, 'name' => 'production', 'databaseType' => 'nitro'],
     );
 
     $this->artisan('database:restart');
-})->throws('The database type [nitro] is not restartable.');
+})->throws('Restarting [nitro] databases is not supported.');
