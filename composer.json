@@ -21,7 +21,8 @@
         "laravel/forge-sdk": "^3.7",
         "mockery/mockery": "^1.4",
         "nunomaduro/larastan": "^0.7.10",
-        "pestphp/pest": "^1.9"
+        "pestphp/pest": "^1.9",
+        "spatie/once": "^2.2"
     },
     "autoload": {
         "psr-4": {
