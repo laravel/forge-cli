@@ -2,8 +2,6 @@
 
 namespace App\Commands;
 
-use App\Exceptions\LogicException;
-
 class DatabaseRestartCommand extends Command
 {
     use Concerns\InteractsWithDatabase;
@@ -41,7 +39,7 @@ class DatabaseRestartCommand extends Command
         } elseif (in_array($databaseType, ['postgres', 'postgres13'])) {
             $restarting = $this->restartPostgres($server->id);
         } else {
-            throw new LogicException('Restarting ['.$databaseType.'] databases is not supported.');
+            abort(1, 'Restarting ['.$databaseType.'] databases is not supported.');
         }
 
         if ($restarting) {

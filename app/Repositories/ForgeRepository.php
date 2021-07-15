@@ -2,7 +2,6 @@
 
 namespace App\Repositories;
 
-use App\Exceptions;
 use Exception;
 use Laravel\Forge\Exceptions\NotFoundException;
 
@@ -66,15 +65,11 @@ class ForgeRepository
             return $this->client->{$method}(...$parameters);
         } catch (Exception $e) {
             if ($e instanceof NotFoundException) {
-                throw new Exceptions\NotFoundException(
-                    $e->getMessage(), 404, $e
-                );
+                abort(1, $e->getMessage());
             }
 
             if ($e instanceof Exception && $e->getMessage() == 'Unauthorized') {
-                throw new Exceptions\UnauthorizedException(
-                    'Your API Token is invalid.', 403, $e
-                );
+                abort(1, 'Your API Token is invalid.');
             }
 
             throw $e;
@@ -90,11 +85,7 @@ class ForgeRepository
     {
         $token = $this->config->get('token');
 
-        if ($token == null) {
-            throw new Exceptions\UnauthorizedException(
-                'Please authenticate using the \'login\' command before proceeding.'
-            );
-        }
+        abort_if($token == null, 1, 'Please authenticate using the \'login\' command before proceeding.');
 
         $this->client->setApiKey($token);
     }

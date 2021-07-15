@@ -2,7 +2,6 @@
 
 namespace App\Commands;
 
-use App\Exceptions\MissingSshKeyException;
 use App\Repositories\ConfigRepository;
 use App\Repositories\ForgeRepository;
 use App\Support\Shell;
@@ -85,7 +84,7 @@ abstract class Command extends BaseCommand
             case 0:
                 return '<comment>[running]</comment>';
             case 255:
-                MissingSshKeyException::raise();
+                abort(255, 'Unable to connect to remove server. Have you configured an SSH Key?');
         }
 
         return '<fg=red>[inactive]</>';

@@ -2,8 +2,6 @@
 
 namespace App\Commands;
 
-use App\Exceptions\LogicException;
-
 class DatabaseStatusCommand extends Command
 {
     use Concerns\InteractsWithDatabase;
@@ -41,7 +39,7 @@ class DatabaseStatusCommand extends Command
         } elseif (in_array($databaseType, ['postgres', 'postgres13'])) {
             $status = $this->serviceStatus($server, 'postgres');
         } else {
-            throw new LogicException('Checking the status of ['.$databaseType.'] databases is not supported.');
+            abort(1, 'Checking the status of ['.$databaseType.'] databases is not supported.');
         }
 
         $this->info('Database service is '.$status.'.');

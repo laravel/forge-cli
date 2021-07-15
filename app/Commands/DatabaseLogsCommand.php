@@ -2,8 +2,6 @@
 
 namespace App\Commands;
 
-use App\Exceptions\LogicException;
-
 class DatabaseLogsCommand extends Command
 {
     use Concerns\InteractsWithLogs, Concerns\InteractsWithDatabase;
@@ -37,7 +35,7 @@ class DatabaseLogsCommand extends Command
         $databaseType = $server->databaseType;
 
         if (! in_array($databaseType, ['mysql', 'mysql8', 'postgres'])) {
-            throw new LogicException('Retrieving logs from ['.$databaseType.'] databases is not supported.');
+            abort(1, 'Retrieving logs from ['.$databaseType.'] databases is not supported.');
         }
 
         $this->showLogs($server, 'database');

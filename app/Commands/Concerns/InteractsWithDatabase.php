@@ -2,8 +2,6 @@
 
 namespace App\Commands\Concerns;
 
-use App\Exceptions\LogicException;
-
 trait InteractsWithDatabase
 {
     /**
@@ -17,7 +15,7 @@ trait InteractsWithDatabase
 
         // @phpstan-ignore-next-line
         if (is_null($server->databaseType)) {
-            throw new LogicException('No databases installed in this server.');
+            abort(1, 'No databases installed in this server.');
         }
     }
 }

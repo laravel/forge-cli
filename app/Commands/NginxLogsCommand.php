@@ -2,8 +2,6 @@
 
 namespace App\Commands;
 
-use App\Exceptions\LogicException;
-
 class NginxLogsCommand extends Command
 {
     use Concerns\InteractsWithLogs;
@@ -33,9 +31,7 @@ class NginxLogsCommand extends Command
 
         $type = $this->option('type');
 
-        if (! in_array($type, ['error', 'access'])) {
-            throw new LogicException('Logs type must be either "error" or "access".');
-        }
+        abort_if(! in_array($type, ['error', 'access']), 1, 'Logs type must be either "error" or "access".');
 
         $this->showLogs($server, 'nginx_'.$type);
     }

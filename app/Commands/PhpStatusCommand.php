@@ -2,8 +2,6 @@
 
 namespace App\Commands;
 
-use App\Exceptions\LogicException;
-
 class PhpStatusCommand extends Command
 {
     use Concerns\InteractsWithPhp;
@@ -37,7 +35,7 @@ class PhpStatusCommand extends Command
         $versions = ['5.6', '7.0', '7.1', '7.2', '7.3', '7.4', '8.0'];
 
         if (! is_null($version) && ! in_array($version, $versions)) {
-            throw new LogicException('PHP version needs to be one of those values: '.implode(', ', $versions).'.');
+            abort(1, 'PHP version needs to be one of those values: '.implode(', ', $versions).'.');
         }
 
         $version = $version ?: number_format(substr($server->phpVersion, -2) / 10, 1, '.', '');

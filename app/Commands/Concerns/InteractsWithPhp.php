@@ -2,8 +2,6 @@
 
 namespace App\Commands\Concerns;
 
-use App\Exceptions\LogicException;
-
 trait InteractsWithPhp
 {
     /**
@@ -17,7 +15,7 @@ trait InteractsWithPhp
 
         // @phpstan-ignore-next-line
         if (is_null($server->phpVersion)) {
-            throw new LogicException('PHP is not installed in this server.');
+            abort(1, 'PHP is not installed in this server.');
         }
     }
 }

@@ -18,7 +18,7 @@ it('can retrieve logs from php', function () {
 
 it('can retrieve logs from a specific php version', function () {
     $this->client->shouldReceive('server')->andReturn(
-        (object) ['id' => 1, 'name' => 'production', 'phpVersion' => '8.0'],
+        (object) ['id' => 1, 'name' => 'production', 'phpVersion' => 'php80'],
     );
 
     $this->client->shouldReceive('logs')
@@ -33,7 +33,7 @@ it('can retrieve logs from a specific php version', function () {
 
 it('can not retrieve logs when php version is incorrect', function () {
     $this->client->shouldReceive('server')->andReturn(
-        (object) ['id' => 1, 'name' => 'production', 'phpVersion' => '8.0'],
+        (object) ['id' => 1, 'name' => 'production', 'phpVersion' => 'php80'],
     );
 
     $this->artisan('php:logs', ['--type' => '2.0']);

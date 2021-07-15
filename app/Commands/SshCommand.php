@@ -2,8 +2,6 @@
 
 namespace App\Commands;
 
-use App\Exceptions\MissingSshKeyException;
-
 class SshCommand extends Command
 {
     /**
@@ -18,7 +16,7 @@ class SshCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Start an SSH connection with your current server';
+    protected $description = 'Start an SSH connection';
 
     /**
      * Execute the console command.
@@ -34,9 +32,7 @@ class SshCommand extends Command
             $server->ipAddress,
         ));
 
-        if ($exitCode == 255) {
-            MissingSshKeyException::raise();
-        }
+        abort_if($exitCode == 255, $exitCode, 'Unable to connect to remove server. Have you configured an SSH Key?');
 
         return $exitCode;
     }

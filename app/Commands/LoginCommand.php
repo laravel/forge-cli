@@ -2,8 +2,7 @@
 
 namespace App\Commands;
 
-use App\Exceptions\LogicException;
-use App\Exceptions\UnauthorizedException;
+use Exception;
 
 class LoginCommand extends Command
 {
@@ -49,7 +48,7 @@ class LoginCommand extends Command
     {
         try {
             return $this->forge->user()->email;
-        } catch (UnauthorizedException $e) {
+        } catch (Exception $e) {
             $this->config->flush();
 
             throw $e;
@@ -65,11 +64,7 @@ class LoginCommand extends Command
     {
         $server = collect($this->forge->servers())->first();
 
-        if ($server == null) {
-            throw new LogicException(
-                'Please create a server first.'
-            );
-        }
+        abort_if($server == null, 1, 'Please create a server first.');
 
         $this->config->set('server', $server->id);
     }
