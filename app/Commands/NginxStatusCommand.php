@@ -29,6 +29,6 @@ class NginxStatusCommand extends Command
 
         $status = $this->serviceStatus($server, 'nginx');
 
-        $this->info('Nginx is '.$status.'.');
+        $this->info('Nginx service is '.$status.'.');
     }
 }

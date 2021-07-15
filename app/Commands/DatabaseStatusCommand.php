@@ -45,6 +45,6 @@ class DatabaseStatusCommand extends Command
             throw new LogicException('Checking the status of ['.$databaseType.'] databases is not supported.');
         }
 
-        $this->info('The database is '.$status.'.');
+        $this->info('Database service is '.$status.'.');
     }
 }
