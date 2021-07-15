@@ -18,7 +18,7 @@ class PhpStatusCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Get the current status of php';
+    protected $description = 'Get the current status of PHP';
 
     /**
      * Execute the console command.

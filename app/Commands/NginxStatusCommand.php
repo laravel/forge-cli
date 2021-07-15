@@ -16,7 +16,7 @@ class NginxStatusCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Get the current status of nginx';
+    protected $description = 'Get the current status of Nginx';
 
     /**
      * Execute the console command.

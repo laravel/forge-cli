@@ -16,7 +16,7 @@ class NginxRestartCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Restart nginx';
+    protected $description = 'Restart Nginx';
 
     /**
      * Execute the console command.

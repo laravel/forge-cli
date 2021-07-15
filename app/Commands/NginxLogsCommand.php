@@ -18,7 +18,7 @@ class NginxLogsCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Retrieve the latest nginx log messages';
+    protected $description = 'Retrieve the latest Nginx log messages';
 
     /**
      * Execute the console command.
