@@ -19,7 +19,7 @@ class DatabaseRestartCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Restart a database';
+    protected $description = 'Restart the database';
 
     /**
      * Execute the console command.
