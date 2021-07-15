@@ -6,6 +6,7 @@ use App\Repositories\ForgeRepository;
 use App\Support\Shell;
 use Illuminate\Support\Facades\File;
 use LaravelZero\Framework\Testing\TestCase;
+use Spatie\Once;
 use Tests\CreatesApplication;
 
 /*
@@ -21,6 +22,8 @@ use Tests\CreatesApplication;
 
 uses(TestCase::class, CreatesApplication::class)
     ->beforeEach(function () {
+        Once\Cache::flush();
+
         File::deleteDirectory(base_path('tests/.laravel-forge'));
 
         $this->client = tap(Mockery::mock(Forge::class), function ($mock) {

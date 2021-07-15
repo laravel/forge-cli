@@ -59,9 +59,11 @@ abstract class Command extends BaseCommand
      */
     public function currentServer()
     {
-        return $this->forge->server(
-            $this->config->get('server')
-        );
+        return once(function () {
+            return $this->forge->server(
+                $this->config->get('server')
+            );
+        });
     }
 
     /**
