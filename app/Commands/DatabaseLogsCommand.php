@@ -4,10 +4,11 @@ namespace App\Commands;
 
 use App\Exceptions\LogicException;
 use App\Exceptions\NotFoundException;
-use Illuminate\Support\Str;
 
 class DatabaseLogsCommand extends Command
 {
+    use Concerns\InteractsWithLogs;
+
     /**
      * The signature of the command.
      *
@@ -42,13 +43,6 @@ class DatabaseLogsCommand extends Command
             throw new LogicException('Retrieving logs from ['.$databaseType.'] databases is not supported.');
         }
 
-        $logs = $this->forge->logs($server->id, 'database');
-
-        Str::of($logs->content)
-            ->trim()
-            ->explode("\n")
-            ->each(function ($line) {
-                $this->line($line);
-            });
+        $this->showLogs($server, 'database');
     }
 }

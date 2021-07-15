@@ -3,10 +3,11 @@
 namespace App\Commands;
 
 use App\Exceptions\LogicException;
-use Illuminate\Support\Str;
 
 class NginxLogsCommand extends Command
 {
+    use Concerns\InteractsWithLogs;
+
     /**
      * The signature of the command.
      *
@@ -36,13 +37,6 @@ class NginxLogsCommand extends Command
             throw new LogicException('Logs type must be either "error" or "access".');
         }
 
-        $logs = $this->forge->logs($server->id, 'nginx_'.$type);
-
-        Str::of($logs->content)
-            ->trim()
-            ->explode("\n")
-            ->each(function ($line) {
-                $this->line($line);
-            });
+        $this->showLogs($server, 'nginx_'.$type);
     }
 }
