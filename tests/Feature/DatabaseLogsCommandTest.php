@@ -20,7 +20,7 @@ it('can not retrieve logs when there is no databases', function () {
     );
 
     $this->artisan('database:logs');
-})->throws('No database logs available.');
+})->throws('No databases installed in this server.');
 
 it('can not retrieve logs from unknown databases', function () {
     $this->client->shouldReceive('server')->andReturn(

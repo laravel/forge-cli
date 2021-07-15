@@ -3,10 +3,11 @@
 namespace App\Commands;
 
 use App\Exceptions\LogicException;
-use App\Exceptions\NotFoundException;
 
 class DatabaseRestartCommand extends Command
 {
+    use Concerns\InteractsWithDatabase;
+
     /**
      * The signature of the command.
      *
@@ -28,14 +29,12 @@ class DatabaseRestartCommand extends Command
      */
     public function handle()
     {
+        $this->ensureDatabaseExists();
+
         $server = $this->currentServer();
 
         // @phpstan-ignore-next-line
         $databaseType = $server->databaseType;
-
-        if (is_null($databaseType)) {
-            throw new NotFoundException('No database available.');
-        }
 
         if (in_array($databaseType, ['mysql', 'mysql8', 'mariadb'])) {
             $restarting = $this->restartMysql($server->id);

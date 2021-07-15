@@ -3,11 +3,10 @@
 namespace App\Commands;
 
 use App\Exceptions\LogicException;
-use App\Exceptions\NotFoundException;
 
 class DatabaseLogsCommand extends Command
 {
-    use Concerns\InteractsWithLogs;
+    use Concerns\InteractsWithLogs, Concerns\InteractsWithDatabase;
 
     /**
      * The signature of the command.
@@ -30,14 +29,12 @@ class DatabaseLogsCommand extends Command
      */
     public function handle()
     {
+        $this->ensureDatabaseExists();
+
         $server = $this->currentServer();
 
         // @phpstan-ignore-next-line
         $databaseType = $server->databaseType;
-
-        if (is_null($databaseType)) {
-            throw new NotFoundException('No database logs available.');
-        }
 
         if (! in_array($databaseType, ['mysql', 'mysql8', 'postgres'])) {
             throw new LogicException('Retrieving logs from ['.$databaseType.'] databases is not supported.');

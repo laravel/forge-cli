@@ -34,7 +34,7 @@ it('can not restart when there is no database', function () {
     );
 
     $this->artisan('database:restart');
-})->throws('No database available.');
+})->throws('No databases installed in this server.');
 
 it('can not restart unknown databases', function () {
     $this->client->shouldReceive('server')->andReturn(
