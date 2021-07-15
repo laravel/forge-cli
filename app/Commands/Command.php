@@ -81,7 +81,7 @@ abstract class Command extends BaseCommand
 
         switch ($exitCode) {
             case 0:
-                return '<comment>[active]</comment>';
+                return '<comment>[running]</comment>';
             case 255:
                 MissingSshKeyException::raise();
         }
