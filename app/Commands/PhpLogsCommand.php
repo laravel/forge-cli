@@ -6,7 +6,8 @@ use App\Exceptions\LogicException;
 
 class PhpLogsCommand extends Command
 {
-    use Concerns\InteractsWithLogs;
+    use Concerns\InteractsWithLogs,
+        Concerns\InteractsWithPhp;
 
     /**
      * The signature of the command.
@@ -29,6 +30,8 @@ class PhpLogsCommand extends Command
      */
     public function handle()
     {
+        $this->ensurePhpExists();
+
         $server = $this->currentServer();
 
         $version = $this->option('type');
