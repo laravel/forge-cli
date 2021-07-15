@@ -2,6 +2,8 @@
 
 namespace App\Commands;
 
+use App\Support\PhpVersion;
+
 class PhpLogsCommand extends Command
 {
     use Concerns\InteractsWithLogs,
@@ -41,7 +43,7 @@ class PhpLogsCommand extends Command
             'PHP version needs to be one of those values: '.implode(', ', $versions).'.'
         );
 
-        $version = $version ?: substr($server->phpVersion, -2);
+        $version = $version ?: PhpVersion::of($server->phpVersion)->release();
 
         $this->showLogs($server, 'php'.str_replace('.', '', $version));
     }

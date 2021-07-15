@@ -2,6 +2,8 @@
 
 namespace App\Commands;
 
+use App\Support\PhpVersion;
+
 class PhpStatusCommand extends Command
 {
     use Concerns\InteractsWithPhp;
@@ -38,7 +40,7 @@ class PhpStatusCommand extends Command
             abort(1, 'PHP version needs to be one of those values: '.implode(', ', $versions).'.');
         }
 
-        $version = $version ?: number_format(substr($server->phpVersion, -2) / 10, 1, '.', '');
+        $version = $version ?: PhpVersion::of($server->phpVersion)->release();
 
         $status = $this->serviceStatus($server, 'php'.$version.'-fpm');
 

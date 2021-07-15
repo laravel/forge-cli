@@ -2,6 +2,7 @@
 
 namespace App\Commands;
 
+use App\Support\PhpVersion;
 use Laravel\Forge\Exceptions\ValidationException;
 
 class PhpRestartCommand extends Command
@@ -40,7 +41,7 @@ class PhpRestartCommand extends Command
             abort(1, 'PHP version needs to be one of those values: '.implode(', ', $versions).'.');
         }
 
-        $version = $version ?: number_format(substr($server->phpVersion, -2) / 10, 1, '.', '');
+        $version = $version ?: PhpVersion::of($server->phpVersion)->release();
 
         if ($this->restartPhp($server->id, $version)) {
             $this->info('PHP '.$version.' restart initiated successfully.');
