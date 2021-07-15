@@ -13,7 +13,7 @@ trait InteractsWithLogs
      * @param  string  $type
      * @return void
      */
-    public function showLogs($server, $type)
+    protected function showLogs($server, $type)
     {
         $logs = $this->forge->logs($server->id, $type);
 
