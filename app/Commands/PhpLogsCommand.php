@@ -32,8 +32,6 @@ class PhpLogsCommand extends Command
     {
         $this->ensurePhpExists();
 
-        $server = $this->currentServer();
-
         $version = $this->option('type');
         $versions = ['5.6', '7.0', '7.1', '7.2', '7.3', '7.4', '8.0'];
 
@@ -43,8 +41,10 @@ class PhpLogsCommand extends Command
             'PHP version needs to be one of those values: '.implode(', ', $versions).'.'
         );
 
-        $version = $version ?: PhpVersion::of($server->phpVersion)->release();
+        $serverPhpVersion = $this->currentServer()->phpVersion;
 
-        $this->showLogs($server, 'php'.str_replace('.', '', $version));
+        $version = $version ?: PhpVersion::of($serverPhpVersion)->release();
+
+        $this->showLogs('php'.str_replace('.', '', $version));
     }
 }

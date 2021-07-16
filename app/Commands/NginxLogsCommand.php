@@ -27,12 +27,10 @@ class NginxLogsCommand extends Command
      */
     public function handle()
     {
-        $server = $this->currentServer();
-
         $type = $this->option('type');
 
         abort_if(! in_array($type, ['error', 'access']), 1, 'Logs type must be either "error" or "access".');
 
-        $this->showLogs($server, 'nginx_'.$type);
+        $this->showLogs('nginx_'.$type);
     }
 }

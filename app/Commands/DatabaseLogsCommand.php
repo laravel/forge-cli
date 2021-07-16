@@ -29,15 +29,13 @@ class DatabaseLogsCommand extends Command
     {
         $this->ensureDatabaseExists();
 
-        $server = $this->currentServer();
-
         // @phpstan-ignore-next-line
-        $databaseType = $server->databaseType;
+        $databaseType = $this->currentServer()->databaseType;
 
         if (! in_array($databaseType, ['mysql', 'mysql8', 'postgres'])) {
             abort(1, 'Retrieving logs from ['.$databaseType.'] databases is not supported.');
         }
 
-        $this->showLogs($server, 'database');
+        $this->showLogs('database');
     }
 }

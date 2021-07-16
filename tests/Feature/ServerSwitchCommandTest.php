@@ -10,7 +10,7 @@ it('allows to switch the server context with an menu', function () {
         (object) ['id' => 2, 'name' => 'staging', 'ipAddress' => '789.456.123.111'],
     );
 
-    $exitCode = $this->artisan('server:switch')
+    $this->artisan('server:switch')
         ->expectsChoice('Which server would you like to switch to?', 'staging', [
             'production', 'staging',
         ])->expectsOutput('Current server context changed successfully.')->run();
@@ -23,7 +23,7 @@ it('allows to switch the server context with an option', function () {
         (object) ['id' => 2, 'name' => 'staging', 'ipAddress' => '789.456.123.111'],
     );
 
-    $exitCode = $this->artisan('server:switch', ['--id' => 2])
+    $this->artisan('server:switch', ['--id' => 2])
         ->expectsOutput('Current server context changed successfully.')
         ->run();
 
