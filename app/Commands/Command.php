@@ -11,6 +11,8 @@ use LaravelZero\Framework\Commands\Command as BaseCommand;
 
 abstract class Command extends BaseCommand
 {
+    use Concerns\InteractsWithIO;
+
     /**
      * The configuration repository.
      *

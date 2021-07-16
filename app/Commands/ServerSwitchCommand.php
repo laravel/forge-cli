@@ -25,17 +25,13 @@ class ServerSwitchCommand extends Command
      */
     public function handle()
     {
-        if (is_null($id = $this->option('id'))) {
-            $servers = collect($this->forge->servers());
+        $servers = function () {
+            return $this->forge->servers();
+        };
 
-            $name = $this->choice('Which server would you like to switch to?', $servers->mapWithKeys(function ($server) {
-                return [$server->id => $server->name];
-            })->all());
+        $serverId = $this->askForId('Which server would you like to switch to?', $servers);
 
-            $id = $servers->where('name', $name)->first()->id;
-        }
-
-        $server = $this->forge->server($id);
+        $server = $this->forge->server($serverId);
 
         $this->config->set('server', $server->id);
 
