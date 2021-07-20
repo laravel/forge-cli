@@ -18,12 +18,33 @@ trait InteractsWithIO
 
             $name = $this->choice($question, $answers->mapWithKeys(function ($resource) {
                 return [$resource->id => $resource->name];
-            })->all()
-            );
+            })->all());
 
             $id = $answers->where('name', $name)->first()->id;
         }
 
         return $id;
+    }
+
+    /**
+     * Display a "step" message.
+     *
+     * @param  string  $text
+     * @return void
+     */
+    public function step($text)
+    {
+        $this->line('<fg=blue>==></> <options=bold>'.$text.'</>');
+    }
+
+    /**
+     * Display a successful "step" message.
+     *
+     * @param  string  $text
+     * @return void
+     */
+    public function successfulStep($text)
+    {
+        $this->line('<fg=green>==></> <options=bold>'.$text.'</>');
     }
 }
