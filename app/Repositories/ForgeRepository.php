@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use Exception;
+use GuzzleHttp;
 use Laravel\Forge\Exceptions\NotFoundException;
 
 /**
@@ -87,6 +88,17 @@ class ForgeRepository
 
         abort_if($token == null, 1, 'Please authenticate using the \'login\' command before proceeding.');
 
-        $this->client->setApiKey($token);
+        $guzzle = isset($_SERVER['FORGE_API_BASE'])
+            ? new GuzzleHttp\Client([ // http://forge.test/api/v1/
+                'base_uri' => $_SERVER['FORGE_API_BASE'], // 'https://forge.laravel.com/api/v1/',
+                'http_errors' => false,
+                'headers' => [
+                    'Authorization' => 'Bearer '.$token,
+                    'Accept' => 'application/json',
+                    'Content-Type' => 'application/json',
+                ],
+            ]) : null;
+
+        $this->client->setApiKey($token, $guzzle);
     }
 }
