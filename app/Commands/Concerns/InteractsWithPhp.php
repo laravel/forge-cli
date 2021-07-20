@@ -14,7 +14,7 @@ trait InteractsWithPhp
         $server = $this->currentServer();
 
         // @phpstan-ignore-next-line
-        if (is_null($server->phpVersion)) {
+        if (empty($server->phpVersion)) {
             abort(1, 'PHP is not installed in this server.');
         }
     }

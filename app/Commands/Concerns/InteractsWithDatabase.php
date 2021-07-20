@@ -14,7 +14,7 @@ trait InteractsWithDatabase
         $server = $this->currentServer();
 
         // @phpstan-ignore-next-line
-        if (is_null($server->databaseType)) {
+        if (empty($server->databaseType)) {
             abort(1, 'No databases installed in this server.');
         }
     }
