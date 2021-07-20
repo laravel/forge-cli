@@ -33,7 +33,16 @@ it('can deploy sites with an menu', function () {
 
     $this->remote->shouldReceive('exec')->with(
         'cat /home/forge/.forge/provision-3.output'
-    )->once()->andReturn([0, 'Installing composer dependencies...']);
+    )->once()->andReturn([0, [
+        'Installing composer dependencies...',
+    ]]);
+
+    $this->remote->shouldReceive('exec')->with(
+        'cat /home/forge/.forge/provision-3.output'
+    )->once()->andReturn([0, [
+        'Installing composer dependencies...',
+        'Restarting FPM...',
+    ]]);
 
     $this->client->shouldReceive('siteDeployment')->with(1, 1, 3)->once()->andReturn(
         (object) ['id' => 3, 'status' => 'finished', 'started_at' => '2021-07-20 12:50:01', 'ended_at' => '2021-07-20 12:50:09'],
@@ -46,6 +55,7 @@ it('can deploy sites with an menu', function () {
             ->expectsOutput('==> Waiting For Deployment To Start')
             ->expectsOutput('==> Deploying')
             ->expectsOutput('  ▕ Installing composer dependencies...')
+            ->expectsOutput('  ▕ Restarting FPM...')
             ->expectsOutput('==> Site Deployed Successfully. (8s)');
 });
 
@@ -77,7 +87,16 @@ it('can deploy sites with an option', function () {
 
     $this->remote->shouldReceive('exec')->with(
         'cat /home/forge/.forge/provision-3.output'
-    )->once()->andReturn([0, 'Installing composer dependencies...']);
+    )->once()->andReturn([0, [
+        'Installing composer dependencies...',
+    ]]);
+
+    $this->remote->shouldReceive('exec')->with(
+        'cat /home/forge/.forge/provision-3.output'
+    )->once()->andReturn([0, [
+        'Installing composer dependencies...',
+        'Restarting FPM...',
+    ]]);
 
     $this->client->shouldReceive('siteDeployment')->with(1, 2, 3)->once()->andReturn(
         (object) ['id' => 3, 'status' => 'finished', 'started_at' => '2021-07-20 12:50:01', 'ended_at' => '2021-07-20 12:50:09'],
@@ -88,6 +107,7 @@ it('can deploy sites with an option', function () {
         ->expectsOutput('==> Waiting For Deployment To Start')
         ->expectsOutput('==> Deploying')
         ->expectsOutput('  ▕ Installing composer dependencies...')
+        ->expectsOutput('  ▕ Restarting FPM...')
         ->expectsOutput('==> Site Deployed Successfully. (8s)');
 });
 
@@ -131,7 +151,14 @@ it('handles deployment failures', function () {
 
     $this->remote->shouldReceive('exec')->with(
         'cat /home/forge/.forge/provision-3.output'
-    )->once()->andReturn([0, 'Installing composer dependencies...']);
+    )->once()->andReturn([0, ['Installing composer dependencies...']]);
+
+    $this->remote->shouldReceive('exec')->with(
+        'cat /home/forge/.forge/provision-3.output'
+    )->once()->andReturn([0, [
+        'Installing composer dependencies...',
+        'Restarting FPM failed...',
+    ]]);
 
     $this->client->shouldReceive('siteDeployment')->with(1, 2, 3)->once()->andReturn(
         (object) ['id' => 3, 'status' => 'failed', 'started_at' => '2021-07-20 12:50:01', 'ended_at' => '2021-07-20 12:50:09'],
