@@ -10,8 +10,8 @@ it('can retrieve logs from databases', function () {
     ]);
 
     $this->artisan('database:logs')
-        ->expectsOutput('[00:01] FOO')
-        ->expectsOutput('[00:02] BAR');
+        ->expectsOutput('  ▕ [00:01] FOO')
+        ->expectsOutput('  ▕ [00:02] BAR');
 });
 
 it('can not retrieve logs when there is no databases', function () {

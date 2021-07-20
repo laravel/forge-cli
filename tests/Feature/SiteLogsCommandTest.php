@@ -18,8 +18,8 @@ it('can retrieve logs from sites with an menu', function () {
     $this->artisan('site:logs')
         ->expectsChoice('Which site would you like to retrieve the logs from?', 'pestphp.com', [
             'pestphp.com', 'something.com',
-        ])->expectsOutput('[00:01] FOO')
-        ->expectsOutput('[00:02] BAR');
+        ])->expectsOutput('  ▕ [00:01] FOO')
+        ->expectsOutput('  ▕ [00:02] BAR');
 });
 
 it('can retrieve logs from sites with an option', function () {
@@ -33,6 +33,6 @@ it('can retrieve logs from sites with an option', function () {
         ]);
 
     $this->artisan('site:logs', ['--id' => 2])
-        ->expectsOutput('[00:01] FOO')
-        ->expectsOutput('[00:02] BAR');
+        ->expectsOutput('  ▕ [00:01] FOO')
+        ->expectsOutput('  ▕ [00:02] BAR');
 });

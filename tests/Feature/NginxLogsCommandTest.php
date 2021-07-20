@@ -12,8 +12,8 @@ it('can retrieve error logs from nginx', function () {
         ]);
 
     $this->artisan('nginx:logs')
-        ->expectsOutput('[00:01] FOO')
-        ->expectsOutput('[00:02] BAR');
+        ->expectsOutput('  ▕ [00:01] FOO')
+        ->expectsOutput('  ▕ [00:02] BAR');
 });
 
 it('can retrieve access logs from nginx', function () {
@@ -28,8 +28,8 @@ it('can retrieve access logs from nginx', function () {
         ]);
 
     $this->artisan('nginx:logs', ['--type' => 'access'])
-        ->expectsOutput('[00:01] FOO')
-        ->expectsOutput('[00:02] BAR');
+        ->expectsOutput('  ▕ [00:01] FOO')
+        ->expectsOutput('  ▕ [00:02] BAR');
 });
 
 it('can not retrieve logs from unknown types', function () {

@@ -16,7 +16,7 @@ trait InteractsWithLogs
     {
         $logs = $this->forge->logs($this->currentServer()->id, $type);
 
-        $this->displayLogs($logs);
+        $this->displayLogs($logs->content);
     }
 
     /**
@@ -29,26 +29,30 @@ trait InteractsWithLogs
     {
         $logs = $this->forge->siteLogs($this->currentServer()->id, $siteId);
 
-        $this->displayLogs($logs);
+        $this->displayLogs($logs->content);
     }
 
     /**
      * Displays the given logs.
      *
-     * @param  object  $logs
+     * @param  string  $logs
      * @return void
      */
     protected function displayLogs($logs)
     {
-        Str::of($logs->content)
+        Str::of($logs)
             ->trim()
             ->whenEmpty(function () {
                 abort(1, 'The requested logs could not be found, or they are simply empty.');
             })->whenNotEmpty(function ($logs) {
+                $this->line('');
+
                 $logs->explode("\n")
                     ->each(function ($line) {
-                        $this->line($line);
+                        $this->line("  <fg=#6C7280>▕</> $line");
                     });
+
+                $this->line('');
             });
     }
 }
