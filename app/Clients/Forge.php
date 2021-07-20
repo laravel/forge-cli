@@ -54,4 +54,17 @@ class Forge extends BaseForge
     {
         return (object) $this->get("servers/$serverId/sites/$siteId/deployment-history/$deploymentId")['deployment'];
     }
+
+    /**
+     * Get the site deployment output.
+     *
+     * @param  string|int  $serverId
+     * @param  string|int  $siteId
+     * @param  string|int  $deploymentId
+     * @return string
+     */
+    public function siteDeploymentOutput($serverId, $siteId, $deploymentId)
+    {
+        return $this->get("servers/$serverId/sites/$siteId/deployment-history/$deploymentId/output")['output'];
+    }
 }
