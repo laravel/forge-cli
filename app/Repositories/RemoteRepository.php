@@ -5,6 +5,13 @@ namespace App\Repositories;
 class RemoteRepository
 {
     /**
+     * The sockets path.
+     *
+     * @var string
+     */
+    protected $socketsPath;
+
+    /**
      * The server.
      *
      * @var \Laravel\Forge\Resources\Server|null
@@ -19,6 +26,17 @@ class RemoteRepository
     protected $serverResolver = null;
 
     /**
+     * Creates a new repository instance.
+     *
+     * @param  string  $socketsPath
+     * @return void
+     */
+    public function __construct($socketsPath)
+    {
+        $this->socketsPath = $socketsPath;
+    }
+
+    /**
      * Execute a command against the shell, and displays the output.
      *
      * @param  string|null  $command
@@ -28,13 +46,7 @@ class RemoteRepository
     {
         $this->ensureSshIsConfigured();
 
-        $command = sprintf(
-            'ssh -o LogLevel=QUIET -t forge@%s %s',
-            $this->server->ipAddress,
-            $command,
-        );
-
-        passthru($command, $exitCode);
+        passthru($this->ssh($command), $exitCode);
 
         return (int) $exitCode;
     }
@@ -49,13 +61,7 @@ class RemoteRepository
     {
         $this->ensureSshIsConfigured();
 
-        $command = sprintf(
-            'ssh -o LogLevel=QUIET -t forge@%s %s',
-            $this->server->ipAddress,
-            $command,
-        );
-
-        exec($command, $output, $exitCode);
+        exec($this->ssh($command), $output, $exitCode);
 
         return [(int) $exitCode, $output];
     }
@@ -85,12 +91,34 @@ class RemoteRepository
                 $this->server = call_user_func($this->serverResolver);
             }
 
-            exec(sprintf(
-                'ssh -o LogLevel=QUIET -t forge@%s -t exit 0',
-                $this->server->ipAddress,
-            ), $_, $exitCode);
+            exec($this->ssh('-t exit 0'), $_, $exitCode);
 
             abort_if($exitCode > 0, 1, 'Unable to connect to remote server. Have you configured an SSH Key?');
         });
+    }
+
+    /**
+     * Returns the "ssh" sheel command to be run.
+     *
+     * @param  string  $command|null
+     * @return string
+     */
+    protected function ssh($command = null)
+    {
+        $options = collect([
+            'ControlMaster' => 'auto',
+            'ControlPersist' => 100,
+            'ControlPath' => $this->socketsPath.'/%h-%p-%r',
+            'LogLevel' => 'QUIET',
+        ])->map(function ($value, $option) {
+            return "-o $option=$value";
+        })->values()->implode(' ');
+
+        return trim(sprintf(
+            'ssh %s -t forge@%s %s',
+            $options,
+            $this->server->ipAddress,
+            $command,
+        ));
     }
 }
