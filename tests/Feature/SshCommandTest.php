@@ -10,9 +10,7 @@ it('can create ssh connections', function () {
             'ipAddress' => '123.456.789.000',
         ]);
 
-    $this->shell->shouldReceive('passthru')->with(
-        'ssh -t forge@123.456.789.000',
-    )->andReturn(0);
+    $this->remote->shouldReceive('passthru')->andReturn(0);
 
     $this->artisan('ssh')->assertExitCode(0);
 });
@@ -27,9 +25,7 @@ it('can not create ssh connections when ssh key is missing', function () {
             'ipAddress' => '123.456.789.000',
         ]);
 
-    $this->shell->shouldReceive('passthru')->with(
-        'ssh -t forge@123.456.789.000',
-    )->andReturn(255);
+    $this->remote->shouldReceive('passthru')->andReturn(255);
 
     $this->artisan('ssh');
 })->throws('Unable to connect to remove server. Have you configured an SSH Key?');

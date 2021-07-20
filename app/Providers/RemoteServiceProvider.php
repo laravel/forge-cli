@@ -2,11 +2,11 @@
 
 namespace App\Providers;
 
-use App\Support\Shell;
+use App\Repositories\RemoteRepository;
 use Illuminate\Support\ServiceProvider;
 use Mockery;
 
-class ShellServiceProvider extends ServiceProvider
+class RemoteServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap any application services.
@@ -25,10 +25,12 @@ class ShellServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->singleton(Shell::class, function () {
+        $this->app->singleton(RemoteRepository::class, function () {
             return isset($_ENV['APP_ENV']) && $_ENV['APP_ENV'] == 'testing'
-                ? Mockery::mock(Shell::class)
-                : new Shell;
+                ? tap(Mockery::mock(RemoteRepository::class), function ($mock) {
+                    // @phpstan-ignore-next-line
+                    $mock->shouldReceive('resolveServerUsing')->zeroOrMoreTimes();
+                }) : new RemoteRepository;
         });
     }
 }

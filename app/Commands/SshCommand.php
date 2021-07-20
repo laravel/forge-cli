@@ -27,10 +27,7 @@ class SshCommand extends Command
     {
         $server = $this->currentServer();
 
-        $exitCode = $this->shell->passthru(sprintf(
-            'ssh -t forge@%s',
-            $server->ipAddress,
-        ));
+        $exitCode = $this->remote->passthru();
 
         abort_if($exitCode == 255, $exitCode, 'Unable to connect to remove server. Have you configured an SSH Key?');
 

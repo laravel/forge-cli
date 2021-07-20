@@ -4,7 +4,7 @@ namespace App\Commands;
 
 use App\Repositories\ConfigRepository;
 use App\Repositories\ForgeRepository;
-use App\Support\Shell;
+use App\Repositories\RemoteRepository;
 use Laravel\Forge\Forge;
 use Laravel\Forge\Resources\Server;
 use LaravelZero\Framework\Commands\Command as BaseCommand;
@@ -28,11 +28,11 @@ abstract class Command extends BaseCommand
     protected $forge;
 
     /**
-     * The shell.
+     * The remote connection.
      *
-     * @var \App\Support\Shell
+     * @var \App\Repositories\RemoteRepository
      */
-    protected $shell;
+    protected $remote;
 
     /**
      * Creates a new command instance.
@@ -44,13 +44,16 @@ abstract class Command extends BaseCommand
     public function __construct(
         ConfigRepository $config,
         ForgeRepository $forge,
-        Shell $shell
+        RemoteRepository $remote
     ) {
         parent::__construct();
 
         $this->config = $config;
         $this->forge = $forge;
-        $this->shell = $shell;
+
+        $this->remote = tap($remote)->resolveServerUsing(function () {
+            return $this->currentServer();
+        });
     }
 
     /**
@@ -76,9 +79,8 @@ abstract class Command extends BaseCommand
      */
     public function serviceStatus($server, $name)
     {
-        [$exitCode] = $this->shell->exec(sprintf(
-            'ssh -t forge@%s systemctl is-active --quiet %s 2>/dev/null',
-            $server->ipAddress,
+        [$exitCode] = $this->remote->exec(sprintf(
+            'systemctl is-active --quiet %s',
             $name,
         ));
 

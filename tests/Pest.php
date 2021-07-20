@@ -3,7 +3,7 @@
 use App\Clients\Forge;
 use App\Repositories\ConfigRepository;
 use App\Repositories\ForgeRepository;
-use App\Support\Shell;
+use App\Repositories\RemoteRepository;
 use Illuminate\Support\Facades\File;
 use LaravelZero\Framework\Testing\TestCase;
 use Spatie\Once;
@@ -36,7 +36,7 @@ uses(TestCase::class, CreatesApplication::class)
             $this->client
         );
 
-        $this->shell = resolve(Shell::class);
+        $this->remote = resolve(RemoteRepository::class);
     })->afterEach(function () {
         File::deleteDirectory(base_path('tests/.laravel-forge'));
     })->in('Feature', 'Unit');

@@ -57,7 +57,7 @@ return [
         App\Providers\AppServiceProvider::class,
         App\Providers\ConfigServiceProvider::class,
         App\Providers\ForgeServiceProvider::class,
-        App\Providers\ShellServiceProvider::class,
+        App\Providers\RemoteServiceProvider::class,
     ],
 
 ];
