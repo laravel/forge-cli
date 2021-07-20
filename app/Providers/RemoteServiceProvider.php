@@ -16,15 +16,7 @@ class RemoteServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        if (isset($_ENV['APP_ENV']) && $_ENV['APP_ENV'] == 'testing') {
-            return;
-        }
-
-        $socketsPath = $this->getSocketsPath();
-
-        if (! File::isDirectory($socketsPath)) {
-            File::makeDirectory($socketsPath);
-        }
+        // ..
     }
 
     /**
@@ -41,7 +33,7 @@ class RemoteServiceProvider extends ServiceProvider
                 ? tap(Mockery::mock(RemoteRepository::class), function ($mock) {
                     // @phpstan-ignore-next-line
                     $mock->shouldReceive('resolveServerUsing')->zeroOrMoreTimes();
-                }) : new RemoteRepository($this->getSocketsPath());
+                }) : new RemoteRepository($this->ensureSocketsPath());
         });
     }
 
@@ -50,10 +42,22 @@ class RemoteServiceProvider extends ServiceProvider
      *
      * @return string
      */
-    public function getSocketsPath()
+    public function ensureSocketsPath()
     {
         $path = ($_SERVER['HOME'] ?? $_SERVER['USERPROFILE']);
 
-        return $path.'/.laravel-forge/sockets';
+        $config = "$path/laravel-forge";
+
+        if (! File::isDirectory($config)) {
+            File::makeDirectory($config);
+        }
+
+        $socketsPath = "$config/sockets";
+
+        if (! File::isDirectory($socketsPath)) {
+            File::makeDirectory($socketsPath);
+        }
+
+        return $socketsPath;
     }
 }
