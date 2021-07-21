@@ -1,4 +1,4 @@
-<p align="center"><img src="/art/logo.svg" alt="Logo Laravel CLI"></p>
+<p align="center"><img src="/art/readme.png" alt="Logo Laravel Forge CLI"></p>
 
 <p align="center">
 <a href="https://github.com/laravel/forge-cli/actions"><img src="https://github.com/laravel/forge-cli/workflows/tests/badge.svg" alt="Build Status"></a>
@@ -9,19 +9,11 @@
 
 ## Introduction
 
-Laravel Forge CLI provides...
+Laravel Forge is a server management and site deployment service. After connecting to your preferred server provider, Forge will provision a new server, installing and configuring: PHP, Nginx, MySQL, and more.
 
-## Official Documentation
+In addition, Forge can assist you in managing scheduled jobs, queue workers, SSL certificates, and more. After a server has provisioned, you can then deploy your PHP / Laravel applications or WordPress applications using the Forge UI dashboard or the Forge CLI.
 
-Documentation for Forge CLI can be found on the [Laravel website](https://laravel.com/docs/billing).
-
-## Contributing
-
-Thank you for considering contributing to Forge CLI! You can read the contribution guide [here](.github/CONTRIBUTING.md).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+This repository contains the CLI client for interacting with Laravel Forge. To learn more about Forge and how to use this client, please consult the **[official documentation](https://forge.laravel.com/docs)**.
 
 ## Security Vulnerabilities
 
@@ -29,4 +21,4 @@ Please review [our security policy](https://github.com/laravel/forge-cli/securit
 
 ## License
 
-Laravel Forge CLI is open-sourced software licensed under the [MIT license](LICENSE.md).
+Forge CLI is open-sourced software licensed under the [MIT license](LICENSE.md).
