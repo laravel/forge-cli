@@ -5,6 +5,7 @@ namespace App\Commands;
 use App\Repositories\ConfigRepository;
 use App\Repositories\ForgeRepository;
 use App\Repositories\RemoteRepository;
+use App\Support\Time;
 use Laravel\Forge\Forge;
 use Laravel\Forge\Resources\Server;
 use LaravelZero\Framework\Commands\Command as BaseCommand;
@@ -35,6 +36,13 @@ abstract class Command extends BaseCommand
     protected $remote;
 
     /**
+     * The time.
+     *
+     * @var \App\Support\Time
+     */
+    protected $time;
+
+    /**
      * Creates a new command instance.
      *
      * @param  \App\Repositories\ConfigRepository  $config
@@ -44,12 +52,14 @@ abstract class Command extends BaseCommand
     public function __construct(
         ConfigRepository $config,
         ForgeRepository $forge,
-        RemoteRepository $remote
+        RemoteRepository $remote,
+        Time $time
     ) {
         parent::__construct();
 
         $this->config = $config;
         $this->forge = $forge;
+        $this->time = $time;
 
         $this->remote = tap($remote)->resolveServerUsing(function () {
             return $this->currentServer();

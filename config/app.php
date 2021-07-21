@@ -58,6 +58,7 @@ return [
         App\Providers\ConfigServiceProvider::class,
         App\Providers\ForgeServiceProvider::class,
         App\Providers\RemoteServiceProvider::class,
+        App\Providers\TimeServiceProvider::class,
     ],
 
 ];
