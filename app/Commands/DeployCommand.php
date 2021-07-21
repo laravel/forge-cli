@@ -6,6 +6,8 @@ use Illuminate\Support\Carbon;
 
 class DeployCommand extends Command
 {
+    use Concerns\InteractsWithEvents;
+
     /**
      * The signature of the command.
      *
@@ -19,13 +21,6 @@ class DeployCommand extends Command
      * @var string
      */
     protected $description = 'Deploy an site';
-
-    /**
-     * The current state of the deployment output.
-     *
-     * @var array
-     */
-    protected $outputBuffer = [];
 
     /**
      * Execute the console command.
@@ -65,19 +60,15 @@ class DeployCommand extends Command
 
         [$deploymentId, $eventId] = $this->ensureDeploymentHaveStarted($site, $lastEventId);
 
-        $this->line('');
+        $deployment = null;
 
-        do {
+        $this->displayEventOutput($eventId, function () use ($server, $site, $deploymentId, &$deployment) {
             sleep(1);
 
-            $this->displayOutput($eventId);
-
             $deployment = $this->forge->siteDeployment($server->id, $site->id, $deploymentId);
-        } while ($deployment->status == 'deploying');
 
-        $this->displayOutput($eventId);
-
-        $this->line('');
+            return $deployment->status == 'deploying';
+        });
 
         abort_if($deployment->status == 'failed', 1, 'The deployment failed.');
 
@@ -121,28 +112,6 @@ class DeployCommand extends Command
         ))->first()['id'];
 
         return [$deploymentId, $eventId];
-    }
-
-    /**
-     * Displays the deployment output.
-     *
-     * @param  string|int  $eventId
-     * @return void
-     */
-    protected function displayOutput($eventId)
-    {
-        [$exitCode, $output] = $this->remote->exec(sprintf(
-            'cat /home/forge/.forge/provision-%s.output',
-            $eventId
-        ));
-
-        if ($exitCode == 0) {
-            collect($output)->slice(count($this->outputBuffer))->each(function ($line) {
-                $this->line("  <fg=#6C7280>▕</> $line");
-            });
-
-            $this->outputBuffer = $output;
-        }
     }
 
     /**
