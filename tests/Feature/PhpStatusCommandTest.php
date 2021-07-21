@@ -7,7 +7,7 @@ it('can display the php status running', function () {
 
     $this->remote->shouldReceive('exec')->andReturn([0]);
 
-    $this->artisan('php:status')->expectsOutput('PHP 5.6 service is [running].');
+    $this->artisan('php:status')->expectsOutput('==> PHP 5.6 Is Up & Running');
 });
 
 it('can display the php status as inactive', function () {
@@ -17,8 +17,8 @@ it('can display the php status as inactive', function () {
 
     $this->remote->shouldReceive('exec')->andReturn([3]);
 
-    $this->artisan('php:status')->expectsOutput('PHP 8.0 service is [inactive].');
-});
+    $this->artisan('php:status');
+})->throws('Service is not running.');
 
 it('can not display the status when php is incorrect', function () {
     $this->client->shouldReceive('server')->andReturn(

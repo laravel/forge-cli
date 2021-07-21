@@ -25,6 +25,8 @@ class ServerListCommand extends Command
      */
     public function handle()
     {
+        $this->step('Retrieving the list of servers');
+
         $this->table([
             'ID', 'Name', 'IP Address',
         ], collect($this->forge->servers())->map(function ($server) {

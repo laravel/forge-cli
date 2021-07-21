@@ -11,7 +11,7 @@ it('can restart mysql databases', function () {
         ->expectsConfirmation(
             'While the <comment>[MySQL]</comment> service restarts, the database may become unavailable. Wish to proceed?',
             'yes',
-        )->expectsOutput('Database restart initiated successfully.');
+        )->expectsOutput('==> Database Restart Initiated Successfully');
 });
 
 it('can restart postgres databases', function () {
@@ -25,7 +25,7 @@ it('can restart postgres databases', function () {
         ->expectsConfirmation(
             'While the <comment>[PostgreSQL]</comment> service restarts, the database may become unavailable. Wish to proceed?',
             'yes'
-        )->expectsOutput('Database restart initiated successfully.');
+        )->expectsOutput('==> Database Restart Initiated Successfully');
 });
 
 it('can not restart when there is no database', function () {

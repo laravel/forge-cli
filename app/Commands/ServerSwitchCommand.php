@@ -29,12 +29,12 @@ class ServerSwitchCommand extends Command
             return $this->forge->servers();
         };
 
-        $serverId = $this->askForId('Which server would you like to switch to?', $servers);
+        $serverId = $this->askForId('Which server would you like to switch to', $servers);
 
         $server = $this->forge->server($serverId);
 
         $this->config->set('server', $server->id);
 
-        $this->info('Current server context changed successfully.');
+        $this->successfulStep('Current server context changed successfully');
     }
 }

@@ -7,8 +7,11 @@ it('can create ssh connections', function () {
         ->once()
         ->with(1)
         ->andReturn((object) [
+            'name' => 'production',
             'ipAddress' => '123.456.789.000',
         ]);
+
+    $this->remote->shouldReceive('ensureSshIsConfigured');
 
     $this->remote->shouldReceive('passthru')->andReturn(0);
 
@@ -22,8 +25,11 @@ it('can not create ssh connections when ssh key is missing', function () {
         ->once()
         ->with(1)
         ->andReturn((object) [
+            'name' => 'staging',
             'ipAddress' => '123.456.789.000',
         ]);
+
+    $this->remote->shouldReceive('ensureSshIsConfigured');
 
     $this->remote->shouldReceive('passthru')->andReturn(255);
 

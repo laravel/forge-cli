@@ -43,7 +43,7 @@ class DatabaseRestartCommand extends Command
         }
 
         if ($restarting) {
-            $this->info('Database restart initiated successfully.');
+            $this->successfulStep('Database restart initiated successfully');
         }
     }
 
@@ -56,6 +56,8 @@ class DatabaseRestartCommand extends Command
     public function restartMysql($serverId)
     {
         if ($restarting = $this->confirm('While the <comment>[MySQL]</comment> service restarts, the database may become unavailable. Wish to proceed?')) {
+            $this->step('Restarting the database');
+
             $this->forge->rebootMysql($serverId);
         }
 
@@ -71,6 +73,8 @@ class DatabaseRestartCommand extends Command
     public function restartPostgres($serverId)
     {
         if ($restarting = $this->confirm('While the <comment>[PostgreSQL]</comment> service restarts, the database may become unavailable. Wish to proceed?')) {
+            $this->step('Restarting the database');
+
             $this->forge->rebootPostgres($serverId);
         }
 

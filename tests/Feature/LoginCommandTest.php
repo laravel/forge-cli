@@ -11,7 +11,7 @@ it('authenticates users', function () {
 
     $this->artisan('login')
         ->expectsQuestion('API Token', '123123213')
-        ->expectsOutput('Authenticated successfully as [nuno@laravel.com].');
+        ->expectsOutput('==> Authenticated Successfully As [nuno@laravel.com]');
 });
 
 it('sets current server', function () {

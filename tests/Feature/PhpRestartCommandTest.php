@@ -11,7 +11,7 @@ it('can restart php', function () {
         ->expectsConfirmation(
             'While the <comment>[PHP 8.0]</comment> service restarts, sites may become unavailable. Wish to proceed?',
             'yes',
-        )->expectsOutput('PHP 8.0 restart initiated successfully.');
+        )->expectsOutput('==> PHP 8.0 Restart Initiated Successfully.');
 });
 
 it('can restart a specific php version', function () {
@@ -26,7 +26,7 @@ it('can restart a specific php version', function () {
     ])->expectsConfirmation(
         'While the <comment>[PHP 7.4]</comment> service restarts, sites may become unavailable. Wish to proceed?',
         'yes',
-    )->expectsOutput('PHP 7.4 restart initiated successfully.');
+    )->expectsOutput('==> PHP 7.4 Restart Initiated Successfully.');
 });
 
 it('can restart php when php version is incorrect', function () {

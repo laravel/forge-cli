@@ -10,7 +10,7 @@ it('gets current server', function () {
     $this->config->set('server', 1);
 
     $this->artisan('server:current')
-        ->expectsOutput('You are currently within the [production] server context.');
+        ->expectsOutput('==> You Are Currently Within The [production] Server Context.');
 });
 
 it('may fail if current server no longer exists', function () {

@@ -31,7 +31,9 @@ class DeployLogsCommand extends Command
             return $this->forge->sites($this->currentServer()->id);
         };
 
-        $siteId = $this->askForId('Which site would you like to retrieve the deployment logs from?', $sites);
+        $siteId = $this->askForId('Which site would you like to retrieve the deployment logs from', $sites);
+
+        $this->step('Retrieving the latest deployment logs');
 
         $lastDeploymentId = optional(collect($this->forge->siteDeployments(
             $this->currentServer()->id,

@@ -7,7 +7,7 @@ it('can display the database status running', function () {
 
     $this->remote->shouldReceive('exec')->andReturn([0]);
 
-    $this->artisan('database:status')->expectsOutput('Database service is [running].');
+    $this->artisan('database:status')->expectsOutput('==> The Database Is Up & Running');
 });
 
 it('can display the database status as inactive', function () {
@@ -17,8 +17,8 @@ it('can display the database status as inactive', function () {
 
     $this->remote->shouldReceive('exec')->andReturn([3]);
 
-    $this->artisan('database:status')->expectsOutput('Database service is [inactive].');
-});
+    $this->artisan('database:status');
+})->throws('Service is not running.');
 
 it('can not display the status when there is no database', function () {
     $this->client->shouldReceive('server')->andReturn(

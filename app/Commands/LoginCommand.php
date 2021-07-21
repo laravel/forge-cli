@@ -35,7 +35,7 @@ class LoginCommand extends Command
 
         $this->ensureCurrentTeamIsSet();
 
-        $this->info("Authenticated successfully as [$email].");
+        $this->successfulStep("Authenticated successfully as [$email]");
     }
 
     /**

@@ -7,7 +7,7 @@ it('can display the nginx status running', function () {
 
     $this->remote->shouldReceive('exec')->andReturn([0]);
 
-    $this->artisan('nginx:status')->expectsOutput('Nginx service is [running].');
+    $this->artisan('nginx:status')->expectsOutput('==> Nginx Is Up & Running');
 });
 
 it('can display the nginx status as inactive', function () {
@@ -17,5 +17,5 @@ it('can display the nginx status as inactive', function () {
 
     $this->remote->shouldReceive('exec')->andReturn([3]);
 
-    $this->artisan('nginx:status')->expectsOutput('Nginx service is [inactive].');
-});
+    $this->artisan('nginx:status');
+})->throws('Service is not running.');

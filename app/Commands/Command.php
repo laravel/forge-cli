@@ -81,26 +81,21 @@ abstract class Command extends BaseCommand
     }
 
     /**
-     * Gets the given service status.
+     * Ensure the given service is running.
      *
      * @param  \Laravel\Forge\Resources\Server  $server
      * @param  string  $name
-     * @return string
+     * @return void
      */
-    public function serviceStatus($server, $name)
+    public function ensureServiceIsRunning($server, $name)
     {
+        $this->step('Checking the service status');
+
         [$exitCode] = $this->remote->exec(sprintf(
             'systemctl is-active --quiet %s',
             $name,
         ));
 
-        switch ($exitCode) {
-            case 0:
-                return '<comment>[running]</comment>';
-            case 255:
-                abort(255, 'Unable to connect to remove server. Have you configured an SSH Key?');
-        }
-
-        return '<fg=red>[inactive]</>';
+        abort_if($exitCode != 0, 1, 'Service is not running.');
     }
 }

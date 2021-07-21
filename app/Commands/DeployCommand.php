@@ -33,7 +33,7 @@ class DeployCommand extends Command
             return $this->forge->sites($this->currentServer()->id);
         };
 
-        $siteId = $this->askForId('Which site would you like to deploy?', $sites);
+        $siteId = $this->askForId('Which site would you like to deploy', $sites);
 
         $site = $this->forge->site($this->currentServer()->id, $siteId);
 
@@ -120,11 +120,11 @@ class DeployCommand extends Command
         $this->successfulStep('<options=bold>Site Deployed Successfully.</> <fg=#6C7280>('.$time.'s)</>');
 
         $this->table([
-            '   <comment>Deployment ID</comment>',
-            '   <comment>Site URL</comment>',
+            'Deployment ID',
+            'Site URL',
         ], [[
-            "   <options=bold>{$deployment->id}</>",
-            "   <options=bold>https://{$site->name}</>",
-        ]], 'compact');
+            "{$deployment->id}",
+            "https://{$site->name}",
+        ]]);
     }
 }

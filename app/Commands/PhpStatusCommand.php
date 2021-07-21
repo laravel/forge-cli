@@ -42,8 +42,8 @@ class PhpStatusCommand extends Command
 
         $version = $version ?: PhpVersion::of($server->phpVersion)->release();
 
-        $status = $this->serviceStatus($server, 'php'.$version.'-fpm');
+        $this->ensureServiceIsRunning($server, 'php'.$version.'-fpm');
 
-        $this->info('PHP '.$version.' service is '.$status.'.');
+        $this->successfulStep('PHP '.$version.' is up & running');
     }
 }

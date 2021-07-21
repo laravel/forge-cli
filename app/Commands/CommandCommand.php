@@ -35,9 +35,9 @@ class CommandCommand extends Command
             return $this->forge->sites($this->currentServer()->id);
         };
 
-        $siteId = $this->askForId('Which site would you like to run the command on?', $sites);
+        $siteId = $this->askForId('Which site would you like to run the command on', $sites);
 
-        $command = $this->option('command') ?? $this->ask('What command would you like to execute?');
+        $command = $this->option('command') ?? $this->ask('What command would you like to execute');
 
         $this->step('Queuing Command');
 

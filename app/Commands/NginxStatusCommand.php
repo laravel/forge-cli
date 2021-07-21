@@ -27,8 +27,8 @@ class NginxStatusCommand extends Command
     {
         $server = $this->currentServer();
 
-        $status = $this->serviceStatus($server, 'nginx');
+        $this->ensureServiceIsRunning($server, 'nginx');
 
-        $this->info('Nginx service is '.$status.'.');
+        $this->successfulStep('Nginx is up & running');
     }
 }

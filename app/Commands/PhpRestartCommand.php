@@ -44,7 +44,7 @@ class PhpRestartCommand extends Command
         $version = $version ?: PhpVersion::of($server->phpVersion)->release();
 
         if ($this->restartPhp($server->id, $version)) {
-            $this->info('PHP '.$version.' restart initiated successfully.');
+            $this->successfulStep('PHP '.$version.' restart initiated successfully.');
         }
     }
 
@@ -58,6 +58,8 @@ class PhpRestartCommand extends Command
     public function restartPhp($serverId, $version)
     {
         if ($restarting = $this->confirm('While the <comment>[PHP '.$version.']</comment> service restarts, sites may become unavailable. Wish to proceed?')) {
+            $this->step('Restarting PHP '.$version);
+
             try {
                 $this->forge->rebootPHP($serverId, [
                     'version' => 'php'.str_replace('.', '', $version),

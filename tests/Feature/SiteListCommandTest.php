@@ -11,8 +11,8 @@ it('can display the list of sites', function () {
     ]);
 
     $this->artisan('site:list')
-        ->expectsTable(['ID', 'Name', 'PHP'], [
-            ['id' => 1, 'name' => 'production.com', 'phpVersion' => '5.6'],
-            ['id' => 2, 'name' => 'staging.com', 'phpVersion' => 'None'],
-        ]);
+        ->expectsTable(['   ID', '   Name', '   PHP'], [
+            ['id' => '   1', 'name' => '   production.com', 'phpVersion' => '   5.6'],
+            ['id' => '   2', 'name' => '   staging.com', 'phpVersion' => '   None'],
+        ], 'compact');
 });

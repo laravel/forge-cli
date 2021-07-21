@@ -27,6 +27,12 @@ class SshCommand extends Command
     {
         $server = $this->currentServer();
 
+        $this->step('Creating secure connection');
+
+        $this->remote->ensureSshIsConfigured();
+
+        $this->successfulStep('Connected To <comment>['.$server->name.']</comment>');
+
         $exitCode = $this->remote->passthru();
 
         abort_if($exitCode == 255, $exitCode, 'Unable to connect to remove server. Have you configured an SSH Key?');

@@ -19,7 +19,7 @@ it('can retrieve deployment logs from sites with an menu', function () {
     );
 
     $this->artisan('deploy:logs')
-        ->expectsChoice('Which site would you like to retrieve the deployment logs from?', 'something.com', [
+        ->expectsChoice('Which site would you like to retrieve the deployment logs from', 'something.com', [
             'pestphp.com', 'something.com',
         ])->expectsOutput('  ▕ Restarting FPM...');
 });

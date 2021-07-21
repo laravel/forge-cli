@@ -27,6 +27,8 @@ class SiteListCommand extends Command
      */
     public function handle()
     {
+        $this->step('Retrieving the list of sites');
+
         $sites = $this->forge->sites(
             $this->currentServer()->id
         );

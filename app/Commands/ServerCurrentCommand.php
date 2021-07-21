@@ -29,7 +29,7 @@ class ServerCurrentCommand extends Command
             $this->config->get('server')
         );
 
-        $this->info(
+        $this->successfulStep(
             'You are currently within the <comment>['.$server->name.']</comment> server context.'
         );
     }

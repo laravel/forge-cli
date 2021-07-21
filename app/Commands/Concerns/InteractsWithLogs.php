@@ -14,6 +14,8 @@ trait InteractsWithLogs
      */
     protected function showLogs($type)
     {
+        $this->step('Retrieving the latest logs');
+
         $logs = $this->forge->logs($this->currentServer()->id, $type);
 
         $this->displayLogs($logs->content);
@@ -27,6 +29,8 @@ trait InteractsWithLogs
      */
     protected function showSiteLogs($siteId)
     {
+        $this->step('Retrieving the latest site logs');
+
         $logs = $this->forge->siteLogs($this->currentServer()->id, $siteId);
 
         $this->displayLogs($logs->content);

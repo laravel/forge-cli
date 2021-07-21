@@ -31,7 +31,7 @@ class SiteLogsCommand extends Command
             return $this->forge->sites($this->currentServer()->id);
         };
 
-        $siteId = $this->askForId('Which site would you like to retrieve the logs from?', $sites);
+        $siteId = $this->askForId('Which site would you like to retrieve the logs from', $sites);
 
         $this->showSiteLogs($siteId);
     }

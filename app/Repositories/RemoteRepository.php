@@ -82,7 +82,7 @@ class RemoteRepository
      *
      * @return void
      */
-    protected function ensureSshIsConfigured()
+    public function ensureSshIsConfigured()
     {
         once(function () {
             abort_if(is_null($this->serverResolver), 1, 'Current server unresolvable.');
