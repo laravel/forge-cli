@@ -82,7 +82,7 @@ class DeployCommand extends Command
         $this->step('Waiting For Deployment To Start');
 
         do {
-            sleep(1);
+            $this->time->sleep(1);
 
             $status = $this->forge->site(
                 $this->currentServer()->id,
@@ -96,8 +96,6 @@ class DeployCommand extends Command
             'Deploying Pushed Code (%s).',
             $site->name
         ));
-
-        abort_if(is_null($eventId), 1, 'The deployment failed. Did you configured the deployment script?');
 
         $deploymentId = collect($this->forge->siteDeployments(
             $this->currentServer()->id,

@@ -20,12 +20,16 @@ trait InteractsWithEvents
      */
     protected function displayEventOutput($eventId, $while = null)
     {
-        $while && $this->outputBuffer[$eventId] = [];
+        if ($while) {
+            $this->outputBuffer[$eventId] = [];
+        }
 
         $firstOutput = false;
 
         do {
-            $while && sleep(1);
+            if ($while) {
+                $this->time->sleep(1);
+            }
 
             [$exitCode, $output] = $this->remote->exec(sprintf(
                 'cat /home/forge/.forge/provision-%s.output',
@@ -58,12 +62,16 @@ trait InteractsWithEvents
      * Find the first event by the given "description".
      *
      * @param  string  $description
-     * @return string|int|null
+     * @return string|int
      */
     protected function findEventId($description)
     {
-        return optional(collect($this->forge->events((string) $this->currentServer()->id))->first(function ($event) use ($description) {
+        $eventId = optional(collect($this->forge->events((string) $this->currentServer()->id))->first(function ($event) use ($description) {
             return $event->description == $description;
         }))->id;
+
+        abort_if(is_null($eventId), 1, 'Event unresolvable.');
+
+        return $eventId;
     }
 }
