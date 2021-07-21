@@ -14,11 +14,6 @@ it('can deploy sites with an menu', function () {
         (object) ['id' => 1, 'name' => 'pestphp.com', 'deploymentStatus' => null],
     );
 
-    $this->client->shouldReceive('events')->with(1)->once()->andReturn([
-        (object) ['id' => 2, 'description' => 'Deploying Pushed Code (something.com).'],
-        (object) ['id' => 1, 'description' => 'Deploying Pushed Code (pestphp.com).'],
-    ]);
-
     $this->client->shouldReceive('deploySite')->with(1, 1, false)->once()->andReturn(null);
 
     $this->client->shouldReceive('events')->with(1)->once()->andReturn([
@@ -67,11 +62,6 @@ it('can deploy sites with an option', function () {
     $this->client->shouldReceive('site')->twice()->with(1, 2)->andReturn(
         (object) ['id' => 2, 'name' => 'something.com', 'deploymentStatus' => null],
     );
-
-    $this->client->shouldReceive('events')->with(1)->once()->andReturn([
-        (object) ['id' => 2, 'description' => 'Deploying Pushed Code (something.com).'],
-        (object) ['id' => 1, 'description' => 'Deploying Pushed Code (pestphp.com).'],
-    ]);
 
     $this->client->shouldReceive('deploySite')->with(1, 2, false)->once()->andReturn(null);
 
@@ -131,11 +121,6 @@ it('handles deployment failures', function () {
     $this->client->shouldReceive('site')->twice()->with(1, 2)->andReturn(
         (object) ['id' => 2, 'name' => 'something.com', 'deploymentStatus' => null],
     );
-
-    $this->client->shouldReceive('events')->with(1)->once()->andReturn([
-        (object) ['id' => 2, 'description' => 'Deploying Pushed Code (something.com).'],
-        (object) ['id' => 1, 'description' => 'Deploying Pushed Code (pestphp.com).'],
-    ]);
 
     $this->client->shouldReceive('deploySite')->with(1, 2, false)->once()->andReturn(null);
 

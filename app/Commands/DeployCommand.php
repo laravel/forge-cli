@@ -54,17 +54,13 @@ class DeployCommand extends Command
 
         $this->step('Queuing Deployment');
 
-        $lastEventId = collect($this->forge->events((string) $server->id))->first()->id;
-
         $this->forge->deploySite($server->id, $site->id, false);
 
-        [$deploymentId, $eventId] = $this->ensureDeploymentHaveStarted($site, $lastEventId);
+        [$deploymentId, $eventId] = $this->ensureDeploymentHaveStarted($site);
 
         $deployment = null;
 
         $this->displayEventOutput($eventId, function () use ($server, $site, $deploymentId, &$deployment) {
-            sleep(1);
-
             $deployment = $this->forge->siteDeployment($server->id, $site->id, $deploymentId);
 
             return $deployment->status == 'deploying';
@@ -79,10 +75,9 @@ class DeployCommand extends Command
      * Ensure the deployment have started on the server.
      *
      * @param  \Laravel\Forge\Resources\Site  $site
-     * @param  string|int|null  $lastEventId
      * @return array
      */
-    protected function ensureDeploymentHaveStarted($site, $lastEventId)
+    protected function ensureDeploymentHaveStarted($site)
     {
         $this->step('Waiting For Deployment To Start');
 
@@ -97,12 +92,10 @@ class DeployCommand extends Command
 
         $this->step('Deploying');
 
-        $eventId = optional(collect($this->forge->events((string) $this->currentServer()->id))->first(function ($event) use ($site) {
-            return $event->description == sprintf(
-                'Deploying Pushed Code (%s).',
-                $site->name
-            );
-        }))->id;
+        $eventId = $this->findEventId(sprintf(
+            'Deploying Pushed Code (%s).',
+            $site->name
+        ));
 
         abort_if(is_null($eventId), 1, 'The deployment failed. Did you configured the deployment script?');
 

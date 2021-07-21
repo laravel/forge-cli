@@ -25,6 +25,8 @@ trait InteractsWithEvents
         $firstOutput = false;
 
         do {
+            $while && sleep(1);
+
             [$exitCode, $output] = $this->remote->exec(sprintf(
                 'cat /home/forge/.forge/provision-%s.output',
                 $eventId
@@ -50,5 +52,18 @@ trait InteractsWithEvents
         } while ($while && call_user_func($while));
 
         $while ? $this->displayEventOutput($eventId) : $this->line('');
+    }
+
+    /**
+     * Find the first event by the given "description".
+     *
+     * @param  string  $description
+     * @return string|int|null
+     */
+    protected function findEventId($description)
+    {
+        return optional(collect($this->forge->events((string) $this->currentServer()->id))->first(function ($event) use ($description) {
+            return $event->description == $description;
+        }))->id;
     }
 }
