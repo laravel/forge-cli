@@ -78,7 +78,7 @@ class Forge extends BaseForge
      */
     protected function handleRequestError(ResponseInterface $response)
     {
-        if (! in_array($response->getStatusCode(), [400, 404, 422])) {
+        if ($response->getStatusCode() >= 500) {
             Panic::abort($response->getBody());
         }
 
