@@ -2,7 +2,9 @@
 
 namespace App\Clients;
 
+use App\Support\Panic;
 use Laravel\Forge\Forge as BaseForge;
+use Psr\Http\Message\ResponseInterface;
 
 class Forge extends BaseForge
 {
@@ -66,5 +68,20 @@ class Forge extends BaseForge
     public function siteDeploymentOutput($serverId, $siteId, $deploymentId)
     {
         return $this->get("servers/$serverId/sites/$siteId/deployment-history/$deploymentId/output")['output'];
+    }
+
+    /**
+     * Handle the request error.
+     *
+     * @param  \Psr\Http\Message\ResponseInterface  $response
+     * @return void
+     */
+    protected function handleRequestError(ResponseInterface $response)
+    {
+        if (! in_array($response->getStatusCode(), [400, 404, 422])) {
+            Panic::abort($response->getBody());
+        }
+
+        parent::handleRequestError($response);
     }
 }
