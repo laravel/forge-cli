@@ -42,7 +42,7 @@ it('can retrieve deployment logs from sites with an option', function () {
         'Restarting FPM...',
     );
 
-    $this->artisan('deploy:logs', ['--id' => 1])
+    $this->artisan('deploy:logs', ['site' => 'pestphp.com'])
         ->expectsOutput('  ▕ Restarting FPM...');
 });
 
@@ -51,7 +51,12 @@ it('can not display the status when there is no deployments', function () {
         (object) ['id' => 1, 'name' => 'production'],
     );
 
+    $this->client->shouldReceive('sites')->once()->andReturn([
+        (object) ['id' => 1, 'name' => 'pestphp.com'],
+        (object) ['id' => 2, 'name' => 'something.com'],
+    ]);
+
     $this->client->shouldReceive('siteDeployments')->with(1, 1)->once()->andReturn([]);
 
-    $this->artisan('deploy:logs', ['--id' => 1]);
+    $this->artisan('deploy:logs', ['site' => 1]);
 })->throws('No deployments have been made in this site.');

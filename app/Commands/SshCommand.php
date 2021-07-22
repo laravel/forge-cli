@@ -9,7 +9,7 @@ class SshCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'ssh';
+    protected $signature = 'ssh {server? : The server name}';
 
     /**
      * The description of the command.
@@ -25,6 +25,14 @@ class SshCommand extends Command
      */
     public function handle()
     {
+        $server = $this->argument('server');
+
+        if (! is_null($server)) {
+            $this->call('server:switch', [
+                'server' => $server,
+            ]);
+        }
+
         $server = $this->currentServer();
 
         $this->step('Creating secure connection');

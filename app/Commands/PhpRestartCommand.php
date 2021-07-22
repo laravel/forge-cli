@@ -14,7 +14,7 @@ class PhpRestartCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'php:restart {--type=}';
+    protected $signature = 'php:restart {version? : The PHP Version}';
 
     /**
      * The description of the command.
@@ -34,7 +34,7 @@ class PhpRestartCommand extends Command
 
         $server = $this->currentServer();
 
-        $version = $this->option('type');
+        $version = $this->argument('version');
         $versions = ['5.6', '7.0', '7.1', '7.2', '7.3', '7.4', '8.0'];
 
         if (! is_null($version) && ! in_array($version, $versions)) {

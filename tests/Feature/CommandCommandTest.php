@@ -50,6 +50,11 @@ it('can deploy sites with an option', function () {
         (object) ['id' => 1, 'name' => 'production'],
     );
 
+    $this->client->shouldReceive('sites')->once()->andReturn([
+        (object) ['id' => 1, 'name' => 'pestphp.com'],
+        (object) ['id' => 2, 'name' => 'something.com'],
+    ]);
+
     $this->client->shouldReceive('executeSiteCommand')->once()->andReturn((object) [
         'id' => 3,
     ]);
@@ -74,7 +79,7 @@ it('can deploy sites with an option', function () {
         'Compiled services and packages files removed!',
     ]]);
 
-    $this->artisan('command', ['--id' => 2, '--command' => 'php artisan list'])
+    $this->artisan('command', ['site' => 2, '--command' => 'php artisan list'])
         ->expectsOutput('==> Queuing Command')
         ->expectsOutput('==> Waiting For Command To Run')
         ->expectsOutput('==> Running')
@@ -86,6 +91,11 @@ it('handles command failures', function () {
     $this->client->shouldReceive('server')->once()->andReturn(
         (object) ['id' => 1, 'name' => 'production'],
     );
+
+    $this->client->shouldReceive('sites')->once()->andReturn([
+        (object) ['id' => 1, 'name' => 'pestphp.com'],
+        (object) ['id' => 2, 'name' => 'something.com'],
+    ]);
 
     $this->client->shouldReceive('executeSiteCommand')->once()->andReturn((object) [
         'id' => 3,
@@ -111,5 +121,5 @@ it('handles command failures', function () {
         ' Illuminate\Database\QueryException',
     ]]);
 
-    $this->artisan('command', ['--id' => 2, '--command' => 'php artisan migrate']);
+    $this->artisan('command', ['site' => 'something.com', '--command' => 'php artisan migrate']);
 })->throws('The command failed.');

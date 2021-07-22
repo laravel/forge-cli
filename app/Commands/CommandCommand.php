@@ -12,8 +12,8 @@ class CommandCommand extends Command
      * @var string
      */
     protected $signature = 'command
-        {--id= : The ID of the site}
-        {--command= : Execute a CLI command}';
+        {site? : The site name}
+        {--command= : The command that should be executed}';
 
     /**
      * The description of the command.
@@ -29,17 +29,13 @@ class CommandCommand extends Command
      */
     public function handle()
     {
-        $server = $this->currentServer();
-
-        $sites = function () {
-            return $this->forge->sites($this->currentServer()->id);
-        };
-
-        $siteId = $this->askForId('Which site would you like to run the command on', $sites);
+        $siteId = $this->askForSite('Which site would you like to run the command on');
 
         $command = $this->option('command') ?? $this->ask('What command would you like to execute');
 
         $this->step('Queuing Command');
+
+        $server = $this->currentServer();
 
         $command = $this->forge->executeSiteCommand($server->id, $siteId, [
             'command' => $command,

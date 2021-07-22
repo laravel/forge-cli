@@ -13,7 +13,7 @@ class DeployCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'deploy {--id= : The ID of the site}';
+    protected $signature = 'deploy {site? : The site name}';
 
     /**
      * The description of the command.
@@ -29,11 +29,7 @@ class DeployCommand extends Command
      */
     public function handle()
     {
-        $sites = function () {
-            return $this->forge->sites($this->currentServer()->id);
-        };
-
-        $siteId = $this->askForId('Which site would you like to deploy', $sites);
+        $siteId = $this->askForSite('Which site would you like to deploy');
 
         $site = $this->forge->site($this->currentServer()->id, $siteId);
 

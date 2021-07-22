@@ -33,25 +33,45 @@ trait InteractsWithIO
     }
 
     /**
-     * Prompt the user for an "id" input.
+     * Prompt the user for an "site" input.
      *
      * @param  string  $question
-     * @param  callable  $answers
      * @return string|int
      */
-    public function askForId($question, $answers)
+    public function askForSite($question)
     {
-        if (is_null($id = $this->option('id'))) {
-            $answers = collect(call_user_func($answers));
+        $name = $this->argument('site');
 
+        $answers = collect($this->forge->sites($this->currentServer()->id));
+
+        if (is_null($name)) {
             $name = $this->choice($question, $answers->mapWithKeys(function ($resource) {
                 return [$resource->id => $resource->name];
             })->all());
-
-            $id = $answers->where('name', $name)->first()->id;
         }
 
-        return $id;
+        return optional($answers->where('name', $name)->first())->id ?: $name;
+    }
+
+    /**
+     * Prompt the user for an "server" input.
+     *
+     * @param  string  $question
+     * @return string|int
+     */
+    public function askForServer($question)
+    {
+        $name = $this->argument('server');
+
+        $answers = collect($this->forge->servers());
+
+        if (is_null($name)) {
+            $name = $this->choice($question, $answers->mapWithKeys(function ($resource) {
+                return [$resource->id => $resource->name];
+            })->all());
+        }
+
+        return optional($answers->where('name', $name)->first())->id ?: $name;
     }
 
     /**

@@ -11,7 +11,7 @@ class DeployLogsCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'deploy:logs {--id= : The ID of the site}';
+    protected $signature = 'deploy:logs {site? : The site name}';
 
     /**
      * The description of the command.
@@ -27,11 +27,7 @@ class DeployLogsCommand extends Command
      */
     public function handle()
     {
-        $sites = function () {
-            return $this->forge->sites($this->currentServer()->id);
-        };
-
-        $siteId = $this->askForId('Which site would you like to retrieve the deployment logs from', $sites);
+        $siteId = $this->askForSite('Which site would you like to retrieve the deployment logs from');
 
         $this->step('Retrieving the latest deployment logs');
 

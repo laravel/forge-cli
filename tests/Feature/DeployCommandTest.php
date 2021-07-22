@@ -63,6 +63,11 @@ it('can deploy sites with an option', function () {
         (object) ['id' => 2, 'name' => 'something.com', 'deploymentStatus' => null],
     );
 
+    $this->client->shouldReceive('sites')->once()->andReturn([
+        (object) ['id' => 1, 'name' => 'pestphp.com'],
+        (object) ['id' => 2, 'name' => 'something.com'],
+    ]);
+
     $this->client->shouldReceive('deploySite')->with(1, 2, false)->once()->andReturn(null);
 
     $this->client->shouldReceive('events')->with(1)->once()->andReturn([
@@ -92,7 +97,7 @@ it('can deploy sites with an option', function () {
         (object) ['id' => 3, 'status' => 'finished', 'started_at' => '2021-07-20 12:50:01', 'ended_at' => '2021-07-20 12:50:09'],
     );
 
-    $this->artisan('deploy', ['--id' => 2])
+    $this->artisan('deploy', ['site' => 2])
         ->expectsOutput('==> Queuing Deployment')
         ->expectsOutput('==> Waiting For Deployment To Start')
         ->expectsOutput('==> Deploying')
@@ -106,17 +111,27 @@ it('can not deploy sites that are already deploying', function () {
         (object) ['id' => 1, 'name' => 'production'],
     );
 
+    $this->client->shouldReceive('sites')->once()->andReturn([
+        (object) ['id' => 1, 'name' => 'pestphp.com'],
+        (object) ['id' => 2, 'name' => 'something.com'],
+    ]);
+
     $this->client->shouldReceive('site')->once()->with(1, 2)->andReturn(
         (object) ['id' => 2, 'name' => 'something.com', 'deploymentStatus' => 'queued'],
     );
 
-    $this->artisan('deploy', ['--id' => 2]);
+    $this->artisan('deploy', ['site' => 'something.com']);
 })->throws('This site is already deploying.');
 
 it('handles deployment failures', function () {
     $this->client->shouldReceive('server')->once()->andReturn(
         (object) ['id' => 1, 'name' => 'production'],
     );
+
+    $this->client->shouldReceive('sites')->once()->andReturn([
+        (object) ['id' => 1, 'name' => 'pestphp.com'],
+        (object) ['id' => 2, 'name' => 'something.com'],
+    ]);
 
     $this->client->shouldReceive('site')->twice()->with(1, 2)->andReturn(
         (object) ['id' => 2, 'name' => 'something.com', 'deploymentStatus' => null],
@@ -149,5 +164,5 @@ it('handles deployment failures', function () {
         (object) ['id' => 3, 'status' => 'failed', 'started_at' => '2021-07-20 12:50:01', 'ended_at' => '2021-07-20 12:50:09'],
     );
 
-    $this->artisan('deploy', ['--id' => 2]);
+    $this->artisan('deploy', ['site' => 2]);
 })->throws('The deployment failed.');

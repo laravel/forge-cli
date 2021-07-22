@@ -14,7 +14,7 @@ class PhpLogsCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'php:logs {--type=}';
+    protected $signature = 'php:logs {version? : The PHP Version}';
 
     /**
      * The description of the command.
@@ -32,7 +32,7 @@ class PhpLogsCommand extends Command
     {
         $this->ensurePhpExists();
 
-        $version = $this->option('type');
+        $version = $this->argument('version');
         $versions = ['5.6', '7.0', '7.1', '7.2', '7.3', '7.4', '8.0'];
 
         abort_if(

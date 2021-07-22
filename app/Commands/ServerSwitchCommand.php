@@ -2,6 +2,8 @@
 
 namespace App\Commands;
 
+use Spatie\Once;
+
 class ServerSwitchCommand extends Command
 {
     /**
@@ -9,7 +11,7 @@ class ServerSwitchCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'server:switch {--id= : The ID of the server to switch to}';
+    protected $signature = 'server:switch {server? : The server name}';
 
     /**
      * The description of the command.
@@ -25,16 +27,16 @@ class ServerSwitchCommand extends Command
      */
     public function handle()
     {
-        $servers = function () {
-            return $this->forge->servers();
-        };
-
-        $serverId = $this->askForId('Which server would you like to switch to', $servers);
+        $serverId = $this->askForServer('Which server would you like to switch to');
 
         $server = $this->forge->server($serverId);
 
         $this->config->set('server', $server->id);
 
-        $this->successfulStep('Current server context changed successfully');
+        Once\Cache::flush();
+
+        $this->successfulStep(
+            'Current server context changed successfully to <comment>['.$server->name.']</comment>'
+        );
     }
 }

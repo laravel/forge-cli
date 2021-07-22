@@ -25,7 +25,7 @@ it('can not display the status when php is incorrect', function () {
         (object) ['id' => 1, 'name' => 'production', 'phpVersion' => 'php56'],
     );
 
-    $this->artisan('php:status', ['--type' => '2.0']);
+    $this->artisan('php:status', ['version' => '2.0']);
 })->throws('PHP version needs to be one of those values: 5.6, 7.0, 7.1, 7.2, 7.3, 7.4, 8.0.');
 
 it('can not display the status when there is no php', function () {
