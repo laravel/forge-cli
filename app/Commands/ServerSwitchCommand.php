@@ -21,6 +21,15 @@ class ServerSwitchCommand extends Command
     protected $description = 'Switch to a different server';
 
     /**
+     * The aliases of the command.
+     *
+     * @var array
+     */
+    protected $aliases = [
+        'switch',
+    ];
+
+    /**
      * Execute the console command.
      *
      * @return void

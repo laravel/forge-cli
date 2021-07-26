@@ -16,6 +16,13 @@ abstract class Command extends BaseCommand
     use Concerns\InteractsWithIO;
 
     /**
+     * The aliases of the command.
+     *
+     * @var array
+     */
+    protected $aliases = [];
+
+    /**
      * The configuration repository.
      *
      * @var \App\Repositories\ConfigRepository
@@ -77,6 +84,8 @@ abstract class Command extends BaseCommand
         $this->remote = tap($remote)->resolveServerUsing(function () {
             return $this->currentServer();
         });
+
+        $this->setAliases($this->aliases);
     }
 
     /**

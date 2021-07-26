@@ -19,6 +19,15 @@ class ServerCurrentCommand extends Command
     protected $description = 'Determine your current server';
 
     /**
+     * The aliases of the command.
+     *
+     * @var array
+     */
+    protected $aliases = [
+        'current',
+    ];
+
+    /**
      * Execute the console command.
      *
      * @return void
