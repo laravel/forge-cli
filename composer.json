@@ -16,15 +16,9 @@
     "require": {
         "php": "^7.3|^8.0"
     },
-    "repositories": [
-        {
-            "type": "path",
-            "url": "./../forge-sdk"
-        }
-    ],
     "require-dev": {
         "laravel-zero/framework": "^8.9",
-        "laravel/forge-sdk": "dev-feat/forge-cli",
+        "laravel/forge-sdk": "^3.8",
         "mockery/mockery": "^1.4",
         "nunomaduro/larastan": "^0.7.10",
         "pestphp/pest": "^1.9",
