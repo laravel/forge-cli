@@ -1,4 +1,3 @@
 1. `login` command: consider using user/password
-2. `ssh` command: consider setup ssh key automatically
-3. `:logs` commands: consider offer an `--tail` option
-4. All commands: updates `--id` by names
+2. `:logs` commands: consider offer an `--tail` option
+3. `timeout` on do whiles.
