@@ -93,7 +93,7 @@ class RemoteRepository
 
             exec($this->ssh('-t exit 0'), $_, $exitCode);
 
-            abort_if($exitCode > 0, 1, 'Unable to connect to remote server. Have you configured an SSH Key?');
+            abort_if($exitCode > 0, 1, 'Unable to connect to remote server. Maybe run [ssh:configure] to configure an SSH Key?');
         });
     }
 
@@ -106,6 +106,7 @@ class RemoteRepository
     protected function ssh($command = null)
     {
         $options = collect([
+            'ConnectTimeout' => 5,
             'ControlMaster' => 'auto',
             'ControlPersist' => 100,
             'ControlPath' => $this->socketsPath.'/%h-%p-%r',
