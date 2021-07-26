@@ -27,8 +27,6 @@ class RemoteServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->singleton(RemoteRepository::class, function () {
-            $path = ($_SERVER['HOME'] ?? $_SERVER['USERPROFILE']);
-
             return isset($_ENV['APP_ENV']) && $_ENV['APP_ENV'] == 'testing'
                 ? tap(Mockery::mock(RemoteRepository::class), function ($mock) {
                     // @phpstan-ignore-next-line
