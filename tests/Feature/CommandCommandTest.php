@@ -35,9 +35,9 @@ it('can run commands on sites with an menu', function () {
     ]]);
 
     $this->artisan('command')
-        ->expectsChoice('Which site would you like to run the command on', 'pestphp.com', [
+        ->expectsChoice('<fg=yellow>‣</> <options=bold>Which Site Would You Like To Run The Command On</>', 'pestphp.com', [
             'pestphp.com', 'something.com',
-        ])->expectsQuestion('What command would you like to execute', 'php artisan clear')
+        ])->expectsQuestion('<fg=yellow>‣</> <options=bold>What Command Would You Like To Execute</>', 'php artisan clear')
             ->expectsOutput('==> Queuing Command')
             ->expectsOutput('==> Waiting For Command To Run')
             ->expectsOutput('==> Running')

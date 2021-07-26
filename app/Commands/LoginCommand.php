@@ -27,7 +27,7 @@ class LoginCommand extends Command
      */
     public function handle()
     {
-        $token = $this->ask('API Token');
+        $token = $this->askStep('Please enter the API Token');
 
         $this->config->set('token', $token);
 

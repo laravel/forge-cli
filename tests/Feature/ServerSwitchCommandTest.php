@@ -11,7 +11,7 @@ it('allows to switch the server context with an menu', function () {
     );
 
     $this->artisan('server:switch')
-        ->expectsChoice('Which server would you like to switch to', 'staging', [
+        ->expectsChoice('<fg=yellow>‣</> <options=bold>Which Server Would You Like To Switch To</>', 'staging', [
             'production', 'staging',
         ])->expectsOutput('==> Current Server Context Changed Successfully To [staging]')->run();
 

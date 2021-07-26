@@ -16,7 +16,7 @@ it('can retrieve logs from sites with an menu', function () {
         ]);
 
     $this->artisan('site:logs')
-        ->expectsChoice('Which site would you like to retrieve the logs from', 'pestphp.com', [
+        ->expectsChoice('<fg=yellow>‣</> <options=bold>Which Site Would You Like To Retrieve The Logs From</>', 'pestphp.com', [
             'pestphp.com', 'something.com',
         ])->expectsOutput('  ▕ [00:01] FOO')
         ->expectsOutput('  ▕ [00:02] BAR');

@@ -31,7 +31,7 @@ class CommandCommand extends Command
     {
         $siteId = $this->askForSite('Which site would you like to run the command on');
 
-        $command = $this->option('command') ?? $this->ask('What command would you like to execute');
+        $command = $this->option('command') ?? $this->askStep('What command would you like to execute');
 
         $this->step('Queuing Command');
 

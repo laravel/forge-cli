@@ -44,7 +44,7 @@ it('can deploy sites with an menu', function () {
     );
 
     $this->artisan('deploy')
-        ->expectsChoice('Which site would you like to deploy', 'pestphp.com', [
+        ->expectsChoice('<fg=yellow>‣</> <options=bold>Which Site Would You Like To Deploy</>', 'pestphp.com', [
             'pestphp.com', 'something.com',
         ])->expectsOutput('==> Queuing Deployment')
             ->expectsOutput('==> Waiting For Deployment To Start')

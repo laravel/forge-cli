@@ -45,7 +45,7 @@ trait InteractsWithIO
         $answers = collect($this->forge->sites($this->currentServer()->id));
 
         if (is_null($name)) {
-            $name = $this->choice($question, $answers->mapWithKeys(function ($resource) {
+            $name = $this->choiceStep($question, $answers->mapWithKeys(function ($resource) {
                 return [$resource->id => $resource->name];
             })->all());
         }
@@ -66,7 +66,7 @@ trait InteractsWithIO
         $answers = collect($this->forge->servers());
 
         if (is_null($name)) {
-            $name = $this->choice($question, $answers->mapWithKeys(function ($resource) {
+            $name = $this->choiceStep($question, $answers->mapWithKeys(function ($resource) {
                 return [$resource->id => $resource->name];
             })->all());
         }
@@ -98,5 +98,34 @@ trait InteractsWithIO
         $text = ucwords($text);
 
         $this->line('<fg=green>==></> <options=bold>'.$text.'</>');
+    }
+
+    /**
+     * Display a ask "step" message.
+     *
+     * @param  string  $question
+     * @param  string|null  $default
+     * @return mixed
+     */
+    public function askStep($question, $default = null)
+    {
+        $question = ucwords($question);
+
+        return $this->ask('<fg=yellow>‣</> <options=bold>'.$question.'</>', $default);
+    }
+
+    /**
+     * Display a ask "step" message.
+     *
+     * @param  string  $question
+     * @param  array  $choices
+     * @param  string|null  $default
+     * @return string|array
+     */
+    public function choiceStep($question, $choices, $default = null)
+    {
+        $question = ucwords($question);
+
+        return $this->choice('<fg=yellow>‣</> <options=bold>'.$question.'</>', $choices, $default);
     }
 }

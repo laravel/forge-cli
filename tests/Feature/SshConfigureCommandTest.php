@@ -30,10 +30,10 @@ it('can create ssh keys', function () {
     ], true)->once();
 
     $this->artisan('ssh:configure')
-        ->expectsChoice('Which key would you like to use', 0, [
+        ->expectsChoice('<fg=yellow>‣</> <options=bold>Which Key Would You Like To Use</>', 0, [
             '<comment>Create new key</comment>',
             '<comment>Reuse</comment> id_rsa.pub',
-        ])->expectsQuestion('What should the SSH Key be named', 'driesvints')
+        ])->expectsQuestion('<fg=yellow>‣</> <options=bold>What Should The SSH Key Be Named</>', 'driesvints')
         ->expectsOutput('==> Creating Key [driesvints_rsa.pub]')
         ->expectsOutput('==> Adding Key [driesvints_rsa.pub] With The Name [driesvints] To Server [production]')
         ->expectsOutput('==> SSH Key Based Secure Authentication Configured Successfully');
@@ -69,10 +69,10 @@ it('can reuse ssh keys', function () {
     ], true)->once();
 
     $this->artisan('ssh:configure')
-        ->expectsChoice('Which key would you like to use', '<comment>Reuse</comment> id_rsa.pub', [
+        ->expectsChoice('<fg=yellow>‣</> <options=bold>Which Key Would You Like To Use</>', '<comment>Reuse</comment> id_rsa.pub', [
             '<comment>Create new key</comment>',
             '<comment>Reuse</comment> id_rsa.pub',
-        ])->expectsQuestion('What should the SSH Key be named in Forge', 'driesvints')
+        ])->expectsQuestion('<fg=yellow>‣</> <options=bold>What Should The SSH Key Be Named In Forge</>', 'driesvints')
         ->expectsOutput('==> Adding Key [id_rsa.pub] With The Name [driesvints] To Server [production]')
         ->expectsOutput('==> SSH Key Based Secure Authentication Configured Successfully');
 });

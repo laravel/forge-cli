@@ -79,7 +79,7 @@ class SshConfigureCommand extends Command
                 return '<comment>Reuse</comment> '.str_replace($this->keys->keysPath().'/', '', $key);
             }))->values()->all();
 
-            $choice = $this->choice('Which key would you like to use', $choices);
+            $choice = $this->choiceStep('Which key would you like to use', $choices);
 
             $choice = collect($choices)->search($choice);
 
@@ -105,6 +105,6 @@ class SshConfigureCommand extends Command
             $question .= ' in Forge';
         }
 
-        return $this->option('name') ?: $this->ask($question, get_current_user());
+        return $this->option('name') ?: $this->askStep($question, get_current_user());
     }
 }
