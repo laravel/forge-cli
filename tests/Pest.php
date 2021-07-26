@@ -3,7 +3,9 @@
 use App\Clients\Forge;
 use App\Repositories\ConfigRepository;
 use App\Repositories\ForgeRepository;
+use App\Repositories\KeyRepository;
 use App\Repositories\RemoteRepository;
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\File;
 use LaravelZero\Framework\Testing\TestCase;
 use Spatie\Once;
@@ -24,7 +26,7 @@ uses(TestCase::class, CreatesApplication::class)
     ->beforeEach(function () {
         Once\Cache::flush();
 
-        File::deleteDirectory(base_path('tests/.laravel-forge'));
+        (new Filesystem)->deleteDirectory(base_path('tests/.laravel-forge'));
 
         $this->client = tap(Mockery::mock(Forge::class), function ($mock) {
             $mock->shouldReceive('setApiKey')->zeroOrMoreTimes();
@@ -32,13 +34,15 @@ uses(TestCase::class, CreatesApplication::class)
 
         $this->config = resolve(ConfigRepository::class)->set('token', '123123213');
 
+        $this->keys = resolve(KeyRepository::class);
+
         $this->forge = resolve(ForgeRepository::class)->setClient(
             $this->client
         );
 
         $this->remote = resolve(RemoteRepository::class);
     })->afterEach(function () {
-        File::deleteDirectory(base_path('tests/.laravel-forge'));
+        (new Filesystem)->deleteDirectory(base_path('tests/.laravel-forge'));
     })->in('Feature', 'Unit');
 
 /*
