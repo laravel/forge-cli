@@ -3,7 +3,6 @@
 namespace App\Commands;
 
 use App\Support\PhpVersion;
-use Laravel\Forge\Exceptions\ValidationException;
 
 class PhpRestartCommand extends Command
 {
@@ -60,13 +59,9 @@ class PhpRestartCommand extends Command
         if ($restarting = $this->confirm('While the <comment>[PHP '.$version.']</comment> service restarts, sites may become unavailable. Wish to proceed?')) {
             $this->step('Restarting PHP '.$version);
 
-            try {
-                $this->forge->rebootPHP($serverId, [
-                    'version' => 'php'.str_replace('.', '', $version),
-                ]);
-            } catch (ValidationException $e) {
-                abort(1, collect($e->errors())->first());
-            }
+            $this->forge->rebootPHP($serverId, [
+                'version' => 'php'.str_replace('.', '', $version),
+            ]);
         }
 
         return $restarting;

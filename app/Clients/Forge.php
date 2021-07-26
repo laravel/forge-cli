@@ -9,6 +9,13 @@ use Psr\Http\Message\ResponseInterface;
 class Forge extends BaseForge
 {
     /**
+     * Number of seconds a request is retried.
+     *
+     * @var int
+     */
+    public $timeout = 60;
+
+    /**
      * Get the server logs.
      *
      * @param  string|int  $serverId
@@ -80,6 +87,12 @@ class Forge extends BaseForge
     {
         if ($response->getStatusCode() >= 500) {
             Panic::abort($response->getBody());
+        }
+
+        if ($response->getStatusCode() == 422) {
+            $errors = json_decode((string) $response->getBody());
+
+            abort(1, collect($errors)->flatten()->first());
         }
 
         parent::handleRequestError($response);
