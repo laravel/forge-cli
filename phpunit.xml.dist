@@ -21,6 +21,10 @@
         <include>
             <directory suffix=".php">./app</directory>
         </include>
+        <exclude>
+              <file>./app/Clients/Forge.php</file>
+              <file>./app/Support/Time.php</file>
+        </exclude>
     </coverage>
     <php>
         <env name="APP_ENV" value="testing"/>
