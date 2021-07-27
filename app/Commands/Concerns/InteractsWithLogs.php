@@ -37,6 +37,28 @@ trait InteractsWithLogs
     }
 
     /**
+     * Shows the given daemon logs.
+     *
+     * @param  string|int  $daemonId
+     * @param  string  $user
+     * @return void
+     */
+    protected function showDaemonLogs($daemonId, $user)
+    {
+        abort_if($user == 'root', 1, 'Requesting logs from daemons run by [root] is not supported.');
+
+        [$exitCode, $content] = $this->remote->exec(
+            'cat /home/'.$user.'/.forge/daemon-'.$daemonId.'.log'
+        );
+
+        collect($content)->implode("\n");
+
+        abort_if($exitCode > 0, 1, 'The requested logs could not be found, or they are simply empty.');
+
+        $this->displayLogs(collect($content)->implode("\n"));
+    }
+
+    /**
      * Displays the given logs.
      *
      * @param  string  $logs

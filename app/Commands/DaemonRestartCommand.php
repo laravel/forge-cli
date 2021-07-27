@@ -9,7 +9,7 @@ class DaemonRestartCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'daemon:restart {daemon? : The daemon id}';
+    protected $signature = 'daemon:restart {daemon? : The daemon ID}';
 
     /**
      * The description of the command.
