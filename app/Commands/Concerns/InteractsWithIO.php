@@ -75,14 +75,35 @@ trait InteractsWithIO
     }
 
     /**
+     * Prompt the user for an "daemon" input.
+     *
+     * @param  string  $question
+     * @return string|int
+     */
+    public function askForDaemon($question)
+    {
+        $command = $this->argument('daemon');
+
+        $answers = collect($this->forge->daemons($this->currentServer()->id));
+
+        if (is_null($command)) {
+            $command = $this->choiceStep($question, $answers->mapWithKeys(function ($resource) {
+                return [$resource->id => $resource->command];
+            })->all());
+        }
+
+        return optional($answers->where('command', $command)->first())->id ?: $command;
+    }
+
+    /**
      * Display a "step" message.
      *
-     * @param  string  $text
+     * @param  string|array  $text
      * @return void
      */
     public function step($text)
     {
-        $text = ucwords($text);
+        $text = $this->formatStepText($text);
 
         $this->line('<fg=blue>==></> <options=bold>'.$text.'</>');
     }
@@ -90,12 +111,12 @@ trait InteractsWithIO
     /**
      * Display a successful "step" message.
      *
-     * @param  string  $text
+     * @param  string|array  $text
      * @return void
      */
     public function successfulStep($text)
     {
-        $text = ucwords($text);
+        $text = $this->formatStepText($text);
 
         $this->line('<fg=green>==></> <options=bold>'.$text.'</>');
     }
@@ -103,13 +124,13 @@ trait InteractsWithIO
     /**
      * Display a ask "step" message.
      *
-     * @param  string  $question
+     * @param  string|array  $question
      * @param  string|null  $default
      * @return mixed
      */
     public function askStep($question, $default = null)
     {
-        $question = ucwords($question);
+        $question = $this->formatStepText($question);
 
         return $this->ask('<fg=yellow>‣</> <options=bold>'.$question.'</>', $default);
     }
@@ -117,15 +138,36 @@ trait InteractsWithIO
     /**
      * Display a ask "step" message.
      *
-     * @param  string  $question
+     * @param  string|array  $question
      * @param  array  $choices
      * @param  string|null  $default
      * @return string|array
      */
     public function choiceStep($question, $choices, $default = null)
     {
-        $question = ucwords($question);
+        $question = $this->formatStepText($question);
 
         return $this->choice('<fg=yellow>‣</> <options=bold>'.$question.'</>', $choices, $default);
+    }
+
+    /**
+     * Formats a text step.
+     *
+     * @param  string|array  $text
+     * @return string
+     */
+    protected function formatStepText($text)
+    {
+        $parameters = [];
+
+        if (is_array($text)) {
+            $parameters = $text;
+            $text = array_shift($text);
+            unset($parameters[0]);
+        }
+
+        return sprintf(ucwords($text), ...collect($parameters)->map(function ($parameter) {
+            return '<comment>['.$parameter.']</comment>';
+        })->values()->all());
     }
 }
