@@ -11,5 +11,5 @@ it('can restart nginx', function () {
         ->expectsConfirmation(
             'While the <comment>[Nginx]</comment> service restarts, sites may become unavailable. Wish to proceed?',
             'yes',
-        )->expectsOutput('Nginx restart initiated successfully.');
+        )->expectsOutput('==> Nginx Restart Initiated Successfully.');
 });
