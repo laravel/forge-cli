@@ -22,7 +22,6 @@ it('can restart daemons', function () {
         ])->expectsOutput('==> Daemon Restart Initiated Successfully.');
 });
 
-
 it('can not restart daemons that are not running', function () {
     $this->client->shouldReceive('server')->andReturn(
         (object) ['id' => 1],
