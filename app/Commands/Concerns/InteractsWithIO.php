@@ -2,6 +2,8 @@
 
 namespace App\Commands\Concerns;
 
+use Symfony\Component\Console\Question\ChoiceQuestion;
+
 trait InteractsWithIO
 {
     /**
@@ -44,13 +46,13 @@ trait InteractsWithIO
 
         $answers = collect($this->forge->sites($this->currentServer()->id));
 
-        if (is_null($name)) {
-            $name = $this->choiceStep($question, $answers->mapWithKeys(function ($resource) {
-                return [$resource->id => $resource->name];
-            })->all());
+        if (! is_null($name)) {
+            return optional($answers->where('name', $name)->first())->id ?: $name;
         }
 
-        return optional($answers->where('name', $name)->first())->id ?: $name;
+        return $this->choiceStep($question, $answers->mapWithKeys(function ($resource) {
+            return [$resource->id => $resource->name];
+        })->all());
     }
 
     /**
@@ -65,13 +67,13 @@ trait InteractsWithIO
 
         $answers = collect($this->forge->servers());
 
-        if (is_null($name)) {
-            $name = $this->choiceStep($question, $answers->mapWithKeys(function ($resource) {
-                return [$resource->id => $resource->name];
-            })->all());
+        if (! is_null($name)) {
+            return optional($answers->where('name', $name)->first())->id ?: $name;
         }
 
-        return optional($answers->where('name', $name)->first())->id ?: $name;
+        return $this->choiceStep($question, $answers->mapWithKeys(function ($resource) {
+            return [$resource->id => $resource->name];
+        })->all());
     }
 
     /**
@@ -86,13 +88,13 @@ trait InteractsWithIO
 
         $answers = collect($this->forge->daemons($this->currentServer()->id));
 
-        if (is_null($command)) {
-            $command = $this->choiceStep($question, $answers->mapWithKeys(function ($resource) {
-                return [$resource->id => $resource->command];
-            })->all());
+        if (! is_null($command)) {
+            return optional($answers->where('command', $command)->first())->id ?: $command;
         }
 
-        return optional($answers->where('command', $command)->first())->id ?: $command;
+        return $this->choiceStep($question, $answers->mapWithKeys(function ($resource) {
+            return [$resource->id => $resource->command];
+        })->all());
     }
 
     /**
@@ -141,13 +143,24 @@ trait InteractsWithIO
      * @param  string|array  $question
      * @param  array  $choices
      * @param  string|null  $default
-     * @return string|array
+     * @return int
      */
     public function choiceStep($question, $choices, $default = null)
     {
         $question = $this->formatStepText($question);
 
-        return $this->choice('<fg=yellow>‣</> <options=bold>'.$question.'</>', $choices, $default);
+        $question = new class('<fg=yellow>‣</> <options=bold>'.$question.'</>', $choices, $default) extends ChoiceQuestion
+        {
+            /**
+             * Determines if the given array is associative.
+             */
+            public function isAssoc(array $array): bool
+            {
+                return true;
+            }
+        };
+
+        return (int) $this->output->askQuestion($question);
     }
 
     /**

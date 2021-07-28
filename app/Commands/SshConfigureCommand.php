@@ -81,9 +81,7 @@ class SshConfigureCommand extends Command
 
             $choice = $this->choiceStep('Which key would you like to use', $choices);
 
-            $choice = collect($choices)->search($choice);
-
-            if ($choice !== false) {
+            if ($choice > 0) {
                 $key = $localKeys->get($choice - 1);
             }
         }

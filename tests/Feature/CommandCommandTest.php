@@ -39,14 +39,13 @@ it('can run commands on sites with an menu', function () {
     ]]);
 
     $this->artisan('command')
-        ->expectsChoice('<fg=yellow>‣</> <options=bold>Which Site Would You Like To Run The Command On</>', 'pestphp.com', [
-            'pestphp.com', 'something.com',
-        ])->expectsQuestion('<fg=yellow>‣</> <options=bold>What Command Would You Like To Execute</>', 'php artisan clear')
-            ->expectsOutput('==> Queuing Command')
-            ->expectsOutput('==> Waiting For Command To Run')
-            ->expectsOutput('==> Running')
-            ->expectsOutput('  ▕ Compiled services and packages files removed!')
-            ->expectsOutput('==> Command Run Successfully.');
+        ->expectsQuestion('<fg=yellow>‣</> <options=bold>Which Site Would You Like To Run The Command On</>', 1)
+        ->expectsQuestion('<fg=yellow>‣</> <options=bold>What Command Would You Like To Execute</>', 'php artisan clear')
+        ->expectsOutput('==> Queuing Command')
+        ->expectsOutput('==> Waiting For Command To Run')
+        ->expectsOutput('==> Running')
+        ->expectsOutput('  ▕ Compiled services and packages files removed!')
+        ->expectsOutput('==> Command Run Successfully.');
 });
 
 it('can run commands with an option', function () {

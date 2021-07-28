@@ -44,14 +44,13 @@ it('can deploy sites with an menu', function () {
     );
 
     $this->artisan('deploy')
-        ->expectsChoice('<fg=yellow>‣</> <options=bold>Which Site Would You Like To Deploy</>', 'pestphp.com', [
-            'pestphp.com', 'something.com',
-        ])->expectsOutput('==> Queuing Deployment')
-            ->expectsOutput('==> Waiting For Deployment To Start')
-            ->expectsOutput('==> Deploying')
-            ->expectsOutput('  ▕ Installing composer dependencies...')
-            ->expectsOutput('  ▕ Restarting FPM...')
-            ->expectsOutput('==> Site Deployed Successfully. (8s)');
+        ->expectsQuestion('<fg=yellow>‣</> <options=bold>Which Site Would You Like To Deploy</>', 1)
+        ->expectsOutput('==> Queuing Deployment')
+        ->expectsOutput('==> Waiting For Deployment To Start')
+        ->expectsOutput('==> Deploying')
+        ->expectsOutput('  ▕ Installing composer dependencies...')
+        ->expectsOutput('  ▕ Restarting FPM...')
+        ->expectsOutput('==> Site Deployed Successfully. (8s)');
 });
 
 it('can deploy sites with an option', function () {

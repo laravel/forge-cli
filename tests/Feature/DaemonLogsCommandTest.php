@@ -20,10 +20,9 @@ it('can retrieve logs from daemons', function () {
         ->andReturn([0, "   [00:01] FOO\n[00:02] BAR\n   "]);
 
     $this->artisan('daemon:logs')
-        ->expectsChoice('<fg=yellow>‣</> <options=bold>Which Daemon Would You Like To Retrieve The Logs From</>', 'php8.0 artisan queue:work', [
-            'php7.4 artisan websockets:serve', 'php8.0 artisan queue:work',
-        ])->expectsOutput('  ▕ [00:01] FOO')
-          ->expectsOutput('  ▕ [00:02] BAR');
+        ->expectsQuestion('<fg=yellow>‣</> <options=bold>Which Daemon Would You Like To Retrieve The Logs From</>', 2)
+        ->expectsOutput('  ▕ [00:01] FOO')
+        ->expectsOutput('  ▕ [00:02] BAR');
 });
 
 it('can not retrieve logs when there is no log files', function () {
@@ -46,9 +45,7 @@ it('can not retrieve logs when there is no log files', function () {
         ->andReturn([1, '']);
 
     $this->artisan('daemon:logs')
-        ->expectsChoice('<fg=yellow>‣</> <options=bold>Which Daemon Would You Like To Retrieve The Logs From</>', 'php8.0 artisan queue:work', [
-            'php7.4 artisan websockets:serve', 'php8.0 artisan queue:work',
-        ]);
+        ->expectsQuestion('<fg=yellow>‣</> <options=bold>Which Daemon Would You Like To Retrieve The Logs From</>', 2);
 })->throws('The requested logs could not be found, or they are simply empty.');
 
 it('can not retrieve logs from daemons run by root', function () {
@@ -66,7 +63,5 @@ it('can not retrieve logs from daemons run by root', function () {
     );
 
     $this->artisan('daemon:logs')
-        ->expectsChoice('<fg=yellow>‣</> <options=bold>Which Daemon Would You Like To Retrieve The Logs From</>', 'php8.0 artisan queue:work', [
-            'php7.4 artisan websockets:serve', 'php8.0 artisan queue:work',
-        ]);
+        ->expectsQuestion('<fg=yellow>‣</> <options=bold>Which Daemon Would You Like To Retrieve The Logs From</>', 1);
 })->throws('Requesting logs from daemons run by [root] is not supported.');
