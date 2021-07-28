@@ -35,7 +35,7 @@ class SshCommand extends Command
 
         $server = $this->currentServer();
 
-        $this->step('Creating secure connection');
+        $this->step('Establishing secure connection');
 
         $this->remote->ensureSshIsConfigured();
 
