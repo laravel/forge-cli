@@ -56,7 +56,7 @@ class DeployCommand extends Command
 
         $deployment = null;
 
-        $this->displayEventOutput($eventId, function () use ($server, $site, $deploymentId, &$deployment) {
+        $this->displayEventOutput($site->username, $eventId, function () use ($server, $site, $deploymentId, &$deployment) {
             $deployment = $this->forge->siteDeployment($server->id, $site->id, $deploymentId);
 
             return $deployment->status == 'deploying';

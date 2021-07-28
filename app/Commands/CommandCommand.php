@@ -53,7 +53,9 @@ class CommandCommand extends Command
 
         $eventId = $this->findEventId('Running Custom Command.');
 
-        $this->displayEventOutput($eventId, function () use ($server, $siteId, &$command) {
+        $username = $this->forge->site($server->id, $siteId)->username;
+
+        $this->displayEventOutput($username, $eventId, function () use ($server, $siteId, &$command) {
             $command = collect($this->forge->getSiteCommand($server->id, $siteId, $command->id))->first();
 
             return $command->status == 'running';

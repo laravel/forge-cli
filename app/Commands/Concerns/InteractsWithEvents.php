@@ -14,11 +14,12 @@ trait InteractsWithEvents
     /**
      * Displays the event output while the given condition is "true".
      *
+     * @param  string  $username
      * @param  string|int  $eventId
      * @param  callable|null  $while
      * @return void
      */
-    protected function displayEventOutput($eventId, $while = null)
+    protected function displayEventOutput($username, $eventId, $while = null)
     {
         if ($while) {
             $this->outputBuffer[$eventId] = [];
@@ -32,7 +33,8 @@ trait InteractsWithEvents
             }
 
             [$exitCode, $output] = $this->remote->exec(sprintf(
-                'cat /home/forge/.forge/provision-%s.output',
+                'cat /home/%s/.forge/provision-%s.output',
+                $username,
                 $eventId
             ));
 
@@ -55,7 +57,7 @@ trait InteractsWithEvents
             }
         } while ($while && call_user_func($while));
 
-        $while ? $this->displayEventOutput($eventId) : $this->line('');
+        $while ? $this->displayEventOutput($username, $eventId) : $this->line('');
     }
 
     /**
