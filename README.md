@@ -21,7 +21,7 @@ This repository contains the CLI client for interacting with Laravel Forge. To l
 
 You may install the Forge CLI as a global Composer dependency:
 
-````
+```bash
 composer global config repositories.forge-cli vcs https://github.com/laravel/forge-cli
 composer global require laravel/forge-cli
 ```
