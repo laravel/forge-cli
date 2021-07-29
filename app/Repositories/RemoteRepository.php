@@ -2,6 +2,9 @@
 
 namespace App\Repositories;
 
+use Illuminate\Support\Arr;
+use Symfony\Component\Process\Process;
+
 class RemoteRepository
 {
     /**
@@ -46,9 +49,44 @@ class RemoteRepository
     {
         $this->ensureSshIsConfigured();
 
-        passthru($this->ssh($command), $exitCode);
+        passthru($this->ssh('"'.$command.'"'), $exitCode);
 
         return (int) $exitCode;
+    }
+
+    /**
+     * Tails the given file, and runs the given callback on each output.
+     *
+     * @param  array|string  $files
+     * @param  callable  $callback
+     * @param  array  $options
+     * @return int
+     */
+    public function tail($files, $callback, $options = [])
+    {
+        $this->ensureSshIsConfigured();
+
+        $files = Arr::wrap($files);
+
+        $command = collect(explode(' ', $this->ssh()))->merge([
+            'tail',
+            '-n',
+            '500',
+            ...$options,
+            '$(ls -1td '.implode(' ', $files).' 2>/dev/null | head -n1)',
+        ])->values()->all();
+
+        $process = tap(new Process($command), function ($process) {
+            $process->setTimeout(null);
+
+            $process->start();
+        });
+
+        $callback($process);
+
+        return $process->getExitCode() == 255
+            ? 0 // Control + C
+            : $process->getExitCode();
     }
 
     /**

@@ -24,38 +24,71 @@ trait InteractsWithLogs
     /**
      * Shows the given site logs.
      *
-     * @param  string|int  $siteId
+     * @param  \Laravel\Forge\Resources\Site  $site
+     * @param  bool  $tail
      * @return void
      */
-    protected function showSiteLogs($siteId)
+    protected function showSiteLogs($site, $tail)
     {
         $this->step('Retrieving the latest site logs');
 
-        $logs = $this->forge->siteLogs($this->currentServer()->id, $siteId);
+        switch (strtolower($site->app)) {
+            case 'wordpress':
+                $files = ['public/wp-content/*.log', 'wp-content/*.log'];
+                break;
+            default:
+                $files = ['shared/storage/logs/*.log', 'storage/logs/*.log'];
+                break;
+        }
 
-        $this->displayLogs($logs->content);
+        $sitePath = '/home/'.$site->username.'/'.$site->name;
+
+        $sitePath = basename($sitePath) == 'current'
+            ? basename($sitePath)
+            : $sitePath;
+
+        $this->showRemoteLogs(collect($files)->map(function ($file) use ($sitePath) {
+            return $sitePath.'/'.$file;
+        })->all(), $tail);
     }
 
     /**
      * Shows the given daemon logs.
      *
      * @param  string|int  $daemonId
-     * @param  string  $user
+     * @param  string  $username
+     * @param  bool  $tail
      * @return void
      */
-    protected function showDaemonLogs($daemonId, $user)
+    protected function showDaemonLogs($daemonId, $username, $tail)
     {
-        abort_if($user == 'root', 1, 'Requesting logs from daemons run by [root] is not supported.');
+        abort_if($username == 'root', 1, 'Requesting logs from daemons run by [root] is not supported.');
 
-        [$exitCode, $content] = $this->remote->exec(
-            'cat /home/'.$user.'/.forge/daemon-'.$daemonId.'.log'
-        );
+        $this->step('Retrieving the latest daemon logs');
 
-        collect($content)->implode("\n");
+        $this->showRemoteLogs('/home/'.$username.'/.forge/daemon-'.$daemonId.'.log', $tail);
+    }
 
-        abort_if($exitCode > 0, 1, 'The requested logs could not be found, or they are simply empty.');
+    /**
+     * Shows remote logs.
+     *
+     * @param  array|string  $files
+     * @param  bool  $tail
+     * @return void
+     */
+    protected function showRemoteLogs($files, $tail)
+    {
+        $this->newLine();
 
-        $this->displayLogs(collect($content)->implode("\n"));
+        $exitCode = $this->remote->tail($files, function ($output) {
+            foreach ($output as $type => $logs) {
+                $this->displayLogs(collect($logs)->implode("\n"));
+            }
+        }, $tail ? ['-f'] : []);
+
+        abort_if($exitCode > 0 && $exitCode < 255, 1, 'The requested logs could not be found, or they are simply empty.');
+
+        $this->line('');
     }
 
     /**
@@ -68,17 +101,10 @@ trait InteractsWithLogs
     {
         Str::of($logs)
             ->trim()
-            ->whenEmpty(function () {
-                abort(1, 'The requested logs could not be found, or they are simply empty.');
-            })->whenNotEmpty(function ($logs) {
-                $this->line('');
-
-                $logs->explode("\n")
-                    ->each(function ($line) {
-                        $this->line("  <fg=#6C7280>▕</> $line");
-                    });
-
-                $this->line('');
+            ->whenNotEmpty(function ($logs) {
+                $logs->explode("\n")->each(function ($line) {
+                    $this->line("  <fg=#6C7280>▕</> $line");
+                });
             });
     }
 }

@@ -1,42 +1,113 @@
 <?php
 
-it('can retrieve logs from sites with an menu', function () {
-    $this->client->shouldReceive('sites')->andReturn([
+it('can retrieve logs from sites', function () {
+    $this->client->shouldReceive('server')->andReturn(
+        (object) ['id' => 1],
+    );
+
+    $this->client->shouldReceive('sites')->once()->andReturn([
         (object) ['id' => 1, 'name' => 'pestphp.com'],
         (object) ['id' => 2, 'name' => 'something.com'],
     ]);
 
-    $this->client->shouldReceive('server')->andReturn(
-        (object) ['id' => 1, 'name' => 'production'],
+    $this->client->shouldReceive('site')->once()->with(1, 2)->andReturn(
+        (object) ['id' => 1, 'name' => 'something.com', 'username' => 'forge', 'app' => 'php'],
     );
 
-    $this->client->shouldReceive('siteLogs')
-        ->andReturn((object) [
-            'content' => "   [00:01] FOO\n[00:02] BAR\n   ",
-        ]);
+    $files = [
+        '/home/forge/something.com/shared/storage/logs/*.log',
+        '/home/forge/something.com/storage/logs/*.log',
+    ];
+
+    $this->remote->shouldReceive('tail')
+        ->once()
+        ->with($files, Mockery::type(Closure::class), [])
+        ->andReturn(0);
 
     $this->artisan('site:logs')
-        ->expectsQuestion('<fg=yellow>‣</> <options=bold>Which Site Would You Like To Retrieve The Logs From</>', 1)
-        ->expectsOutput('  ▕ [00:01] FOO')
-        ->expectsOutput('  ▕ [00:02] BAR');
+        ->expectsQuestion('<fg=yellow>‣</> <options=bold>Which Site Would You Like To Retrieve The Logs From</>', 2);
 });
 
-it('can retrieve logs from sites with an option', function () {
+it('can tail logs from sites', function () {
     $this->client->shouldReceive('server')->andReturn(
-        (object) ['id' => 1, 'name' => 'production'],
+        (object) ['id' => 1],
     );
 
-    $this->client->shouldReceive('sites')->andReturn([
+    $this->client->shouldReceive('sites')->once()->andReturn([
         (object) ['id' => 1, 'name' => 'pestphp.com'],
         (object) ['id' => 2, 'name' => 'something.com'],
     ]);
 
-    $this->client->shouldReceive('siteLogs')
-        ->andReturn((object) [
-            'content' => "   [00:01] FOO\n[00:02] BAR\n   ",
-        ]);
+    $this->client->shouldReceive('site')->once()->with(1, 1)->andReturn(
+        (object) ['id' => 1, 'name' => 'pestphp.com', 'username' => 'forge', 'app' => 'wordpress'],
+    );
 
-    $this->artisan('site:logs', ['site' => 'pestphp.com'])
-        ->expectsOutput('  ▕ [00:01] FOO')
-        ->expectsOutput('  ▕ [00:02] BAR');
+    $files = [
+        '/home/forge/pestphp.com/public/wp-content/*.log',
+        '/home/forge/pestphp.com/wp-content/*.log',
+    ];
+
+    $this->remote->shouldReceive('tail')
+        ->once()
+        ->with($files, Mockery::type(Closure::class), ['-f'])
+        ->andReturn(0);
+
+    $this->artisan('site:logs', ['--tail' => true])
+        ->expectsQuestion('<fg=yellow>‣</> <options=bold>Which Site Would You Like To Retrieve The Logs From</>', 1);
 });
+
+it('exits with 0 exit code on control + c', function () {
+    $this->client->shouldReceive('server')->andReturn(
+        (object) ['id' => 1],
+    );
+
+    $this->client->shouldReceive('sites')->once()->andReturn([
+        (object) ['id' => 1, 'name' => 'pestphp.com'],
+        (object) ['id' => 2, 'name' => 'something.com'],
+    ]);
+
+    $this->client->shouldReceive('site')->once()->with(1, 1)->andReturn(
+        (object) ['id' => 1, 'name' => 'pestphp.com', 'username' => 'forge', 'app' => 'wordpress'],
+    );
+
+    $files = [
+        '/home/forge/pestphp.com/public/wp-content/*.log',
+        '/home/forge/pestphp.com/wp-content/*.log',
+    ];
+
+    $this->remote->shouldReceive('tail')
+        ->once()
+        ->with($files, Mockery::type(Closure::class), ['-f'])
+        ->andReturn(255);
+
+    $this->artisan('site:logs', ['--tail' => true])
+        ->expectsQuestion('<fg=yellow>‣</> <options=bold>Which Site Would You Like To Retrieve The Logs From</>', 1);
+});
+
+it('displays errors', function () {
+    $this->client->shouldReceive('server')->andReturn(
+        (object) ['id' => 1],
+    );
+
+    $this->client->shouldReceive('sites')->once()->andReturn([
+        (object) ['id' => 1, 'name' => 'pestphp.com'],
+        (object) ['id' => 2, 'name' => 'something.com'],
+    ]);
+
+    $this->client->shouldReceive('site')->once()->with(1, 2)->andReturn(
+        (object) ['id' => 1, 'name' => 'something.com', 'username' => 'user-in-isolation', 'app' => 'php'],
+    );
+
+    $files = [
+        '/home/user-in-isolation/something.com/shared/storage/logs/*.log',
+        '/home/user-in-isolation/something.com/storage/logs/*.log',
+    ];
+
+    $this->remote->shouldReceive('tail')
+        ->once()
+        ->with($files, Mockery::type(Closure::class), ['-f'])
+        ->andReturn(1);
+
+    $this->artisan('site:logs', ['--tail' => true])
+        ->expectsQuestion('<fg=yellow>‣</> <options=bold>Which Site Would You Like To Retrieve The Logs From</>', 2);
+})->throws('The requested logs could not be found, or they are simply empty.');

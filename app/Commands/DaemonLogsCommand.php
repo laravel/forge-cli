@@ -11,7 +11,8 @@ class DaemonLogsCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'daemon:logs {daemon? : The daemon ID}';
+    protected $signature = 'daemon:logs {daemon? : The daemon ID}
+    `                                   {--tail : Monitor the log changes in realtime}';
 
     /**
      * The description of the command.
@@ -29,10 +30,8 @@ class DaemonLogsCommand extends Command
     {
         $daemonId = $this->askForDaemon('Which daemon would you like to retrieve the logs from');
 
-        $this->step('Retrieving the latest daemon logs');
-
         $daemon = $this->forge->daemon($this->currentServer()->id, $daemonId);
 
-        $this->showDaemonLogs($daemon->id, $daemon->user);
+        $this->showDaemonLogs($daemon->id, $daemon->user, $this->option('tail'));
     }
 }
