@@ -34,6 +34,16 @@ class PhpVersion
     }
 
     /**
+     * Gets the binary.
+     *
+     * @return string
+     */
+    public function binary()
+    {
+        return 'php'.$this->release();
+    }
+
+    /**
      * Gets the release.
      *
      * @return string
