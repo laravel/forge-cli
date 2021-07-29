@@ -36,11 +36,9 @@ After you have generated an API token, you should authenticate with your Forge a
 forge login
 ```
 
-### SSH Key based secure authentication
+### SSH Key Authentication
 
-Before you perform any tasks using Forge CLI, you should ensure you have configured SSH Key based secure authentication to your servers.
-
-You may test that SSH is configured by running the `ssh:test` command:
+Before performing any tasks using the Forge CLI, you should ensure that you have added an SSH key to your servers so that you can securely connect to them. You may test that SSH is configured correctly by running the `ssh:test` command:
 
 ```bash
 forge ssh:test
