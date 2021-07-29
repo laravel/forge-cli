@@ -28,9 +28,11 @@ class SshConfigureCommand extends Command
      */
     public function handle()
     {
-        if (! is_null($server = $this->argument('server'))) {
+        $serverId = $this->askForServer('Which server would you like to configure the SSH Key based secure authentication');
+
+        if ($this->currentServer()->id != $serverId) {
             $this->call('server:switch', [
-                'server' => $server,
+                'server' => $serverId,
             ]);
         }
 
