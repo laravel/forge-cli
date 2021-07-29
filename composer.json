@@ -14,7 +14,8 @@
         }
     ],
     "require": {
-        "php": "^7.3|^8.0"
+        "php": "^7.3|^8.0",
+        "phpseclib/phpseclib": "^3.0"
     },
     "require-dev": {
         "laravel-zero/framework": "^8.9",
@@ -22,7 +23,6 @@
         "mockery/mockery": "^1.4",
         "nunomaduro/larastan": "^0.7.10",
         "pestphp/pest": "^1.9",
-        "phpseclib/phpseclib": "^3.0",
         "spatie/once": "^2.2"
     },
     "autoload": {

@@ -3,7 +3,7 @@
 namespace App\Repositories;
 
 use Illuminate\Support\Facades\File;
-use phpseclib3\Crypt\RSA;
+use Phar;
 use Symfony\Component\Finder\Finder;
 
 class KeyRepository
@@ -36,15 +36,16 @@ class KeyRepository
     {
         abort_if($this->exists($name), 1, 'The name has already been taken.');
 
-        /** @var \phpseclib3\Crypt\RSA\PrivateKey $private */
-        $private = RSA::createKey();
-        /** @var \phpseclib3\Crypt\RSA\PrivateKey $public */
-        $public = $private->getPublicKey();
+        $basePath = empty($phar = Phar::running(false))
+            ? base_path()
+            : dirname($phar, 2);
 
-        File::put($this->keysPath.'/'.$this->privateKeyName($name), (string) $private);
-        File::put($this->keysPath.'/'.($localName = $this->publicKeyName($name)), (string) $public);
+        $keys = json_decode(exec($basePath.'/scripts/keysFactory.php'), true);
 
-        return [$localName, (string) $public];
+        File::put($this->keysPath.'/'.$this->privateKeyName($name), $keys['private']);
+        File::put($this->keysPath.'/'.($localName = $this->publicKeyName($name)), $keys['public']);
+
+        return [$localName, $keys['public']];
     }
 
     /**
