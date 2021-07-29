@@ -51,7 +51,6 @@ it('can reuse ssh keys', function () {
         (object) ['id' => 2, 'name' => 'staging'],
     ]);
 
-
     $this->forge->shouldReceive('server')
         ->once()
         ->with(2)
