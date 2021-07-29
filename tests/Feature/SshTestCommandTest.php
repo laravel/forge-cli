@@ -1,9 +1,12 @@
 <?php
 
 it('can test ssh connections', function () {
-    $this->remote->shouldReceive('ensureSshIsConfigured');
+    $this->remote->shouldReceive('ensureSshIsConfigured')->once();
 
-    $this->artisan('ssh:test')->assertExitCode(0);
+    $this->artisan('ssh:test')
+        ->assertExitCode(0)
+        ->expectsOutput('==> Establishing Secure Connection')
+        ->expectsOutput('==> SSH Key Based Secure Authentication Is Configured');
 });
 
 it('can not test ssh connections when ssh key is missing', function () {
