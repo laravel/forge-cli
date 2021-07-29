@@ -68,13 +68,11 @@ class RemoteRepository
 
         $files = Arr::wrap($files);
 
-        $command = collect(explode(' ', $this->ssh()))->merge([
-            'tail',
-            '-n',
-            '500',
-            ...$options,
-            '$(ls -1td '.implode(' ', $files).' 2>/dev/null | head -n1)',
-        ])->values()->all();
+        $command = collect(explode(' ', $this->ssh()))->merge(['tail', '-n', '500'])
+            ->merge($options)
+            ->push('$(ls -1td '.implode(' ', $files).' 2>/dev/null | head -n1)')
+            ->values()
+            ->all();
 
         $process = tap(new Process($command), function ($process) {
             $process->setTimeout(null);
