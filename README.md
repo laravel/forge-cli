@@ -85,6 +85,7 @@ After you have configured SSH key authentication, you may use the https://forge.
 
 ```bash
 forge ssh
+forge ssh staging
 ```
 
 ### Resources
