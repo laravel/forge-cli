@@ -3,7 +3,7 @@
 ## [Unreleased](https://github.com/laravel/forge-cli/compare/v0.0.1...)
 
 
-## [v0.0.1 (2021-XX-XX)](https://github.com/laravel/forge-cli/TODO)
+## v0.1.0 (2021-07-30)
 
 ### Added
-- First ([XXXXX](https://github.com/laravel/forge-cli/TODO))
+- Initial pre-release
