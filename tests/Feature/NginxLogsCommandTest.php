@@ -27,7 +27,7 @@ it('can retrieve access logs from nginx', function () {
             'content' => "   [00:01] FOO\n[00:02] BAR\n   ",
         ]);
 
-    $this->artisan('nginx:logs', ['--type' => 'access'])
+    $this->artisan('nginx:logs', ['type' => 'access'])
         ->expectsOutput('  ▕ [00:01] FOO')
         ->expectsOutput('  ▕ [00:02] BAR');
 });
@@ -37,5 +37,5 @@ it('can not retrieve logs from unknown types', function () {
         (object) ['id' => 1, 'name' => 'production'],
     );
 
-    $this->artisan('nginx:logs', ['--type' => 'something']);
-})->throws('Logs type must be either "error" or "access".');
+    $this->artisan('nginx:logs', ['type' => 'something']);
+})->throws('Log type must be either "error" or "access".');

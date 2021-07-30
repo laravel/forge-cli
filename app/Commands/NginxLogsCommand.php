@@ -11,7 +11,7 @@ class NginxLogsCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'nginx:logs {--type=error}';
+    protected $signature = 'nginx:logs {type=error : The log type}';
 
     /**
      * The description of the command.
@@ -27,9 +27,9 @@ class NginxLogsCommand extends Command
      */
     public function handle()
     {
-        $type = $this->option('type');
+        $type = $this->argument('type');
 
-        abort_if(! in_array($type, ['error', 'access']), 1, 'Logs type must be either "error" or "access".');
+        abort_if(! in_array($type, ['error', 'access']), 1, 'Log type must be either "error" or "access".');
 
         $this->showLogs('nginx_'.$type);
     }
