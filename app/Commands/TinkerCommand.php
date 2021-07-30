@@ -18,7 +18,7 @@ class TinkerCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Tinker with an site';
+    protected $description = 'Tinker with a site';
 
     /**
      * Execute the console command.
