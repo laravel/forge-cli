@@ -109,7 +109,7 @@ forge php:status 8.0 # Visualize PHP 8.0 logs
 
 #### Viewing Resources Logs
 
-You may also view logs directly from the command-line. To do so, use the `{service}:logs` command:
+You may also view logs directly from the command-line. To do so, use the `{resource}:logs` command:
 
 ```bash
 forge daemon:logs
@@ -126,7 +126,7 @@ forge php:logs 8.0       # Visualize PHP 8.0 logs
 
 #### Restarting Resources
 
-Resources may be "restarted" using the `{service}:restart` command:
+Resources may be "restarted" using the `{resource}:restart` command:
 
 ```bash
 forge daemon:restart
@@ -137,6 +137,16 @@ forge nginx:restart
 
 forge php:restart     # Restarts PHP (default server version)
 forge php:restart 8.0 # Restarts PHP 8.0
+```
+
+#### Connecting To Resources Locally
+
+You may use the `{resource}:shell` command to quickly access a command line shell that lets you interact with your resource:
+
+```bash
+forge database:shell
+forge database:shell my-database-name
+forge database:shell my-database-name --user=my-user
 ```
 
 ### Sites

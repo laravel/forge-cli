@@ -164,6 +164,19 @@ trait InteractsWithIO
     }
 
     /**
+     * Display a secret "step" message.
+     *
+     * @param  array|string  $question
+     * @return mixed
+     */
+    public function secretStep($question)
+    {
+        $question = $this->formatStepText($question);
+
+        return $this->secret('<fg=yellow>‣</> <options=bold>'.$question.'</>');
+    }
+
+    /**
      * Formats a text step.
      *
      * @param  string|array  $text
