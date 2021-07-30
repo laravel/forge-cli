@@ -1,9 +1,6 @@
-# Release Notes
+## [Unreleased](https://github.com/laravel/forge-cli/compare/v1.0.0...)
 
-## [Unreleased](https://github.com/laravel/forge-cli/compare/v0.0.1...)
-
-
-## v0.1.0 (2021-07-30)
+## [v1.0.0 (2021-XX-XX)](https://github.com/laravel/forge-cli/TODO)
 
 ### Added
-- Initial pre-release
+- First ([XXXXX](https://github.com/laravel/forge-cli/TODO))
