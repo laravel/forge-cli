@@ -16,7 +16,7 @@ class SshCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Start a SSH session';
+    protected $description = 'Start an SSH session';
 
     /**
      * Execute the console command.
