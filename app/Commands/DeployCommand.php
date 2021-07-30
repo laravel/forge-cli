@@ -20,7 +20,7 @@ class DeployCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Deploy an site';
+    protected $description = 'Deploy a site';
 
     /**
      * Execute the console command.
