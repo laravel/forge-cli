@@ -43,7 +43,7 @@ class SshCommand extends Command
 
         $exitCode = $this->remote->passthru();
 
-        abort_if($exitCode == 255, $exitCode, 'Unable to connect to remove server. Have you configured an SSH Key?');
+        abort_if($exitCode == 255, $exitCode, 'Unable to connect to remove server. Have you configured an SSH key?');
 
         return $exitCode;
     }

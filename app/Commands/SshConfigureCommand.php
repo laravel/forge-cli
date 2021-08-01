@@ -19,7 +19,7 @@ class SshConfigureCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Configure SSH Key based secure authentication';
+    protected $description = 'Configure SSH key based secure authentication';
 
     /**
      * Execute the console command.
@@ -28,7 +28,7 @@ class SshConfigureCommand extends Command
      */
     public function handle()
     {
-        $serverId = $this->askForServer('Which server would you like to configure the SSH Key based secure authentication');
+        $serverId = $this->askForServer('Which server would you like to configure the SSH key based secure authentication');
 
         if ($this->currentServer()->id != $serverId) {
             $this->call('server:switch', [
@@ -40,7 +40,7 @@ class SshConfigureCommand extends Command
 
         $this->ensureKeyExists($this->getKeyName($key), $key);
 
-        $this->successfulStep('SSH Key based secure authentication configured successfully');
+        $this->successfulStep('SSH key based secure authentication configured successfully');
     }
 
     /**
@@ -99,7 +99,7 @@ class SshConfigureCommand extends Command
      */
     protected function getKeyName($key)
     {
-        $question = 'What should the SSH Key be named';
+        $question = 'What should the SSH key be named';
 
         if ($key) {
             $question .= ' in Forge';

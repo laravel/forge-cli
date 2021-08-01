@@ -25,6 +25,6 @@ class DaemonStatusCommand extends Command
      */
     public function handle()
     {
-        abort(1, 'Checking a daemon status is not yet supported');
+        abort(1, 'Checking a daemon\'s status is not yet supported');
     }
 }

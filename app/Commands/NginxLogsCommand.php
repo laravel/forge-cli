@@ -29,7 +29,7 @@ class NginxLogsCommand extends Command
     {
         $type = $this->argument('type');
 
-        abort_if(! in_array($type, ['error', 'access']), 1, 'Log type must be either "error" or "access".');
+        abort_if(! in_array($type, ['error', 'access']), 1, 'Log type must be "error" or "access".');
 
         $this->showLogs('nginx_'.$type);
     }

@@ -15,7 +15,7 @@ trait InteractsWithPhp
 
         // @phpstan-ignore-next-line
         if (empty($server->phpVersion)) {
-            abort(1, 'PHP is not installed in this server.');
+            abort(1, 'PHP is not installed on this server.');
         }
     }
 }

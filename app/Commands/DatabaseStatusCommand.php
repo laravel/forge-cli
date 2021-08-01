@@ -42,6 +42,6 @@ class DatabaseStatusCommand extends Command
             abort(1, 'Checking the status of ['.$databaseType.'] databases is not supported.');
         }
 
-        $this->successfulStep('The database is up & running');
+        $this->successfulStep('The database is up and running');
     }
 }

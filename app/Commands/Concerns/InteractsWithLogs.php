@@ -86,7 +86,7 @@ trait InteractsWithLogs
             }
         }, $tail ? ['-f'] : []);
 
-        abort_if($exitCode > 0 && $exitCode < 255, 1, 'The requested logs could not be found, or they are simply empty.');
+        abort_if($exitCode > 0 && $exitCode < 255, 1, 'The requested logs could not be found or they are empty.');
 
         $this->line('');
     }

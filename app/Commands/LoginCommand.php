@@ -27,7 +27,7 @@ class LoginCommand extends Command
      */
     public function handle()
     {
-        $token = $this->askStep('Please enter the API Token');
+        $token = $this->askStep('Please enter your Forge API token');
 
         $this->config->set('token', $token);
 

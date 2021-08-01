@@ -36,7 +36,7 @@ class DeployLogsCommand extends Command
             $siteId,
         ))->first())['id'];
 
-        abort_if(is_null($lastDeploymentId), 1, 'No deployments have been made in this site.');
+        abort_if(is_null($lastDeploymentId), 1, 'This site has not been deployed.');
 
         $this->displayLogs(
             $this->forge->siteDeploymentOutput($this->currentServer()->id, $siteId, $lastDeploymentId)

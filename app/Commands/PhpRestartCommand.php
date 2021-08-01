@@ -37,7 +37,7 @@ class PhpRestartCommand extends Command
         $versions = ['5.6', '7.0', '7.1', '7.2', '7.3', '7.4', '8.0'];
 
         if (! is_null($version) && ! in_array($version, $versions)) {
-            abort(1, 'PHP version needs to be one of those values: '.implode(', ', $versions).'.');
+            abort(1, 'PHP version needs to be one of these values: '.implode(', ', $versions).'.');
         }
 
         $version = $version ?: PhpVersion::of($server->phpVersion)->release();
@@ -56,7 +56,7 @@ class PhpRestartCommand extends Command
      */
     public function restartPhp($serverId, $version)
     {
-        if ($restarting = $this->confirm('While the <comment>[PHP '.$version.']</comment> service restarts, sites may become unavailable. Wish to proceed?')) {
+        if ($restarting = $this->confirm('The sites may become unavailable while the <comment>[PHP '.$version.']</comment> service restarts. Continue?')) {
             $this->step('Restarting PHP '.$version);
 
             $this->forge->rebootPHP($serverId, [

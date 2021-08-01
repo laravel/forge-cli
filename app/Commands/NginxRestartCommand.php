@@ -40,7 +40,7 @@ class NginxRestartCommand extends Command
      */
     public function restartNginx($serverId)
     {
-        if ($restarting = $this->confirm('While the <comment>[Nginx]</comment> service restarts, sites may become unavailable. Wish to proceed?')) {
+        if ($restarting = $this->confirm('The sites may become unavailable while the <comment>[Nginx]</comment> service restarts. Continue?')) {
             $this->step('Restarting Nginx');
 
             $this->forge->rebootNginx($serverId);

@@ -57,7 +57,7 @@ class DatabaseShellCommand extends Command
             return $this->connectToPostgres($server->id, $user, $password, $database);
         }
 
-        abort(1, 'Start a ['.$databaseType.'] database shell is not supported.');
+        abort(1, 'Starting a ['.$databaseType.'] database shell is not supported.');
     }
 
     /**

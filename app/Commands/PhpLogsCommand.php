@@ -38,7 +38,7 @@ class PhpLogsCommand extends Command
         abort_if(
             ! is_null($version) && ! in_array($version, $versions),
             1,
-            'PHP version needs to be one of those values: '.implode(', ', $versions).'.'
+            'PHP version needs to be one of these values: '.implode(', ', $versions).'.'
         );
 
         $serverPhpVersion = $this->currentServer()->phpVersion;

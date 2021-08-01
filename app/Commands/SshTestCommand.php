@@ -18,7 +18,7 @@ class SshTestCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Test the SSH Key based secure authentication';
+    protected $description = 'Test the SSH key based secure authentication connection';
 
     /**
      * Execute the console command.
@@ -37,6 +37,6 @@ class SshTestCommand extends Command
 
         $this->remote->ensureSshIsConfigured();
 
-        $this->successfulStep('SSH Key based secure authentication is configured');
+        $this->successfulStep('SSH key based secure authentication is configured');
     }
 }

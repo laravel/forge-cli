@@ -37,7 +37,7 @@ class PhpStatusCommand extends Command
         $versions = ['5.6', '7.0', '7.1', '7.2', '7.3', '7.4', '8.0'];
 
         if (! is_null($version) && ! in_array($version, $versions)) {
-            abort(1, 'PHP version needs to be one of those values: '.implode(', ', $versions).'.');
+            abort(1, 'PHP version needs to be one of these values: '.implode(', ', $versions).'.');
         }
 
         $version = $version ?: PhpVersion::of($server->phpVersion)->release();
