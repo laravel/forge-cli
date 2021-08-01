@@ -19,7 +19,7 @@ class SiteLogsCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Retrieve the latest Site log messages';
+    protected $description = 'Retrieve the latest site log messages';
 
     /**
      * Execute the console command.

@@ -18,7 +18,7 @@ class DeployLogsCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Retrieve the latest Deployment log messages';
+    protected $description = 'Retrieve the latest deployment log messages';
 
     /**
      * Execute the console command.
