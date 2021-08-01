@@ -14,7 +14,7 @@ class PhpLogsCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'php:logs {version? : The PHP Version}';
+    protected $signature = 'php:logs {version? : The PHP version}';
 
     /**
      * The description of the command.

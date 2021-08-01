@@ -11,7 +11,7 @@ class SshConfigureCommand extends Command
      */
     protected $signature = 'ssh:configure
         {server? : The server name}
-        {--key= : The path to the Public Key}
+        {--key= : The path to the public key}
         {--name= : The key name on Forge}';
 
     /**

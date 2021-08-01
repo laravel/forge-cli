@@ -13,7 +13,7 @@ class PhpStatusCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'php:status {version? : The PHP Version}';
+    protected $signature = 'php:status {version? : The PHP version}';
 
     /**
      * The description of the command.

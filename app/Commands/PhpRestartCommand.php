@@ -13,7 +13,7 @@ class PhpRestartCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'php:restart {version? : The PHP Version}';
+    protected $signature = 'php:restart {version? : The PHP version}';
 
     /**
      * The description of the command.
