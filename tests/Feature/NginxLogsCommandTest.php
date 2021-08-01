@@ -38,4 +38,4 @@ it('can not retrieve logs from unknown types', function () {
     );
 
     $this->artisan('nginx:logs', ['type' => 'something']);
-})->throws('Log type must be either "error" or "access".');
+})->throws('Log type must be "error" or "access".');

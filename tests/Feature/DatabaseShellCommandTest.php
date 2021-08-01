@@ -99,4 +99,4 @@ it('can not open shell connections when there is not database service', function
     );
 
     $this->artisan('database:shell');
-})->throws('No databases installed in this server.');
+})->throws('No databases installed on this server.');

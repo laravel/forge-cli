@@ -110,4 +110,4 @@ it('displays errors', function () {
 
     $this->artisan('site:logs', ['--tail' => true])
         ->expectsQuestion('<fg=yellow>‣</> <options=bold>Which Site Would You Like To Retrieve The Logs From</>', 2);
-})->throws('The requested logs could not be found, or they are simply empty.');
+})->throws('The requested logs could not be found or they are empty.');

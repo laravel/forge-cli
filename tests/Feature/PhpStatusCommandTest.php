@@ -26,7 +26,7 @@ it('can not display the status when php is incorrect', function () {
     );
 
     $this->artisan('php:status', ['version' => '2.0']);
-})->throws('PHP version needs to be one of those values: 5.6, 7.0, 7.1, 7.2, 7.3, 7.4, 8.0.');
+})->throws('PHP version needs to be one of these values: 5.6, 7.0, 7.1, 7.2, 7.3, 7.4, 8.0.');
 
 it('can not display the status when there is no php', function () {
     $this->client->shouldReceive('server')->andReturn(
@@ -34,4 +34,4 @@ it('can not display the status when there is no php', function () {
     );
 
     $this->artisan('php:status');
-})->throws('PHP is not installed in this server.');
+})->throws('PHP is not installed on this server.');

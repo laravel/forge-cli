@@ -9,7 +9,7 @@ it('can restart nginx', function () {
 
     $this->artisan('nginx:restart')
         ->expectsConfirmation(
-            'While the <comment>[Nginx]</comment> service restarts, sites may become unavailable. Wish to proceed?',
+            'The sites may become unavailable while the <comment>[Nginx]</comment> service restarts. Continue?',
             'yes',
         )->expectsOutput('==> Nginx Restart Initiated Successfully.');
 });

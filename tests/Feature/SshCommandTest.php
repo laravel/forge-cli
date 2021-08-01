@@ -34,4 +34,4 @@ it('can not create ssh connections when ssh key is missing', function () {
     $this->remote->shouldReceive('passthru')->andReturn(255);
 
     $this->artisan('ssh');
-})->throws('Unable to connect to remove server. Have you configured an SSH Key?');
+})->throws('Unable to connect to remove server. Have you configured an SSH key?');

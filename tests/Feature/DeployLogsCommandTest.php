@@ -58,4 +58,4 @@ it('can not display the status when there is no deployments', function () {
     $this->client->shouldReceive('siteDeployments')->with(1, 1)->once()->andReturn([]);
 
     $this->artisan('deploy:logs', ['site' => 1]);
-})->throws('No deployments have been made in this site.');
+})->throws('This site has not been deployed.');

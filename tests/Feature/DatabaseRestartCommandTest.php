@@ -9,7 +9,7 @@ it('can restart mysql databases', function () {
 
     $this->artisan('database:restart')
         ->expectsConfirmation(
-            'While the <comment>[MySQL]</comment> service restarts, the database may become unavailable. Wish to proceed?',
+            'The database may become unavailable while the <comment>[MySQL]</comment> service restarts. Continue?',
             'yes',
         )->expectsOutput('==> Database Restart Initiated Successfully');
 });
@@ -23,7 +23,7 @@ it('can restart postgres databases', function () {
 
     $this->artisan('database:restart')
         ->expectsConfirmation(
-            'While the <comment>[PostgreSQL]</comment> service restarts, the database may become unavailable. Wish to proceed?',
+            'The database may become unavailable while the <comment>[PostgreSQL]</comment> service restarts. Continue?',
             'yes'
         )->expectsOutput('==> Database Restart Initiated Successfully');
 });
@@ -34,7 +34,7 @@ it('can not restart when there is no database', function () {
     );
 
     $this->artisan('database:restart');
-})->throws('No databases installed in this server.');
+})->throws('No databases installed on this server.');
 
 it('can not restart unknown databases', function () {
     $this->client->shouldReceive('server')->andReturn(

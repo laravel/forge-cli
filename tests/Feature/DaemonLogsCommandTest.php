@@ -91,7 +91,7 @@ it('displays errors', function () {
 
     $this->artisan('daemon:logs', ['--tail' => true])
         ->expectsQuestion('<fg=yellow>‣</> <options=bold>Which Daemon Would You Like To Retrieve The Logs From</>', 1);
-})->throws('The requested logs could not be found, or they are simply empty.');
+})->throws('The requested logs could not be found or they are empty.');
 
 it('can not retrieve or tail logs from daemons run by root', function () {
     $this->client->shouldReceive('server')->andReturn(

@@ -7,7 +7,7 @@ it('can display the database status running', function () {
 
     $this->remote->shouldReceive('exec')->andReturn([0]);
 
-    $this->artisan('database:status')->expectsOutput('==> The Database Is Up & Running');
+    $this->artisan('database:status')->expectsOutput('==> The Database Is Up And Running');
 });
 
 it('can display the database status as inactive', function () {
@@ -26,4 +26,4 @@ it('can not display the status when there is no database', function () {
     );
 
     $this->artisan('database:status');
-})->throws('No databases installed in this server.');
+})->throws('No databases installed on this server.');
