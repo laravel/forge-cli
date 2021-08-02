@@ -22,7 +22,10 @@ it('can retrieve logs from sites', function () {
     $this->remote->shouldReceive('tail')
         ->once()
         ->with($files, Mockery::type(Closure::class), [])
-        ->andReturn(0);
+        ->andReturn([0, [
+            '[00:01] FOO',
+            '[00:02] BAR',
+        ]]);
 
     $this->artisan('site:logs')
         ->expectsQuestion('<fg=yellow>‣</> <options=bold>Which Site Would You Like To Retrieve The Logs From</>', 2);
@@ -50,7 +53,10 @@ it('can tail logs from sites', function () {
     $this->remote->shouldReceive('tail')
         ->once()
         ->with($files, Mockery::type(Closure::class), ['-f'])
-        ->andReturn(0);
+        ->andReturn([0, [
+            '[00:01] FOO',
+            '[00:02] BAR',
+        ]]);
 
     $this->artisan('site:logs', ['--tail' => true])
         ->expectsQuestion('<fg=yellow>‣</> <options=bold>Which Site Would You Like To Retrieve The Logs From</>', 1);
@@ -78,7 +84,10 @@ it('exits with 0 exit code on control + c', function () {
     $this->remote->shouldReceive('tail')
         ->once()
         ->with($files, Mockery::type(Closure::class), ['-f'])
-        ->andReturn(255);
+        ->andReturn([255, [
+            '[00:01] FOO',
+            '[00:02] BAR',
+        ]]);
 
     $this->artisan('site:logs', ['--tail' => true])
         ->expectsQuestion('<fg=yellow>‣</> <options=bold>Which Site Would You Like To Retrieve The Logs From</>', 1);
@@ -106,7 +115,9 @@ it('displays errors', function () {
     $this->remote->shouldReceive('tail')
         ->once()
         ->with($files, Mockery::type(Closure::class), ['-f'])
-        ->andReturn(1);
+        ->andReturn([1, [
+            'ls: error',
+        ]]);
 
     $this->artisan('site:logs', ['--tail' => true])
         ->expectsQuestion('<fg=yellow>‣</> <options=bold>Which Site Would You Like To Retrieve The Logs From</>', 2);

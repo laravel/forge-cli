@@ -29,6 +29,13 @@ class RemoteRepository
     protected $serverResolver = null;
 
     /**
+     * Holds the sanitizable output.
+     *
+     * @var string|null
+     */
+    protected $sanitizableOutput = null;
+
+    /**
      * Creates a new repository instance.
      *
      * @param  string  $socketsPath
@@ -60,17 +67,19 @@ class RemoteRepository
      * @param  array|string  $files
      * @param  callable  $callback
      * @param  array  $options
-     * @return int
+     * @return array
      */
     public function tail($files, $callback, $options = [])
     {
         $this->ensureSshIsConfigured();
 
-        $files = Arr::wrap($files);
+        $files = collect(Arr::wrap($files));
+
+        $this->ensuresFilesAreTailable($files);
 
         $command = collect(explode(' ', $this->ssh()))->merge(['tail', '-n', '500'])
             ->merge($options)
-            ->push('$(ls -1td '.implode(' ', $files).' 2>/dev/null | head -n1)')
+            ->push('$(ls -1td '.$files->implode(' ').' 2>/dev/null | head -n1)')
             ->values()
             ->all();
 
@@ -80,11 +89,21 @@ class RemoteRepository
             $process->start();
         });
 
-        $callback($process);
+        $output = [];
 
-        return $process->getExitCode() == 255
+        foreach ($process as $line) {
+            if (strpos($line, $this->sanitizableOutput) !== 0) {
+                $output[] = $line;
+
+                $callback($line);
+            }
+        }
+
+        $exitCode = $process->getExitCode() == 255
             ? 0 // Control + C
             : $process->getExitCode();
+
+        return [(int) $exitCode, $output];
     }
 
     /**
@@ -99,7 +118,11 @@ class RemoteRepository
 
         exec($this->ssh($command), $output, $exitCode);
 
-        return [(int) $exitCode, $output];
+        if (isset($output[0]) && strpos($output[0], $this->sanitizableOutput) === 0) {
+            unset($output[0]);
+        }
+
+        return [(int) $exitCode, array_values($output)];
     }
 
     /**
@@ -127,9 +150,26 @@ class RemoteRepository
                 $this->server = call_user_func($this->serverResolver);
             }
 
-            exec($this->ssh('-t exit 0'), $_, $exitCode);
+            $this->sanitizableOutput = exec($this->ssh('-t exit 0'), $_, $exitCode);
 
             abort_if($exitCode > 0, 1, 'Unable to connect to remote server. Maybe run [ssh:configure] to configure an SSH Key?');
+        });
+    }
+
+    /**
+     * Ensures the given files are tailable.
+     *
+     * @param  \Illuminate\Support\Collection  $files
+     * @return void
+     */
+    protected function ensuresFilesAreTailable($files)
+    {
+        $files->reject(function ($file) {
+            [$exitCode] = $this->exec('ls -1td '.$file);
+
+            return $exitCode > 0;
+        })->whenEmpty(function () {
+            abort(1, 'The requested logs could not be found or they are empty.');
         });
     }
 

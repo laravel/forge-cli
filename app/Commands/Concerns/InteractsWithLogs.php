@@ -80,13 +80,15 @@ trait InteractsWithLogs
     {
         $this->newLine();
 
-        $exitCode = $this->remote->tail($files, function ($output) {
-            foreach ($output as $type => $logs) {
-                $this->displayLogs(collect($logs)->implode("\n"));
-            }
+        [$exitCode, $output] = $this->remote->tail($files, function ($output) {
+            $this->displayLogs($output);
         }, $tail ? ['-f'] : []);
 
-        abort_if($exitCode > 0 && $exitCode < 255, 1, 'The requested logs could not be found or they are empty.');
+        abort_if(
+            empty($output) || ($exitCode > 0 && $exitCode < 255),
+            1,
+            'The requested logs could not be found or they are empty.'
+        );
 
         $this->line('');
     }
