@@ -44,7 +44,7 @@ class RemoteServiceProvider extends ServiceProvider
     {
         $path = ($_SERVER['HOME'] ?? $_SERVER['USERPROFILE']);
 
-        $config = "$path/laravel-forge";
+        $config = "$path/.laravel-forge";
 
         if (! File::isDirectory($config)) {
             File::makeDirectory($config);
