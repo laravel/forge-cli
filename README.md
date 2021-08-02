@@ -1,4 +1,6 @@
-<p align="center"><img src="/art/readme.png" alt="Logo Laravel Forge CLI" style="width:70%;"></p>
+<p align="center">
+    <img src="/art/readme.png" alt="Logo Laravel Forge CLI preview" style="width:70%;">
+</p>
 
 <p align="center">
 <a href="https://github.com/laravel/forge-cli/actions"><img src="https://github.com/laravel/forge-cli/workflows/tests/badge.svg" alt="Build Status"></a>
