@@ -48,7 +48,7 @@ it('can tail logs from daemons', function () {
             '[00:02] BAR',
         ]]);
 
-    $this->artisan('daemon:logs', ['--tail' => true])
+    $this->artisan('daemon:logs', ['--follow' => true])
         ->expectsQuestion('<fg=yellow>‣</> <options=bold>Which Daemon Would You Like To Retrieve The Logs From</>', 1);
 });
 
@@ -74,7 +74,7 @@ it('exits with 0 exit code on control + c', function () {
             '[00:02] BAR',
         ]]);
 
-    $this->artisan('daemon:logs', ['--tail' => true])
+    $this->artisan('daemon:logs', ['--follow' => true])
         ->assertExitCode(0)
         ->expectsQuestion('<fg=yellow>‣</> <options=bold>Which Daemon Would You Like To Retrieve The Logs From</>', 1);
 });
@@ -98,7 +98,7 @@ it('displays errors', function () {
         ->with('/home/forge/.forge/daemon-1.log', Mockery::type(Closure::class), ['-f'])
         ->andReturn(1);
 
-    $this->artisan('daemon:logs', ['--tail' => true])
+    $this->artisan('daemon:logs', ['--follow' => true])
         ->expectsQuestion('<fg=yellow>‣</> <options=bold>Which Daemon Would You Like To Retrieve The Logs From</>', 1);
 })->throws('The requested logs could not be found or they are empty.');
 

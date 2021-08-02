@@ -25,10 +25,10 @@ trait InteractsWithLogs
      * Shows the given site logs.
      *
      * @param  \Laravel\Forge\Resources\Site  $site
-     * @param  bool  $tail
+     * @param  bool  $follow
      * @return void
      */
-    protected function showSiteLogs($site, $tail)
+    protected function showSiteLogs($site, $follow)
     {
         $this->step('Retrieving the latest site logs');
 
@@ -49,7 +49,7 @@ trait InteractsWithLogs
 
         $this->showRemoteLogs(collect($files)->map(function ($file) use ($sitePath) {
             return $sitePath.'/'.$file;
-        })->all(), $tail);
+        })->all(), $follow);
     }
 
     /**
@@ -57,32 +57,32 @@ trait InteractsWithLogs
      *
      * @param  string|int  $daemonId
      * @param  string  $username
-     * @param  bool  $tail
+     * @param  bool  $follow
      * @return void
      */
-    protected function showDaemonLogs($daemonId, $username, $tail)
+    protected function showDaemonLogs($daemonId, $username, $follow)
     {
         abort_if($username == 'root', 1, 'Requesting logs from daemons run by [root] is not supported.');
 
         $this->step('Retrieving the latest daemon logs');
 
-        $this->showRemoteLogs('/home/'.$username.'/.forge/daemon-'.$daemonId.'.log', $tail);
+        $this->showRemoteLogs('/home/'.$username.'/.forge/daemon-'.$daemonId.'.log', $follow);
     }
 
     /**
      * Shows remote logs.
      *
      * @param  array|string  $files
-     * @param  bool  $tail
+     * @param  bool  $follow
      * @return void
      */
-    protected function showRemoteLogs($files, $tail)
+    protected function showRemoteLogs($files, $follow)
     {
         $this->newLine();
 
         [$exitCode, $output] = $this->remote->tail($files, function ($output) {
             $this->displayLogs($output);
-        }, $tail ? ['-f'] : []);
+        }, $follow ? ['-f'] : []);
 
         abort_if(
             empty($output) || ($exitCode > 0 && $exitCode < 255),

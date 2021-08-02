@@ -12,7 +12,7 @@ class SiteLogsCommand extends Command
      * @var string
      */
     protected $signature = 'site:logs {site? : The site name}
-                                      {--tail : Monitor the log changes in realtime}';
+                                      {--f|follow : Monitor the log changes in realtime}';
 
     /**
      * The description of the command.
@@ -32,6 +32,6 @@ class SiteLogsCommand extends Command
 
         $site = $this->forge->site($this->currentServer()->id, $siteId);
 
-        $this->showSiteLogs($site, $this->option('tail'));
+        $this->showSiteLogs($site, $this->option('follow'));
     }
 }

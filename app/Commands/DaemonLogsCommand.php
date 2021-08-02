@@ -12,7 +12,7 @@ class DaemonLogsCommand extends Command
      * @var string
      */
     protected $signature = 'daemon:logs {daemon? : The daemon ID}
-    `                                   {--tail : Monitor the log changes in realtime}';
+    `                                   {--f|follow : Monitor the log changes in realtime}';
 
     /**
      * The description of the command.
@@ -32,6 +32,6 @@ class DaemonLogsCommand extends Command
 
         $daemon = $this->forge->daemon($this->currentServer()->id, $daemonId);
 
-        $this->showDaemonLogs($daemon->id, $daemon->user, $this->option('tail'));
+        $this->showDaemonLogs($daemon->id, $daemon->user, $this->option('follow'));
     }
 }
