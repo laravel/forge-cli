@@ -1,6 +1,7 @@
 <?php
 
 use App\Clients\Forge;
+use App\Commands\Command;
 use App\Repositories\ConfigRepository;
 use App\Repositories\ForgeRepository;
 use App\Repositories\KeyRepository;
@@ -41,6 +42,10 @@ uses(TestCase::class, CreatesApplication::class)
         );
 
         $this->remote = resolve(RemoteRepository::class);
+
+        Command::resolveLatestVersionUsing(function () {
+            return config('app.version');
+        });
     })->afterEach(function () {
         (new Filesystem)->deleteDirectory(base_path('tests/.laravel-forge'));
     })->in('Feature', 'Unit');

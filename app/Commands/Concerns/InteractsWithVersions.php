@@ -5,13 +5,20 @@ namespace App\Commands\Concerns;
 trait InteractsWithVersions
 {
     /**
+     * The latest version resolver.
+     *
+     * @var callable|null
+     */
+    protected static $latestVersionResolver = null;
+
+    /**
      * Warns the user about the latest version of Forge CLI.
      *
      * @return void
      */
     protected function ensureLatestVersion()
     {
-        $current = 'v' . config('app.version');
+        $current = 'v'.config('app.version');
 
         if (version_compare($remote = $this->getLatestVersion(), $current) > 0) {
             $this->warnStep(['You are using an outdated version %s of Forge CLI. Please update to %s.', $current, $remote]);
@@ -25,7 +32,7 @@ trait InteractsWithVersions
      */
     protected function getLatestVersion()
     {
-        $resolver = function () {
+        $resolver = static::$latestVersionResolver ?? function () {
             $package = json_decode(file_get_contents(
                 'https://packagist.org/p2/laravel/forge-cli.json'
             ), true);
@@ -48,5 +55,16 @@ trait InteractsWithVersions
         }
 
         return $this->config->get('latest_version');
+    }
+
+    /**
+     * Sets the latest version resolver.
+     *
+     * @param  callable  $resolver
+     * @return void
+     */
+    public static function resolveLatestVersionUsing($resolver)
+    {
+        static::$latestVersionResolver = $resolver;
     }
 }

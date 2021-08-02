@@ -61,7 +61,7 @@ class ConfigRepository
      * @param string $key
      * @param mixed  $default
      *
-     * @return array|int|string
+     * @return array|int|string|null
      */
     public function get($key, $default = null)
     {
