@@ -10,10 +10,13 @@ use App\Support\Time;
 use Laravel\Forge\Forge;
 use Laravel\Forge\Resources\Server;
 use LaravelZero\Framework\Commands\Command as BaseCommand;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 
 abstract class Command extends BaseCommand
 {
-    use Concerns\InteractsWithIO;
+    use Concerns\InteractsWithIO,
+        Concerns\InteractsWithVersions;
 
     /**
      * The aliases of the command.
@@ -86,6 +89,20 @@ abstract class Command extends BaseCommand
         });
 
         $this->setAliases($this->aliases);
+    }
+
+    /**
+     * Execute the console command.
+     *
+     * @param  \Symfony\Component\Console\Input\InputInterface  $input
+     * @param  \Symfony\Component\Console\Output\OutputInterface  $output
+     * @return int
+     */
+    protected function execute(InputInterface $input, OutputInterface $output)
+    {
+        return tap(parent::execute($input, $output), function () {
+            $this->ensureLatestVersion();
+        });
     }
 
     /**

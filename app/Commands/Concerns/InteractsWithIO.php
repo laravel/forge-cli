@@ -124,6 +124,19 @@ trait InteractsWithIO
     }
 
     /**
+     * Display a warn "step" message.
+     *
+     * @param  string|array  $text
+     * @return void
+     */
+    public function warnStep($text)
+    {
+        $text = $this->formatStepText($text);
+
+        $this->line('<fg=yellow>==></> <options=bold>'.$text.'</>');
+    }
+
+    /**
      * Display a ask "step" message.
      *
      * @param  string|array  $question
