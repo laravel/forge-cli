@@ -1,6 +1,5 @@
 <p align="center">
-    <img src="/art/header.png" alt="Laravel Forge CLI header with logo">
-    <img src="/art/readme.png" alt="Logo Laravel Forge CLI" style="width:70%;">
+    <img src="/art/readme.png" alt="Logo Laravel Forge CLI preview" style="width:70%;">
 </p>
 
 <p align="center">
