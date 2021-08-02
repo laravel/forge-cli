@@ -11,7 +11,7 @@ trait InteractsWithVersions
      */
     protected function ensureLatestVersion()
     {
-        $current = 'v' . config('app.version');
+        $current = 'v'.config('app.version');
 
         if (version_compare($remote = $this->getLatestVersion(), $current) > 0) {
             $this->warnStep(['You are using an outdated version %s of Forge CLI. Please update to %s.', $current, $remote]);
