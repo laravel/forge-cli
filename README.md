@@ -115,7 +115,7 @@ You may also view logs directly from the command-line. To do so, use the `{resou
 
 ```bash
 forge daemon:logs
-forge daemon:logs --tail # Visualize logs in realtime
+forge daemon:logs --follow # Visualize logs in realtime
 
 forge database:logs
 

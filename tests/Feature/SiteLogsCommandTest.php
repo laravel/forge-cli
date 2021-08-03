@@ -58,7 +58,7 @@ it('can tail logs from sites', function () {
             '[00:02] BAR',
         ]]);
 
-    $this->artisan('site:logs', ['--tail' => true])
+    $this->artisan('site:logs', ['--follow' => true])
         ->expectsQuestion('<fg=yellow>‣</> <options=bold>Which Site Would You Like To Retrieve The Logs From</>', 1);
 });
 
@@ -89,7 +89,7 @@ it('exits with 0 exit code on control + c', function () {
             '[00:02] BAR',
         ]]);
 
-    $this->artisan('site:logs', ['--tail' => true])
+    $this->artisan('site:logs', ['--follow' => true])
         ->expectsQuestion('<fg=yellow>‣</> <options=bold>Which Site Would You Like To Retrieve The Logs From</>', 1);
 });
 
@@ -119,6 +119,6 @@ it('displays errors', function () {
             'ls: error',
         ]]);
 
-    $this->artisan('site:logs', ['--tail' => true])
+    $this->artisan('site:logs', ['--follow' => true])
         ->expectsQuestion('<fg=yellow>‣</> <options=bold>Which Site Would You Like To Retrieve The Logs From</>', 2);
 })->throws('The requested logs could not be found or they are empty.');
