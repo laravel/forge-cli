@@ -10,7 +10,7 @@
 
 ### Added
 - Improvements on `site:logs` and `daemon:logs` commands ([b1ca9ce](https://github.com/laravel/forge-cli/commit/b1ca9ce90a318c28d0a8423396ffd6b19025c68c))
-- Warns users when not using the latest version ([83f89bf](https://github.com/laravel/forge-cli/commit/83f89bf615f3f71b4f2c1f8231835ea5f451e08a)[7e39417](https://github.com/laravel/forge-cli/commit/7e39417b713867bc060715a03b535843c69e67ad))
+- Warns users when not using the latest version ([83f89bf](https://github.com/laravel/forge-cli/commit/83f89bf615f3f71b4f2c1f8231835ea5f451e08a), [7e39417](https://github.com/laravel/forge-cli/commit/7e39417b713867bc060715a03b535843c69e67ad))
 
 ### Fixed
 - Grammar mistakes ([639b49a](https://github.com/laravel/forge-cli/commit/639b49a56e0b6238f84a569c63bd55ffb025d876), [51eb4b3](https://github.com/laravel/forge-cli/commit/51eb4b3fff921c64e0e693c7370c552726dceff1), [f4d41c2](https://github.com/laravel/forge-cli/commit/f4d41c2d67939f42566ab11b446a7e51a7e836ce), [a26cadd](https://github.com/laravel/forge-cli/commit/a26cadddb14f305b36a9cd0594c1ae6f2bc1e4bc))
