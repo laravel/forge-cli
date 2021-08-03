@@ -16,9 +16,15 @@ trait InteractsWithLogs
     {
         $this->step('Retrieving the latest logs');
 
-        $logs = $this->forge->logs($this->currentServer()->id, $type);
+        $logs = $this->forge->logs($this->currentServer()->id, $type)->content;
 
-        $this->displayLogs($logs->content);
+        abort_if(empty($logs), 1, 'The requested logs could not be found or they are empty.');
+
+        $this->newLine();
+
+        $this->displayLogs($logs);
+
+        $this->newLine();
     }
 
     /**
