@@ -80,6 +80,7 @@ class RemoteRepository
         $command = collect(explode(' ', $this->ssh()))->merge(['tail', '-n', '500'])
             ->merge($options)
             ->push('$(ls -1td '.$files->implode(' ').' 2>/dev/null | head -n1)')
+            ->filter()
             ->values()
             ->all();
 
@@ -92,7 +93,7 @@ class RemoteRepository
         $output = [];
 
         foreach ($process as $line) {
-            if (strpos($line, $this->sanitizableOutput) !== 0) {
+            if ($this->sanitizableOutput && strpos($line, $this->sanitizableOutput) !== 0) {
                 $output[] = $line;
 
                 $callback($line);
@@ -118,7 +119,7 @@ class RemoteRepository
 
         exec($this->ssh($command), $output, $exitCode);
 
-        if (isset($output[0]) && strpos($output[0], $this->sanitizableOutput) === 0) {
+        if ($this->sanitizableOutput && isset($output[0]) && strpos($output[0], $this->sanitizableOutput) === 0) {
             unset($output[0]);
         }
 
