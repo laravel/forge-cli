@@ -1,4 +1,10 @@
-## [Unreleased](https://github.com/laravel/forge-cli/compare/v0.1.2...master)
+## [Unreleased](https://github.com/laravel/forge-cli/compare/v0.1.3...master)
+
+## [v0.1.3 (2021-08-03)](https://github.com/laravel/forge-cli/compare/v0.1.2...v0.1.3)
+
+### Fixed
+- Commands based on `tail` operations failing ([286d58b](https://github.com/laravel/forge-cli/commit/286d58b38f78c2cb429d2bc83892bf024be01c83))
+
 
 ## [v0.1.2 (2021-08-02)](https://github.com/laravel/forge-cli/compare/v0.1.1...v0.1.2)
 
