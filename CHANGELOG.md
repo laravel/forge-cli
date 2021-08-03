@@ -1,4 +1,16 @@
-## [Unreleased](https://github.com/laravel/forge-cli/compare/v0.1.3...master)
+## [Unreleased](https://github.com/laravel/forge-cli/compare/v0.1.4...master)
+
+## [v0.1.4 (2021-08-03)](https://github.com/laravel/forge-cli/compare/v0.1.3...v0.1.4)
+
+### Added
+- Runtime errors display next steps ([aced4f9](https://github.com/laravel/forge-cli/commit/aced4f9d7f50fa22e683ce49111d56d7e14ac3ab))
+
+### Changed
+- `--tail` option got renamed to `--follow` ([#8](https://github.com/laravel/forge-cli/pull/8))
+
+### Fixed
+- Empty logs now display feedback ([998da4d](https://github.com/laravel/forge-cli/commit/998da4d145c83b89bdef01c838391adc7c8c9fb6))
+
 
 ## [v0.1.3 (2021-08-03)](https://github.com/laravel/forge-cli/compare/v0.1.2...v0.1.3)
 
