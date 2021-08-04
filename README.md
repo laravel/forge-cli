@@ -83,7 +83,7 @@ forge ssh:configure
 forge ssh:configure --key=/path/to/public/key.pub --name=name-in-forge
 ```
 
-After you have configured SSH key authentication, you may use the https://forge.laravel.com/docs/1.0/servers/recipes.html`ssh` command to create a secure connection to your server:
+After you have configured SSH key authentication, you may use the `ssh` command to create a secure connection to your server:
 
 ```bash
 forge ssh
