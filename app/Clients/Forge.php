@@ -16,6 +16,18 @@ class Forge extends BaseForge
     public $timeout = 60;
 
     /**
+     * Get the collection of servers.
+     *
+     * @return \Laravel\Forge\Resources\Server[]
+     */
+    public function servers()
+    {
+        return collect(parent::servers())->filter(function ($server) {
+            return $server->revoked == false;
+        })->values()->all();
+    }
+
+    /**
      * Get the server logs.
      *
      * @param  string|int  $serverId
