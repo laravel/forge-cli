@@ -1,4 +1,10 @@
-## [Unreleased](https://github.com/laravel/forge-cli/compare/v0.1.4...master)
+## [Unreleased](https://github.com/laravel/forge-cli/compare/v0.1.5...master)
+
+## [v0.1.5 (2021-08-04)](https://github.com/laravel/forge-cli/compare/v0.1.4...v0.1.5)
+
+### Fixed
+- Archived servers appearing on `server:list` command ([b941187](https://github.com/laravel/forge-cli/commit/b94118770b2344b6cacf2fb13f9dbcc027be0375))
+- Commands based on `tail` operations failing ([bd5dc8a](https://github.com/laravel/forge-cli/commit/bd5dc8a878192326f320b48ad55b0f9db08b2888))
 
 ## [v0.1.4 (2021-08-03)](https://github.com/laravel/forge-cli/compare/v0.1.3...v0.1.4)
 
