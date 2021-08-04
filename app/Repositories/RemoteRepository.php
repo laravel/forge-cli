@@ -93,11 +93,13 @@ class RemoteRepository
         $output = [];
 
         foreach ($process as $line) {
-            if ($this->sanitizableOutput && strpos($line, $this->sanitizableOutput) !== 0) {
-                $output[] = $line;
-
-                $callback($line);
+            if ($this->sanitizableOutput && strpos($line, $this->sanitizableOutput) === 0) {
+                continue;
             }
+
+            $output[] = $line;
+
+            $callback($line);
         }
 
         $exitCode = $process->getExitCode() == 255
