@@ -50,6 +50,12 @@ trait InteractsWithIO
             return optional($answers->where('name', $name)->first())->id ?: $name;
         }
 
+        if ($answers->containsOneItem()) {
+            $this->step('Selected [<comment>'. $answers->first()->id .'</comment>] '. $answers->first()->name);
+
+            return $answers->first()->id;
+        }
+
         return $this->choiceStep($question, $answers->mapWithKeys(function ($resource) {
             return [$resource->id => $resource->name];
         })->all());
@@ -71,6 +77,12 @@ trait InteractsWithIO
             return optional($answers->where('name', $name)->first())->id ?: $name;
         }
 
+        if ($answers->containsOneItem()) {
+            $this->step('Selected [<comment>'. $answers->first()->id .'</comment>] '. $answers->first()->name);
+
+            return $answers->first()->id;
+        }
+
         return $this->choiceStep($question, $answers->mapWithKeys(function ($resource) {
             return [$resource->id => $resource->name];
         })->all());
@@ -90,6 +102,12 @@ trait InteractsWithIO
 
         if (! is_null($command)) {
             return optional($answers->where('command', $command)->first())->id ?: $command;
+        }
+
+        if ($answers->containsOneItem()) {
+            $this->step('Selected [<comment>'. $answers->first()->id .'</comment>] '. $answers->first()->command);
+
+            return $answers->first()->id;
         }
 
         return $this->choiceStep($question, $answers->mapWithKeys(function ($resource) {
