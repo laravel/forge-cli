@@ -51,7 +51,7 @@ trait InteractsWithIO
         }
 
         if ($answers->containsOneItem()) {
-            $this->step('Selected [<comment>'.$answers->first()->id.'</comment>] '.$answers->first()->name);
+            $this->step('Selected site [<comment>'.$answers->first()->id.'</comment>] '.$answers->first()->name);
 
             return $answers->first()->id;
         }
@@ -78,7 +78,7 @@ trait InteractsWithIO
         }
 
         if ($answers->containsOneItem()) {
-            $this->step('Selected [<comment>'.$answers->first()->id.'</comment>] '.$answers->first()->name);
+            $this->step('Selected server [<comment>'.$answers->first()->id.'</comment>] '.$answers->first()->name);
 
             return $answers->first()->id;
         }
@@ -105,7 +105,7 @@ trait InteractsWithIO
         }
 
         if ($answers->containsOneItem()) {
-            $this->step('Selected [<comment>'.$answers->first()->id.'</comment>] '.$answers->first()->command);
+            $this->step('Selected daemon [<comment>'.$answers->first()->id.'</comment>] '.$answers->first()->command);
 
             return $answers->first()->id;
         }
