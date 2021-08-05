@@ -9,13 +9,15 @@
 <a href="https://packagist.org/packages/laravel/forge-cli"><img src="https://img.shields.io/packagist/l/laravel/forge-cli" alt="License"></a>
 </p>
 
-## Forge CLI
+## Introduction
 
 Laravel Forge is a server management and site deployment service. After connecting to your preferred server provider, Forge will provision a new server, installing and configuring: PHP, Nginx, MySQL, and more.
 
 In addition, Forge can assist you in managing scheduled jobs, queue workers, SSL certificates, and more. After a server has provisioned, you can then deploy your PHP / Laravel applications or WordPress applications using the Forge UI dashboard or the Forge CLI.
 
-This repository contains the CLI client for interacting with Laravel Forge. To learn more about Forge and how to use this command-line tool, please consult the **[official documentation](https://forge.laravel.com/docs/1.0/accounts/cli.html)**.
+## Official Documentation
+
+Documentation for Forge CLI can be found on the [Laravel Forge website](https://forge.laravel.com/docs/1.0/accounts/cli.html).
 
 ## Contributing
 
