@@ -2,8 +2,7 @@
 
 ## [v1.0.0 (2021-08-09)](https://github.com/laravel/forge-cli/compare/v0.1.5...v1.0.0)
 
-### Added
-- Stable version
+Stable version.
 
 ## [v0.1.5 (2021-08-04)](https://github.com/laravel/forge-cli/compare/v0.1.4...v0.1.5)
 
