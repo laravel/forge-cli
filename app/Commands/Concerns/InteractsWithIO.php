@@ -151,6 +151,20 @@ trait InteractsWithIO
     }
 
     /**
+     * Display a confirm "step" message.
+     *
+     * @param  string|array  $question
+     * @param  bool  $default
+     * @return bool
+     */
+    public function confirmStep($question, $default = false)
+    {
+        $question = $this->formatStepText($question);
+
+        return $this->output->confirm('<fg=yellow>‣</> <options=bold>'.$question.'</>', $default);
+    }
+
+    /**
      * Display a ask "step" message.
      *
      * @param  string|array  $question

@@ -101,6 +101,8 @@ class Forge extends BaseForge
             Panic::abort($response->getBody());
         }
 
+        abort_if($response->getStatusCode() == 403, 1, 'Forbidden.');
+
         if ($response->getStatusCode() == 422) {
             $errors = json_decode((string) $response->getBody());
 
