@@ -37,7 +37,7 @@ class EnvPullCommand extends Command
         );
 
         if (is_null($this->argument('file')) && File::exists($file) && ! $this->confirmStep(
-            ['File already exists with the name: %s. Wish to overwrite it?', basename($file)]
+            ['File already exists with the name: %s. Would you like to overwrite it?', basename($file)]
         )) {
             return 0;
         }
