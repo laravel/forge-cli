@@ -5,3 +5,4 @@
 - After, commit both `config/app.php` and `builds/forge` files.
 - Update the `CHANGELOG.md`.
 - Finally, tag the new version of package.
+- Push commits and tags.
