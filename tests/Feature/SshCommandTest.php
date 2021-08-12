@@ -77,7 +77,7 @@ it('can create ssh connections for a site', function () {
                 'id' => 1,
                 'name' => 'staging.test',
                 'username' => 'staging',
-            ],
+            ]
         ]);
 
     $this->remote->shouldReceive('ensureSshIsConfigured');
