@@ -36,6 +36,13 @@ class RemoteRepository
     protected $sanitizableOutput = null;
 
     /**
+     * The SSH user name.
+     *
+     * @var string
+     */
+    protected $sshUser = 'forge';
+
+    /**
      * Creates a new repository instance.
      *
      * @param  string  $socketsPath
@@ -44,6 +51,18 @@ class RemoteRepository
     public function __construct($socketsPath)
     {
         $this->socketsPath = $socketsPath;
+    }
+
+    /**
+     * Set the SSH user.
+     *
+     * @param string $user
+     *
+     * @return void
+     */
+    public function setSshUser($user)
+    {
+        $this->sshUser = $user;
     }
 
     /**
@@ -195,8 +214,9 @@ class RemoteRepository
         })->values()->implode(' ');
 
         return trim(sprintf(
-            'ssh %s -t forge@%s %s',
+            'ssh %s -t %s@%s %s',
             $options,
+            $this->sshUser,
             $this->server->ipAddress,
             $command,
         ));
