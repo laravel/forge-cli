@@ -37,8 +37,8 @@ class SshCommand extends Command
         $name = $this->argument('site');
 
         if (! is_null($name)) {
-            $answers = collect($this->forge->sites($this->currentServer()->id));
-            $username = optional($answers->where('name', $name)->first())->username ?: 'forge';
+            $sites = collect($this->forge->sites($this->currentServer()->id));
+            $username = optional($sites->where('name', $name)->first())->username ?: 'forge';
             $this->remote->setSshUser($username);
         }
 
