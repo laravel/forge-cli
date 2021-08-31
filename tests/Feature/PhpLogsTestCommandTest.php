@@ -22,13 +22,13 @@ it('can retrieve logs from a specific php version', function () {
     );
 
     $this->client->shouldReceive('logs')
-        ->with(Mockery::any(), 'php80')
+        ->with(Mockery::any(), 'php81')
         ->andReturn((object) [
-            'content' => "   tail: cannot open '/var/log/php8.0-fpm.log' for reading: No such file or directory\n   ",
+            'content' => "   tail: cannot open '/var/log/php8.1-fpm.log' for reading: No such file or directory\n   ",
         ]);
 
-    $this->artisan('php:logs', ['version' => '8.0'])
-        ->expectsOutput("  ▕ tail: cannot open '/var/log/php8.0-fpm.log' for reading: No such file or directory");
+    $this->artisan('php:logs', ['version' => '8.1'])
+        ->expectsOutput("  ▕ tail: cannot open '/var/log/php8.1-fpm.log' for reading: No such file or directory");
 });
 
 it('can not retrieve logs when php version is incorrect', function () {
@@ -37,7 +37,7 @@ it('can not retrieve logs when php version is incorrect', function () {
     );
 
     $this->artisan('php:logs', ['version' => '2.0']);
-})->throws('PHP version needs to be one of these values: 5.6, 7.0, 7.1, 7.2, 7.3, 7.4, 8.0.');
+})->throws('PHP version needs to be one of these values: 5.6, 7.0, 7.1, 7.2, 7.3, 7.4, 8.0, 8.1.');
 
 it('can not display the logs when there is no php', function () {
     $this->client->shouldReceive('server')->andReturn(
