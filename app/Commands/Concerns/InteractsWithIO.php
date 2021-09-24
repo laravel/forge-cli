@@ -46,6 +46,8 @@ trait InteractsWithIO
 
         $answers = collect($this->forge->sites($this->currentServer()->id));
 
+        abort_if($answers->isEmpty(), 1, 'This server does not have any sites.');
+
         if (! is_null($name)) {
             return optional($answers->where('name', $name)->first())->id ?: $name;
         }
@@ -67,6 +69,8 @@ trait InteractsWithIO
 
         $answers = collect($this->forge->servers());
 
+        abort_if($answers->isEmpty(), 1, 'This account does not have any servers.');
+
         if (! is_null($name)) {
             return optional($answers->where('name', $name)->first())->id ?: $name;
         }
@@ -87,6 +91,8 @@ trait InteractsWithIO
         $command = $this->argument('daemon');
 
         $answers = collect($this->forge->daemons($this->currentServer()->id));
+
+        abort_if($answers->isEmpty(), 1, 'This server does not have any daemons.');
 
         if (! is_null($command)) {
             return optional($answers->where('command', $command)->first())->id ?: $command;
