@@ -35,7 +35,7 @@ class NginxRestartCommand extends Command
     /**
      * Restarts Nginx service.
      *
-     * @param  string|int $serverId
+     * @param  string|int  $serverId
      * @return bool
      */
     public function restartNginx($serverId)

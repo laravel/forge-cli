@@ -63,7 +63,7 @@ class DatabaseShellCommand extends Command
     /**
      * Connects the user the MySql instance.
      *
-     * @param  string|int $serverId
+     * @param  string|int  $serverId
      * @param  string  $user
      * @param  string  $password
      * @param  string  $database
@@ -79,7 +79,7 @@ class DatabaseShellCommand extends Command
     /**
      * Connects the user the PostgreSQL instance.
      *
-     * @param  string|int $serverId
+     * @param  string|int  $serverId
      * @param  string  $user
      * @param  string  $password
      * @param  string|null  $database

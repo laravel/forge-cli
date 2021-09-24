@@ -25,7 +25,7 @@ class PhpVersion
     /**
      * Creates a new PHP Version instance. Acts as static factory.
      *
-     * @param  string $version
+     * @param  string  $version
      * @return static
      */
     public static function of($version)

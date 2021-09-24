@@ -17,7 +17,7 @@ class ConfigRepository
     /**
      * Creates a new repository instance.
      *
-     * @param  string $path
+     * @param  string  $path
      * @return void
      */
     public function __construct($path)
@@ -58,9 +58,8 @@ class ConfigRepository
     /**
      * Get the given configuration value.
      *
-     * @param string $key
-     * @param mixed  $default
-     *
+     * @param  string  $key
+     * @param  mixed  $default
      * @return array|int|string|null
      */
     public function get($key, $default = null)
@@ -71,9 +70,8 @@ class ConfigRepository
     /**
      * Set a given configuration value.
      *
-     * @param string $key
-     * @param array|int|string  $value
-     *
+     * @param  string  $key
+     * @param  array|int|string  $value
      * @return $this
      */
     public function set($key, $value)

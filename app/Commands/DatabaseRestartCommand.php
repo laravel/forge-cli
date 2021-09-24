@@ -50,7 +50,7 @@ class DatabaseRestartCommand extends Command
     /**
      * Restarts MySQL database service.
      *
-     * @param  string|int $serverId
+     * @param  string|int  $serverId
      * @return bool
      */
     public function restartMysql($serverId)
@@ -67,7 +67,7 @@ class DatabaseRestartCommand extends Command
     /**
      * Restarts PostgreSQL database service.
      *
-     * @param  string|int $serverId
+     * @param  string|int  $serverId
      * @return bool
      */
     public function restartPostgres($serverId)
