@@ -1,3 +1,5 @@
+# Release Notes
+
 ## [Unreleased](https://github.com/laravel/forge-cli/compare/v1.1.1...master)
 
 
