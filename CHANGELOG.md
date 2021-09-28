@@ -1,4 +1,11 @@
-## [Unreleased](https://github.com/laravel/forge-cli/compare/v1.1.0...master)
+## [Unreleased](https://github.com/laravel/forge-cli/compare/v1.1.1...master)
+
+
+## [v1.1.1 (2021-08-28)](https://github.com/laravel/forge-cli/compare/v1.1.0...v1.1.1)
+
+### Fixed
+- Avoids attempt to question when there is no answers available ([#33](https://github.com/laravel/forge-cli/pull/33))
+
 
 ## [v1.1.0 (2021-08-11)](https://github.com/laravel/forge-cli/compare/v1.0.0...v1.1.0)
 
