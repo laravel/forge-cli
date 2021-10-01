@@ -34,12 +34,15 @@ class ServerCurrentCommand extends Command
      */
     public function handle()
     {
+        /** @var  \Laravel\Forge\Resources\Server  $server */
         $server = $this->forge->server(
             $this->config->get('server')
         );
 
+        $tags = ! empty($server->tags) ? " ({$server->tags(',')})" : null;
+
         $this->successfulStep(
-            'You are currently within the <comment>['.$server->name.']</comment> server context.'
+            'You are currently within the <comment>['.$server->name.']'.$tags.'</comment> server context.'
         );
     }
 }

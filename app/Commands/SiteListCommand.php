@@ -34,12 +34,13 @@ class SiteListCommand extends Command
         );
 
         $this->table([
-            'ID', 'Name', 'PHP',
+            'ID', 'Name', 'PHP', 'Tags',
         ], collect($sites)->map(function ($site) {
             return [
                 $site->id,
                 $site->name,
                 $site->phpVersion ? PhpVersion::of($site->phpVersion)->release() : 'None',
+                $site->tags(),
             ];
         })->all());
     }

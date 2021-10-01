@@ -76,7 +76,9 @@ trait InteractsWithIO
         }
 
         return $this->choiceStep($question, $answers->mapWithKeys(function ($resource) {
-            return [$resource->id => $resource->name];
+            $tags = ! empty($resource->tags) ? " ({$resource->tags()})" : null;
+
+            return [$resource->id => $resource->name.$tags];
         })->all());
     }
 
