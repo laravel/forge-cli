@@ -11,8 +11,8 @@ it('can test ssh connections', function () {
 
 it('can not test ssh connections when ssh key is missing', function () {
     $this->remote->shouldReceive('ensureSshIsConfigured')->andThrow(
-        new Exception('Unable to connect to remove server. Have you configured an SSH Key?')
+        new Exception('Unable to connect to remote server. Have you configured an SSH Key?')
     );
 
     $this->artisan('ssh:test');
-})->throws('Unable to connect to remove server. Have you configured an SSH Key?');
+})->throws('Unable to connect to remote server. Have you configured an SSH Key?');
