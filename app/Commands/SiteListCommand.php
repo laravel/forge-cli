@@ -36,9 +36,15 @@ class SiteListCommand extends Command
         $this->table([
             'ID', 'Name', 'PHP',
         ], collect($sites)->map(function ($site) {
+            $name = $site->name;
+
+            if (! empty($tags = $site->tags(', '))) {
+                $name .= " <fg=gray>($tags)</>";
+            }
+
             return [
                 $site->id,
-                $site->name,
+                $name,
                 $site->phpVersion ? PhpVersion::of($site->phpVersion)->release() : 'None',
             ];
         })->all());

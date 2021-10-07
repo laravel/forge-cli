@@ -30,9 +30,15 @@ class ServerListCommand extends Command
         $this->table([
             'ID', 'Name', 'IP Address',
         ], collect($this->forge->servers())->map(function ($server) {
+            $name = $server->name;
+
+            if (! empty($tags = $server->tags(', '))) {
+                $name .= " <fg=gray>($tags)</>";
+            }
+
             return [
                 $server->id,
-                $server->name,
+                $name,
                 $server->ipAddress,
             ];
         })->all());

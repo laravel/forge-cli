@@ -1,10 +1,11 @@
 <?php
 
 use App\Commands\Command;
+use Laravel\Forge\Resources\Server;
 
 beforeEach(function () {
     $this->client->shouldReceive('servers')->andReturn([
-        (object) ['id' => 1, 'name' => 'production', 'ipAddress' => '123.456.789.000'],
+        new Server(['id' => 1, 'name' => 'production', 'ipAddress' => '123.456.789.000']),
     ]);
 });
 
