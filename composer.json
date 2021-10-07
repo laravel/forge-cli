@@ -19,7 +19,7 @@
     },
     "require-dev": {
         "laravel-zero/framework": "^8.9",
-        "laravel/forge-sdk": "^3.8",
+        "laravel/forge-sdk": "^3.9",
         "mockery/mockery": "^1.4",
         "nunomaduro/larastan": "^0.7.10",
         "pestphp/pest": "^1.9",

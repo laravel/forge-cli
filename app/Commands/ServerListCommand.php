@@ -28,13 +28,18 @@ class ServerListCommand extends Command
         $this->step('Retrieving the list of servers');
 
         $this->table([
-            'ID', 'Name', 'IP Address', 'Tags',
+            'ID', 'Name', 'IP Address',
         ], collect($this->forge->servers())->map(function ($server) {
+            $name = $server->name;
+
+            if (! empty($tags = $server->tags(', '))) {
+                $name .= " <fg=gray>($tags)</>";
+            }
+
             return [
                 $server->id,
-                $server->name,
+                $name,
                 $server->ipAddress,
-                $server->tags(),
             ];
         })->all());
     }

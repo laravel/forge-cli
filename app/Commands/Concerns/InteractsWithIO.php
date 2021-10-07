@@ -2,6 +2,7 @@
 
 namespace App\Commands\Concerns;
 
+use Laravel\Forge\Resources\Server;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 
 trait InteractsWithIO
@@ -76,6 +77,7 @@ trait InteractsWithIO
         }
 
         return $this->choiceStep($question, $answers->mapWithKeys(function ($resource) {
+            /** @var \Laravel\Forge\Resources\Server $resource */
             $tags = ! empty($resource->tags) ? " ({$resource->tags()})" : null;
 
             return [$resource->id => $resource->name.$tags];

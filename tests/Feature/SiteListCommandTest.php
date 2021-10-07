@@ -14,10 +14,10 @@ it('can display the list of sites', function () {
     ]);
 
     $this->artisan('site:list')
-        ->expectsTable(['   ID', '   Name', '   PHP', '   Tags'], [
-            ['id' => '   1', 'name' => '   production.com', 'phpVersion' => '   5.6', 'tags' => '   production, php 5.6'],
-            ['id' => '   2', 'name' => '   staging.com', 'phpVersion' => '   None', 'tags' => '   '],
-            ['id' => '   3', 'name' => '   acceptance.com', 'phpVersion' => '   None', 'tags' => '   acceptance'],
+        ->expectsTable(['   ID', '   Name', '   PHP'], [
+            ['id' => '   1', 'name' => '   production.com (production, php 5.6)', 'phpVersion' => '   5.6'],
+            ['id' => '   2', 'name' => '   staging.com', 'phpVersion' => '   None'],
+            ['id' => '   3', 'name' => '   acceptance.com (acceptance)', 'phpVersion' => '   None'],
         ], 'compact');
 });
 
@@ -27,16 +27,16 @@ it('do not display archived servers', function () {
     );
 
     $this->client->shouldReceive('sites')->andReturn([
-        new Site(['id' => 1, 'name' => 'production.com', 'phpVersion' => 'php56']),
-        new Site(['id' => 2, 'name' => 'staging.com', 'phpVersion' => null]),
-        new Site(['id' => 3, 'name' => 'archived.com', 'phpVersion' => 'php80', 'revoked' => true]),
-        new Site(['id' => 4, 'name' => 'non-archived.com', 'phpVersion' => null, 'revoked' => false]),
+        new Site(['id' => 1, 'name' => 'production.com', 'phpVersion' => 'php56', 'tags' => []]),
+        new Site(['id' => 2, 'name' => 'staging.com', 'phpVersion' => null, 'tags' => []]),
+        new Site(['id' => 3, 'name' => 'archived.com', 'phpVersion' => 'php80', 'revoked' => true, 'tags' => []]),
+        new Site(['id' => 4, 'name' => 'non-archived.com', 'phpVersion' => null, 'revoked' => false, 'tags' => []]),
     ]);
 
     $this->artisan('site:list')
-        ->expectsTable(['   ID', '   Name', '   PHP', '   Tags'], [
-            ['id' => '   1', 'name' => '   production.com', 'phpVersion' => '   5.6', 'tags' => ''],
-            ['id' => '   2', 'name' => '   staging.com', 'phpVersion' => '   None', 'tags' => ''],
-            ['id' => '   4', 'name' => '   non-archived.com', 'phpVersion' => '   None', 'tags' => ''],
+        ->expectsTable(['   ID', '   Name', '   PHP'], [
+            ['id' => '   1', 'name' => '   production.com', 'phpVersion' => '   5.6'],
+            ['id' => '   2', 'name' => '   staging.com', 'phpVersion' => '   None'],
+            ['id' => '   4', 'name' => '   non-archived.com', 'phpVersion' => '   None'],
         ], 'compact');
 });
