@@ -34,7 +34,7 @@ class ServerCurrentCommand extends Command
      */
     public function handle()
     {
-        /** @var  \Laravel\Forge\Resources\Server  $server */
+        /** @var \Laravel\Forge\Resources\Server $server */
         $server = $this->forge->server(
             $this->config->get('server')
         );
