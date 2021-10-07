@@ -1,6 +1,12 @@
 # Release Notes
 
-## [Unreleased](https://github.com/laravel/forge-cli/compare/v1.1.1...master)
+## [Unreleased](https://github.com/laravel/forge-cli/compare/v1.2.0...master)
+
+
+## [v1.2.0 (2021-08-28)](https://github.com/laravel/forge-cli/compare/v1.1.1...v1.2.0)
+
+### Added
+- Server and site tags to `list` commands ([#36](https://github.com/laravel/forge-cli/pull/36))
 
 
 ## [v1.1.1 (2021-08-28)](https://github.com/laravel/forge-cli/compare/v1.1.0...v1.1.1)
