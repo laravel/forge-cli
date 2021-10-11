@@ -71,7 +71,7 @@ class ConfigRepository
      * Set a given configuration value.
      *
      * @param  string  $key
-     * @param  array|int|string  $value
+     * @param  array|int|string|bool  $value
      * @return $this
      */
     public function set($key, $value)

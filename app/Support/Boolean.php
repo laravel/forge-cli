@@ -6,7 +6,7 @@ class Boolean
 {
     /**
      * Get boolean value from mixed value
-     * @param $value
+     * @param mixed $value
      * @return bool|null
      */
     public static function fromValue($value)

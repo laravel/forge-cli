@@ -23,7 +23,7 @@ class SshPrivateIpAccessCommand extends Command
     /**
      * Execute the console command.
      *
-     * @return int|never
+     * @return void
      */
     public function handle()
     {
@@ -40,6 +40,10 @@ class SshPrivateIpAccessCommand extends Command
         $this->successfulStep('SSH private IP access is configured');
     }
 
+    /**
+     * @param mixed $enable
+     * @return bool
+     */
     protected function ensureEnableIsBoolean($enable): bool
     {
         return null !== Boolean::fromValue($enable);
