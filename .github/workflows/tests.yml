@@ -35,6 +35,7 @@ jobs:
 
       - name: Execute static analysis
         run: vendor/bin/phpstan
+        if: matrix.php == '8.0'
 
       - name: Execute unit/feature tests
         run: vendor/bin/pest
