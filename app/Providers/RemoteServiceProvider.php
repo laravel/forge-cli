@@ -47,13 +47,13 @@ class RemoteServiceProvider extends ServiceProvider
 
         $config = "$path/.laravel-forge";
 
-        if (!File::isDirectory($config)) {
+        if (! File::isDirectory($config)) {
             File::makeDirectory($config);
         }
 
         $socketsPath = "$config/sockets";
 
-        if (!File::isDirectory($socketsPath)) {
+        if (! File::isDirectory($socketsPath)) {
             File::makeDirectory($socketsPath);
         }
 

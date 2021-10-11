@@ -17,7 +17,7 @@ test('exec removes sanitizable output', function () {
         '[00:01] FOO',
         '[00:02] BAR',
     ])->map(function ($line) {
-        return 'echo "' . $line . '"';
+        return 'echo "'.$line.'"';
     })->implode(' && ');
 
     expect($remote->exec($command))->toBe([0, [
@@ -30,7 +30,7 @@ test('exec removes sanitizable output', function () {
         '[00:01] FOO',
         '[00:02] BAR',
     ])->map(function ($line) {
-        return 'echo "' . $line . '"';
+        return 'echo "'.$line.'"';
     })->implode(' && ');
 
     expect($remote->exec($command))->toBe([0, [
@@ -47,7 +47,7 @@ test('exec not removes sanitizable output if is empty', function () {
         '[00:01] FOO',
         '[00:02] BAR',
     ])->map(function ($line) {
-        return 'echo "' . $line . '"';
+        return 'echo "'.$line.'"';
     })->implode(' && ');
 
     expect($remote->exec($command))->toBe([0, [
@@ -65,7 +65,7 @@ class LocalRepository extends RemoteRepository
         $this->sanitizableOutput = $sanitizableOutput;
     }
 
-    public function ssh($command = null)
+    protected function ssh($command = null)
     {
         return $command;
     }
