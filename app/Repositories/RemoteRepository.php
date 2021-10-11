@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Support\Boolean;
 use Illuminate\Support\Arr;
 use Symfony\Component\Process\Process;
 
@@ -206,7 +207,7 @@ class RemoteRepository
         return trim(sprintf(
             'ssh %s -t forge@%s %s',
             $options,
-            $this->server->ipAddress,
+            Boolean::fromValue($this->config->get('ssh_private_ip_access', false)) ? $this->server->privateIpAddress : $this->server->ipAddress,
             $command,
         ));
     }
