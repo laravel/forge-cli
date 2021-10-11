@@ -35,7 +35,7 @@ it('can restart php when php version is incorrect', function () {
     );
 
     $this->artisan('php:restart', ['version' => '2.0']);
-})->throws('PHP version needs to be one of these values: 5.6, 7.0, 7.1, 7.2, 7.3, 7.4, 8.0.');
+})->throws('PHP version needs to be one of these values: 5.6, 7.0, 7.1, 7.2, 7.3, 7.4, 8.0, 8.1.');
 
 it('can not restart php when there is no php', function () {
     $this->client->shouldReceive('server')->andReturn(

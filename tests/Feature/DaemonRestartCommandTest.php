@@ -7,11 +7,11 @@ it('can restart daemons', function () {
 
     $this->client->shouldReceive('daemons')->andReturn([
         (object) ['id' => 1, 'command' => 'php7.4 artisan websockets:serve', 'status' => 'installed'],
-        (object) ['id' => 2, 'command' => 'php8.0 artisan queue:work', 'status' => 'installed'],
+        (object) ['id' => 2, 'command' => 'php8.1 artisan queue:work', 'status' => 'installed'],
     ]);
 
     $this->client->shouldReceive('daemon')->with(1, 2)->once()->andReturn(
-        (object) ['id' => 2, 'command' => 'php8.0 artisan queue:work', 'status' => 'installed'],
+        (object) ['id' => 2, 'command' => 'php8.1 artisan queue:work', 'status' => 'installed'],
     );
 
     $this->client->shouldReceive('restartDaemon')->with(1, 2, false)->once();
@@ -28,11 +28,11 @@ it('can not restart daemons that are not running', function () {
 
     $this->client->shouldReceive('daemons')->andReturn([
         (object) ['id' => 1, 'command' => 'php7.4 artisan websockets:serve', 'status' => 'restarting'],
-        (object) ['id' => 2, 'command' => 'php8.0 artisan queue:work', 'status' => 'installed'],
+        (object) ['id' => 2, 'command' => 'php8.1 artisan queue:work', 'status' => 'installed'],
     ]);
 
     $this->client->shouldReceive('daemon')->with(1, 1)->once()->andReturn(
-        (object) ['id' => 2, 'command' => 'php8.0 artisan queue:work', 'status' => 'restarting'],
+        (object) ['id' => 2, 'command' => 'php8.1 artisan queue:work', 'status' => 'restarting'],
     );
 
     $this->artisan('daemon:restart')

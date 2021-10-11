@@ -7,7 +7,7 @@ it('can retrieve logs from daemons', function () {
 
     $this->client->shouldReceive('daemons')->andReturn([
         (object) ['id' => 1, 'command' => 'php7.4 artisan websockets:serve', 'status' => 'installed'],
-        (object) ['id' => 2, 'command' => 'php8.0 artisan queue:work', 'status' => 'installed'],
+        (object) ['id' => 2, 'command' => 'php8.1 artisan queue:work', 'status' => 'installed'],
     ]);
 
     $this->client->shouldReceive('daemon')->andReturn(
@@ -33,7 +33,7 @@ it('can tail logs from daemons', function () {
 
     $this->client->shouldReceive('daemons')->andReturn([
         (object) ['id' => 1, 'command' => 'php7.4 artisan websockets:serve', 'status' => 'installed'],
-        (object) ['id' => 2, 'command' => 'php8.0 artisan queue:work', 'status' => 'installed'],
+        (object) ['id' => 2, 'command' => 'php8.1 artisan queue:work', 'status' => 'installed'],
     ]);
 
     $this->client->shouldReceive('daemon')->andReturn(
@@ -59,7 +59,7 @@ it('exits with 0 exit code on control + c', function () {
 
     $this->client->shouldReceive('daemons')->andReturn([
         (object) ['id' => 1, 'command' => 'php7.4 artisan websockets:serve', 'status' => 'installed'],
-        (object) ['id' => 2, 'command' => 'php8.0 artisan queue:work', 'status' => 'installed'],
+        (object) ['id' => 2, 'command' => 'php8.1 artisan queue:work', 'status' => 'installed'],
     ]);
 
     $this->client->shouldReceive('daemon')->andReturn(
@@ -86,7 +86,7 @@ it('displays errors', function () {
 
     $this->client->shouldReceive('daemons')->andReturn([
         (object) ['id' => 1, 'command' => 'php7.4 artisan websockets:serve', 'status' => 'installed'],
-        (object) ['id' => 2, 'command' => 'php8.0 artisan queue:work', 'status' => 'installed'],
+        (object) ['id' => 2, 'command' => 'php8.1 artisan queue:work', 'status' => 'installed'],
     ]);
 
     $this->client->shouldReceive('daemon')->andReturn(
@@ -109,7 +109,7 @@ it('can not retrieve or tail logs from daemons run by root', function () {
 
     $this->client->shouldReceive('daemons')->andReturn([
         (object) ['id' => 1, 'command' => 'php7.4 artisan websockets:serve', 'status' => 'installed'],
-        (object) ['id' => 2, 'command' => 'php8.0 artisan queue:work', 'status' => 'installed'],
+        (object) ['id' => 2, 'command' => 'php8.1 artisan queue:work', 'status' => 'installed'],
     ]);
 
     $this->client->shouldReceive('daemon')->andReturn(
