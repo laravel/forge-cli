@@ -27,7 +27,7 @@ class SshTestCommand extends Command
      */
     public function handle()
     {
-        if (! is_null($server = $this->argument('server'))) {
+        if (!is_null($server = $this->argument('server'))) {
             $this->call('server:switch', [
                 'server' => $server,
             ]);

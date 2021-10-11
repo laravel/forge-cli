@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Repositories\ConfigRepository;
 use App\Repositories\RemoteRepository;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\ServiceProvider;
@@ -31,7 +32,7 @@ class RemoteServiceProvider extends ServiceProvider
                 ? tap(Mockery::mock(RemoteRepository::class), function ($mock) {
                     // @phpstan-ignore-next-line
                     $mock->shouldReceive('resolveServerUsing')->zeroOrMoreTimes();
-                }) : new RemoteRepository($this->ensureSocketsPath());
+                }) : new RemoteRepository($this->ensureSocketsPath(), resolve(ConfigRepository::class));
         });
     }
 
@@ -46,13 +47,13 @@ class RemoteServiceProvider extends ServiceProvider
 
         $config = "$path/.laravel-forge";
 
-        if (! File::isDirectory($config)) {
+        if (!File::isDirectory($config)) {
             File::makeDirectory($config);
         }
 
         $socketsPath = "$config/sockets";
 
-        if (! File::isDirectory($socketsPath)) {
+        if (!File::isDirectory($socketsPath)) {
             File::makeDirectory($socketsPath);
         }
 
