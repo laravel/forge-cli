@@ -13,7 +13,7 @@ class SshCommand extends Command
      * @var string
      */
     protected $signature = 'ssh {server? : The server name}
-                            {--U|user= : SSH user login}';
+                            {--U|user= : The SSH user login name}';
 
     /**
      * The description of the command.

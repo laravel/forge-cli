@@ -15,7 +15,7 @@ class SshTestCommand extends Command
     protected $signature = 'ssh:test
         {server? : The server name}
         {--key= : The path to the public key}
-        {--U|user= : SSH user login}';
+        {--U|user= : The SSH user login name}';
 
     /**
      * The description of the command.

@@ -13,7 +13,7 @@ class SshConfigureCommand extends Command
         {server? : The server name}
         {--key= : The path to the public key}
         {--name= : The key name on Forge}
-        {--U|user= : SSH user login}';
+        {--U|user= : The SSH user login name}';
 
     /**
      * The description of the command.
