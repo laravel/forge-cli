@@ -31,6 +31,7 @@ it('can create ssh keys', function () {
 
     $this->forge->shouldReceive('createSSHKey')->with(1, [
         'name' => 'driesvints',
+        'username'=> 'forge',
         'key' => 'MY KEY Content',
     ], true)->once();
 
@@ -38,8 +39,9 @@ it('can create ssh keys', function () {
         ->expectsQuestion('<fg=yellow>‣</> <options=bold>Which Server Would You Like To Configure The SSH Key Based Secure Authentication</>', 1)
         ->expectsQuestion('<fg=yellow>‣</> <options=bold>Which Key Would You Like To Use</>', 0)
         ->expectsQuestion('<fg=yellow>‣</> <options=bold>What Should The SSH Key Be Named</>', 'driesvints')
+        ->expectsQuestion('<fg=yellow>‣</> <options=bold>For Which User Do You Want To Create A SSH Key?</>','forge')
         ->expectsOutput('==> Creating Key [driesvints_rsa.pub]')
-        ->expectsOutput('==> Adding Key [driesvints_rsa.pub] With The Name [driesvints] To Server [production]')
+        ->expectsOutput('==> Adding Key [driesvints_rsa.pub] With The Name [driesvints] For The User [forge] To Server [production]')
         ->expectsOutput('==> SSH Key Based Secure Authentication Configured Successfully');
 });
 
@@ -74,12 +76,14 @@ it('can reuse ssh keys', function () {
 
     $this->forge->shouldReceive('createSSHKey')->with(2, [
         'name' => 'driesvints',
+        'username'=> 'forge',
         'key' => 'MY KEY Content',
     ], true)->once();
 
     $this->artisan('ssh:configure', ['server' => 2])
         ->expectsQuestion('<fg=yellow>‣</> <options=bold>Which Key Would You Like To Use</>', 1)
         ->expectsQuestion('<fg=yellow>‣</> <options=bold>What Should The SSH Key Be Named In Forge</>', 'driesvints')
-        ->expectsOutput('==> Adding Key [id_rsa.pub] With The Name [driesvints] To Server [production]')
+        ->expectsQuestion('<fg=yellow>‣</> <options=bold>For Which User Do You Want To Create A SSH Key?</>','forge')
+        ->expectsOutput('==> Adding Key [id_rsa.pub] With The Name [driesvints] For The User [forge] To Server [production]')
         ->expectsOutput('==> SSH Key Based Secure Authentication Configured Successfully');
 });
