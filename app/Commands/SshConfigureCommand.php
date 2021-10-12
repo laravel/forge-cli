@@ -12,7 +12,8 @@ class SshConfigureCommand extends Command
     protected $signature = 'ssh:configure
         {server? : The server name}
         {--key= : The path to the public key}
-        {--name= : The key name on Forge}';
+        {--name= : The key name on Forge}
+        {--U|user= : SSH user login}';
 
     /**
      * The description of the command.
@@ -38,7 +39,7 @@ class SshConfigureCommand extends Command
 
         $key = $this->getKey();
 
-        $this->ensureKeyExists($this->getKeyName($key), $key);
+        $this->ensureKeyExists($this->getKeyName($key) ,$this->getSshUserName(), $key);
 
         $this->successfulStep('SSH key based secure authentication configured successfully');
     }
@@ -47,10 +48,11 @@ class SshConfigureCommand extends Command
      * Ensures the given SSH Key exists.
      *
      * @param  string  $name
+     * @param  string  $user
      * @param  string|null  $key
      * @return void
      */
-    protected function ensureKeyExists($name, $key = null)
+    protected function ensureKeyExists($name, $user, $key = null)
     {
         $server = $this->currentServer();
 
@@ -62,9 +64,9 @@ class SshConfigureCommand extends Command
             $this->step('Creating Key <comment>['.$localName.']</comment>');
         }
 
-        $this->step('Adding Key <comment>['.$localName.']</comment>'.' With The Name <comment>['.$name.']</comment> To Server <comment>['.$server->name.']</comment>');
+        $this->step('Adding Key <comment>['.$localName.']</comment>'.' With The Name <comment>['.$name.']</comment> For The User <comment>['.$user.']</comment> To Server <comment>['.$server->name.']</comment>');
 
-        $this->forge->createSSHKey($server->id, ['key' => $key, 'name' => $name], true);
+        $this->forge->createSSHKey($server->id, ['key' => $key, 'username'=>$user, 'name' => $name], true);
     }
 
     /**
@@ -106,5 +108,17 @@ class SshConfigureCommand extends Command
         }
 
         return $this->option('name') ?: $this->askStep($question, get_current_user());
+    }
+
+    /**
+     * Gets the SSH user name.
+     *
+     * @return string
+     */
+    protected function getSshUserName()
+    {
+        $question = 'For which user do you want to create a SSH key?';
+
+        return $this->option('user') ?: $this->askStep($question, 'forge');
     }
 }

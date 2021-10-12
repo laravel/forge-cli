@@ -2,14 +2,18 @@
 
 namespace App\Commands;
 
+use App\Commands\Concerns\SetsRemoteSshLogin;
+
 class SshCommand extends Command
 {
+    use SetsRemoteSshLogin;
     /**
      * The signature of the command.
      *
      * @var string
      */
-    protected $signature = 'ssh {server? : The server name}';
+    protected $signature = 'ssh {server? : The server name}
+                            {--U|user= : SSH user login}';
 
     /**
      * The description of the command.
@@ -32,6 +36,8 @@ class SshCommand extends Command
                 'server' => $server,
             ]);
         }
+
+        $this->setRemoteSshLogin($this->option('user'));
 
         $server = $this->currentServer();
 

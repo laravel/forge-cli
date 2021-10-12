@@ -36,6 +36,13 @@ class RemoteRepository
     protected $sanitizableOutput = null;
 
     /**
+     * Holds the ssh login.
+     *
+     * @var string
+     */
+    protected $sshLogin = 'forge';
+
+    /**
      * Creates a new repository instance.
      *
      * @param  string  $socketsPath
@@ -195,10 +202,19 @@ class RemoteRepository
         })->values()->implode(' ');
 
         return trim(sprintf(
-            'ssh %s -t forge@%s %s',
+            'ssh %s -t '.$this->sshLogin.'@%s %s',
             $options,
             $this->server->ipAddress,
             $command,
         ));
+    }
+
+    /**
+     * @param string $login
+     * @return void
+     */
+    public function setSshLogin($login)
+    {
+        $this->sshLogin = $login;
     }
 }
