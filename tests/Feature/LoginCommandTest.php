@@ -14,6 +14,19 @@ it('authenticates users', function () {
         ->expectsOutput('==> Authenticated Successfully As [nuno@laravel.com]');
 });
 
+it('authenticates users with token', function () {
+    $this->client->shouldReceive('user')->andReturn((object) [
+        'email' => 'nuno@laravel.com',
+    ]);
+
+    $this->client->shouldReceive('servers')->andReturn([
+        (object) ['id' => 1],
+    ]);
+
+    $this->artisan('login --token 123123123')
+        ->expectsOutput('==> Authenticated Successfully As [nuno@laravel.com]');
+});
+
 it('sets current server', function () {
     $this->client->shouldReceive('user')->andReturn((object) [
         'email' => 'nuno@laravel.com',
