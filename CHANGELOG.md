@@ -1,6 +1,12 @@
 # Release Notes
 
-## [Unreleased](https://github.com/laravel/forge-cli/compare/v1.3.0...master)
+## [Unreleased](https://github.com/laravel/forge-cli/compare/v1.3.1...master)
+
+
+## [v1.3.1 (2021-10-26)](https://github.com/laravel/forge-cli/compare/v1.3.0...v1.3.1)
+
+### Changed
+- Allow the usage of FORGE_API_TOKEN in CIs ([#42](https://github.com/laravel/forge-cli/pull/42))
 
 
 ## [v1.3.0 (2021-09-11)](https://github.com/laravel/forge-cli/compare/v1.2.0...v1.3.0)
