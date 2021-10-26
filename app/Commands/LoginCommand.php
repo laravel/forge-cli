@@ -2,8 +2,6 @@
 
 namespace App\Commands;
 
-use Exception;
-
 class LoginCommand extends Command
 {
     /**
@@ -11,7 +9,7 @@ class LoginCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'login';
+    protected $signature = 'login {--token= : Forge API token}';
 
     /**
      * The description of the command.
@@ -27,11 +25,15 @@ class LoginCommand extends Command
      */
     public function handle()
     {
-        $token = $this->askStep('Please enter your Forge API token');
+        $token = $this->option('token');
+
+        if ($token === null) {
+            $token = $this->askStep('Please enter your Forge API token');
+        }
 
         $this->config->set('token', $token);
 
-        $email = $this->ensureApiTokenIsValid($token);
+        $email = $this->getUserEmail();
 
         $this->ensureCurrentTeamIsSet();
 
@@ -39,33 +41,12 @@ class LoginCommand extends Command
     }
 
     /**
-     * Ensure the given api token is valid.
+     * Gets user's email.
      *
-     * @param  string  $token
      * @return string
      */
-    protected function ensureApiTokenIsValid($token)
+    protected function getUserEmail()
     {
-        try {
-            return $this->forge->user()->email;
-        } catch (Exception $e) {
-            $this->config->flush();
-
-            throw $e;
-        }
-    }
-
-    /**
-     * Ensure the current team is set in the configuration file.
-     *
-     * @return void
-     */
-    protected function ensureCurrentTeamIsSet()
-    {
-        $server = collect($this->forge->servers())->first();
-
-        abort_if($server == null, 1, 'Please create a server first.');
-
-        $this->config->set('server', $server->id);
+        return $this->forge->user()->email;
     }
 }
