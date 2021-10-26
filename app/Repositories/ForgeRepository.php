@@ -61,16 +61,13 @@ class ForgeRepository
     public function __call($method, $parameters)
     {
         $this->ensureApiToken();
+        $this->ensureCurrentTeamIsSet();
 
         try {
             return $this->client->{$method}(...$parameters);
         } catch (Exception $e) {
             if ($e instanceof NotFoundException) {
                 abort(1, $e->getMessage());
-            }
-
-            if ($e instanceof Exception && $e->getMessage() == 'Unauthorized') {
-                abort(1, 'Your API Token is invalid.');
             }
 
             throw $e;
@@ -84,7 +81,7 @@ class ForgeRepository
      */
     protected function ensureApiToken()
     {
-        $token = $this->config->get('token');
+        $token = $this->config->get('token', $_SERVER['FORGE_API_TOKEN'] ?? getenv('FORGE_API_TOKEN') ?? null);
 
         abort_if($token == null, 1, 'Please authenticate using the \'login\' command before proceeding.');
 
@@ -100,5 +97,21 @@ class ForgeRepository
             ]) : null;
 
         $this->client->setApiKey($token, $guzzle);
+    }
+
+    /**
+     * Ensure the current team is set in the configuration file.
+     *
+     * @return void
+     */
+    protected function ensureCurrentTeamIsSet()
+    {
+        if (! $this->config->get('server', false)) {
+            $server = collect($this->client->servers())->first();
+
+            abort_if($server == null, 1, 'Please create a server first.');
+
+            $this->config->set('server', $server->id);
+        }
     }
 }
