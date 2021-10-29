@@ -190,6 +190,7 @@ class RemoteRepository
             'ControlPersist' => 100,
             'ControlPath' => $this->socketsPath.'/%h-%p-%r',
             'LogLevel' => 'QUIET',
+            'StrictHostKeyChecking' => 'no',
         ])->map(function ($value, $option) {
             return "-o $option=$value";
         })->values()->implode(' ');
