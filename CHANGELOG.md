@@ -3,6 +3,12 @@
 ## [Unreleased](https://github.com/laravel/forge-cli/compare/v1.3.1...master)
 
 
+## [v1.3.2 (2021-10-29)](https://github.com/laravel/forge-cli/compare/v1.3.1...v1.3.2)
+
+### Fixed
+- Usage on non-interactive environments ([#43](https://github.com/laravel/forge-cli/pull/43))
+
+
 ## [v1.3.1 (2021-10-26)](https://github.com/laravel/forge-cli/compare/v1.3.0...v1.3.1)
 
 ### Changed
