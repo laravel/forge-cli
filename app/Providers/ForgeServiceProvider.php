@@ -28,7 +28,7 @@ class ForgeServiceProvider extends ServiceProvider
     {
         $this->app->singleton(ForgeRepository::class, function () {
             $config = resolve(ConfigRepository::class);
-            $token = $config->get('token', $_SERVER['FORGE_API_TOKEN'] ?? getenv('FORGE_API_TOKEN') ?? null);
+            $token = $config->get('token', $_SERVER['FORGE_API_TOKEN'] ?? getenv('FORGE_API_TOKEN') ?: null);
 
             $client = new Forge($token);
 
