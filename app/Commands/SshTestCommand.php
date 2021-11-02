@@ -10,8 +10,7 @@ class SshTestCommand extends Command
      * @var string
      */
     protected $signature = 'ssh:test
-        {server? : The server name}
-        {--key= : The path to the public key}';
+        {server? : The server name}';
 
     /**
      * The description of the command.

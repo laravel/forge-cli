@@ -21,7 +21,7 @@
         "laravel-zero/framework": "^8.9",
         "laravel/forge-sdk": "^3.9",
         "mockery/mockery": "^1.4",
-        "nunomaduro/larastan": "^0.7.10",
+        "nunomaduro/larastan": "^1.0",
         "pestphp/pest": "^1.9",
         "spatie/once": "^2.2"
     },

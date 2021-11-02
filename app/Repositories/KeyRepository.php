@@ -43,6 +43,8 @@ class KeyRepository
         $keys = json_decode(exec($basePath.'/scripts/keysFactory.php'), true);
 
         File::put($this->keysPath.'/'.$this->privateKeyName($name), $keys['private']);
+        File::chmod($this->keysPath.'/'.$this->privateKeyName($name), 0600);
+
         File::put($this->keysPath.'/'.($localName = $this->publicKeyName($name)), $keys['public']);
 
         return [$localName, $keys['public']];
@@ -119,7 +121,7 @@ class KeyRepository
      */
     protected function privateKeyName($name)
     {
-        return $this->keyName($name).'_rsa';
+        return $this->keyName($name);
     }
 
     /**

@@ -5,16 +5,21 @@ use App\Repositories\KeyRepository;
 it('creates keys', function () {
     $keys = new KeyRepository('/tmp');
 
-    File::shouldReceive('put')->once()->with('/tmp/mohamed_rsa', Mockery::any());
-    File::shouldReceive('put')->once()->with('/tmp/mohamed_rsa.pub', Mockery::any());
+    File::shouldReceive('exists')->once()->with('/tmp/mysshkey')->andReturn(false);
+    File::shouldReceive('exists')->once()->with('/tmp/mysshkey.pub')->andReturn(false);
 
-    File::shouldReceive('exists')->once()->with('/tmp/mohamed_rsa')->andReturn(false);
-    File::shouldReceive('exists')->once()->with('/tmp/mohamed_rsa.pub')->andReturn(false);
+    File::shouldReceive('put')->once()->with('/tmp/mysshkey', Mockery::any());
+    File::shouldReceive('chmod')->once()->with('/tmp/mysshkey', 0600);
 
-    expect($keys->create('mohamed'))->sequence(
-        'mohamed_rsa.pub',
+    File::shouldReceive('put')->once()->with('/tmp/mysshkey.pub', Mockery::any());
+
+    expect($keys->create('mysshkey'))->sequence(
+        'mysshkey.pub',
         function ($key) {
-            $key->not->toBeEmpty()->toBeString();
+            $key->toContain(
+                'ssh-ed25519',
+                'forge-cli-generated-key'
+            );
         }
     );
 });
@@ -22,25 +27,25 @@ it('creates keys', function () {
 it('do not overrides existing keys', function () {
     $keys = new KeyRepository('/tmp');
 
-    File::shouldReceive('exists')->once()->with('/tmp/mohamed_rsa')->andReturn(false);
-    File::shouldReceive('exists')->once()->with('/tmp/mohamed_rsa.pub')->andReturn(true);
+    File::shouldReceive('exists')->once()->with('/tmp/mysshkey')->andReturn(false);
+    File::shouldReceive('exists')->once()->with('/tmp/mysshkey.pub')->andReturn(true);
 
-    $keys->create('mohamed');
+    $keys->create('mysshkey');
 })->throws('The name has already been taken.');
 
 it('gets keys', function () {
     $keys = new KeyRepository('/tmp');
 
-    File::shouldReceive('exists')->once()->with('/home/driesvints/.ssh/id_rsa.pub')->andReturn(
+    File::shouldReceive('exists')->once()->with('/home/driesvints/.ssh/id.pub')->andReturn(
         true
     );
 
-    File::shouldReceive('get')->once()->with('/home/driesvints/.ssh/id_rsa.pub')->andReturn(
+    File::shouldReceive('get')->once()->with('/home/driesvints/.ssh/id.pub')->andReturn(
         'My Key Content'
     );
 
-    expect($keys->get('/home/driesvints/.ssh/id_rsa.pub'))->toBe([
-        'id_rsa.pub',
+    expect($keys->get('/home/driesvints/.ssh/id.pub'))->toBe([
+        'id.pub',
         'My Key Content',
     ]);
 });

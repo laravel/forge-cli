@@ -81,7 +81,7 @@ class ForgeRepository
      */
     protected function ensureApiToken()
     {
-        $token = $this->config->get('token', $_SERVER['FORGE_API_TOKEN'] ?? getenv('FORGE_API_TOKEN') ?? null);
+        $token = $this->config->get('token', $_SERVER['FORGE_API_TOKEN'] ?? getenv('FORGE_API_TOKEN') ?: null);
 
         abort_if($token == null, 1, 'Please authenticate using the \'login\' command before proceeding.');
 
