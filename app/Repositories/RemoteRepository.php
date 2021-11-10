@@ -8,6 +8,13 @@ use Symfony\Component\Process\Process;
 class RemoteRepository
 {
     /**
+     * The private key resolver.
+     *
+     * @var callable|null
+     */
+    protected $privateKeyResolver = null;
+
+    /**
      * The sockets path.
      *
      * @var string
@@ -129,7 +136,18 @@ class RemoteRepository
     }
 
     /**
-     * Sets the current server.
+     * Sets the current private key resolver.
+     *
+     * @param  callable  $resolver
+     * @return void
+     */
+    public function resolvePrivateKeyUsing($resolver)
+    {
+        $this->privateKeyResolver = $resolver;
+    }
+
+    /**
+     * Sets the current server resolver.
      *
      * @param  callable  $resolver
      * @return void
@@ -194,6 +212,13 @@ class RemoteRepository
         ])->map(function ($value, $option) {
             return "-o $option=$value";
         })->values()->implode(' ');
+
+        if ($this->privateKeyResolver) {
+            $options .= sprintf(
+                ' -o "IdentitiesOnly=yes" -i "%s"',
+                call_user_func($this->privateKeyResolver)
+            );
+        }
 
         return trim(sprintf(
             'ssh %s -t forge@%s %s',

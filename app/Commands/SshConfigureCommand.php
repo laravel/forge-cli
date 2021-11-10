@@ -38,7 +38,9 @@ class SshConfigureCommand extends Command
 
         $key = $this->getKey();
 
-        $this->ensureKeyExists($this->getKeyName($key), $key);
+        $privateKey = $this->ensureKeyExists($this->getKeyName($key), $key);
+
+        $this->callSilently('ssh:test', ['--key' => $privateKey]);
 
         $this->successfulStep('SSH key based secure authentication configured successfully');
     }
@@ -48,7 +50,7 @@ class SshConfigureCommand extends Command
      *
      * @param  string  $name
      * @param  string|null  $key
-     * @return void
+     * @return string
      */
     protected function ensureKeyExists($name, $key = null)
     {
@@ -65,6 +67,8 @@ class SshConfigureCommand extends Command
         $this->step('Adding Key <comment>['.$localName.']</comment>'.' With The Name <comment>['.$name.']</comment> To Server <comment>['.$server->name.']</comment>');
 
         $this->forge->createSSHKey($server->id, ['key' => $key, 'name' => $name], true);
+
+        return $this->keys->keysPath().'/'.basename($localName, '.pub');
     }
 
     /**
