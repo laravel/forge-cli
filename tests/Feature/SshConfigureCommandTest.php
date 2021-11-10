@@ -34,6 +34,9 @@ it('can create ssh keys', function () {
         'key' => 'MY KEY Content',
     ], true)->once();
 
+    $this->remote->shouldReceive('resolvePrivateKeyUsing')->once();
+    $this->remote->shouldReceive('ensureSshIsConfigured')->once();
+
     $this->artisan('ssh:configure')
         ->expectsQuestion('<fg=yellow>‣</> <options=bold>Which Server Would You Like To Configure The SSH Key Based Secure Authentication</>', 1)
         ->expectsQuestion('<fg=yellow>‣</> <options=bold>Which Key Would You Like To Use</>', 0)
@@ -76,6 +79,9 @@ it('can reuse ssh keys', function () {
         'name' => 'driesvints',
         'key' => 'MY KEY Content',
     ], true)->once();
+
+    $this->remote->shouldReceive('resolvePrivateKeyUsing')->once();
+    $this->remote->shouldReceive('ensureSshIsConfigured')->once();
 
     $this->artisan('ssh:configure', ['server' => 2])
         ->expectsQuestion('<fg=yellow>‣</> <options=bold>Which Key Would You Like To Use</>', 1)

@@ -10,7 +10,8 @@ class SshTestCommand extends Command
      * @var string
      */
     protected $signature = 'ssh:test
-        {server? : The server name}';
+        {server? : The server name}
+        {--key= : The path to the private key}';
 
     /**
      * The description of the command.
@@ -33,6 +34,12 @@ class SshTestCommand extends Command
         }
 
         $this->step('Establishing secure connection');
+
+        if ($this->option('key')) {
+            $this->remote->resolvePrivateKeyUsing(function () {
+                return $this->option('key');
+            });
+        }
 
         $this->remote->ensureSshIsConfigured();
 
