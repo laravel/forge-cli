@@ -1,6 +1,12 @@
 # Release Notes
 
-## [Unreleased](https://github.com/laravel/forge-cli/compare/v1.3.3...master)
+## [Unreleased](https://github.com/laravel/forge-cli/compare/v1.3.4...master)
+
+
+## [v1.3.4 (2021-11-16)](https://github.com/laravel/forge-cli/compare/v1.3.3...v1.3.4)
+
+### Changed
+- Improves `ssh:configure` command ([#46](https://github.com/laravel/forge-cli/pull/46))
 
 
 ## [v1.3.3 (2021-11-02)](https://github.com/laravel/forge-cli/compare/v1.3.2...v1.3.3)
