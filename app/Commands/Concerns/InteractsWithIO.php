@@ -175,32 +175,6 @@ trait InteractsWithIO
     }
 
     /**
-     * Display a ask "step" message.
-     *
-     * @param  string|array  $question
-     * @param  array  $choices
-     * @param  string|null  $default
-     * @return int
-     */
-    public function choiceStep($question, $choices, $default = null)
-    {
-        $question = $this->formatStepText($question);
-
-        $question = new class('<fg=yellow>‣</> <options=bold>'.$question.'</>', $choices, $default) extends ChoiceQuestion
-        {
-            /**
-             * Determines if the given array is associative.
-             */
-            public function isAssoc(array $array): bool
-            {
-                return true;
-            }
-        };
-
-        return (int) $this->output->askQuestion($question);
-    }
-
-    /**
      * Display a secret "step" message.
      *
      * @param  array|string  $question
@@ -232,5 +206,31 @@ trait InteractsWithIO
         return sprintf(ucwords($text), ...collect($parameters)->map(function ($parameter) {
             return '<comment>['.$parameter.']</comment>';
         })->values()->all());
+    }
+
+    /**
+     * Display a ask "step" message.
+     *
+     * @param  string|array  $question
+     * @param  array  $choices
+     * @param  string|null  $default
+     * @return int
+     */
+    public function choiceStep($question, $choices, $default = null)
+    {
+        $question = $this->formatStepText($question);
+
+        $question = new class('<fg=yellow>‣</> <options=bold>'.$question.'</>', $choices, $default) extends ChoiceQuestion
+        {
+            /**
+             * Determines if the given array is associative.
+             */
+            public function isAssoc(array $array): bool
+            {
+                return true;
+            }
+        };
+
+        return (int) $this->output->askQuestion($question);
     }
 }
