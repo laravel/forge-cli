@@ -1,15 +1,13 @@
 # Release Instructions
 
- 1. Pull down the latest changes on the current stable branch
- 2. Update and commit the [CHANGELOG.md](./CHANGELOG.md) file
- 3. Update the version in [`config/app.php`](./config/app.php)
- 4. Compile the binary with
+1. Pull down the latest changes on the current stable branch
+2. Update the version in [`config/app.php`](./config/app.php)
+3. Compile the binary with
 
 ```zsh
 ./forge app:build
 ```
 
- 5. Commit all changes
- 6. Tag a new version of the package
- 7. Push all commits and the new tag to GitHub
- 8. Create a new GitHub release with the same release notes from CHANGELOG.md
+4. Commit all changes
+5. Push all commits to GitHub
+6. Create a new GitHub release for this version with the release notes
