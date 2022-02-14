@@ -3,10 +3,10 @@
 ## [Unreleased](https://github.com/laravel/forge-cli/compare/v1.3.4...master)
 
 ### Fixed
-- PHP 8.1 deprecation warnings ([]())
+- PHP 8.1 deprecation warnings ([#54](https://github.com/laravel/forge-cli/pull/54))
 
 ### Removed
-- PHP 7.3 and PHP 7.4 support ([]())
+- PHP 7.3 and PHP 7.4 support ([#54](https://github.com/laravel/forge-cli/pull/54))
 
 ## [v1.3.4 (2021-11-16)](https://github.com/laravel/forge-cli/compare/v1.3.3...v1.3.4)
 
