@@ -25,7 +25,7 @@ use Tests\CreatesApplication;
 
 uses(TestCase::class, CreatesApplication::class)
     ->beforeEach(function () {
-        Once\Cache::flush();
+        Once\Cache::getInstance()->flush();
 
         (new Filesystem)->deleteDirectory(base_path('tests/.laravel-forge'));
 

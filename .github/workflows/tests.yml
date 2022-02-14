@@ -13,7 +13,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        php: [7.3, 7.4, 8.0, 8.1]
+        php: [8.0, 8.1]
 
     name: PHP ${{ matrix.php }}
 
@@ -35,7 +35,7 @@ jobs:
 
       - name: Execute static analysis
         run: vendor/bin/phpstan
-        if: matrix.php == '8.0'
+        if: matrix.php == '8.1'
 
       - name: Execute unit/feature tests
         run: vendor/bin/pest

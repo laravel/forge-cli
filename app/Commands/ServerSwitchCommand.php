@@ -42,7 +42,7 @@ class ServerSwitchCommand extends Command
 
         $this->config->set('server', $server->id);
 
-        Once\Cache::flush();
+        Once\Cache::getInstance()->flush();
 
         $this->successfulStep(
             'Current server context changed successfully to <comment>['.$server->name.']</comment>'
