@@ -6,7 +6,8 @@ parameters:
     - bootstrap
     - config
     - scripts
-  level: 6
+  level: 5
   ignoreErrors:
     - '#Unsafe usage of new static\(\)#'
   checkMissingIterableValueType: false
+  checkGenericClassInNonGenericObjectType: false
