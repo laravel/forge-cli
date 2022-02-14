@@ -58,8 +58,6 @@ return [
         // Illuminate...
         Illuminate\Console\Scheduling\ScheduleRunCommand::class,
         Illuminate\Console\Scheduling\ScheduleFinishCommand::class,
-        Illuminate\Foundation\Console\VendorPublishCommand::class,
-        Illuminate\Foundation\Console\VendorPublishCommand::class,
 
         // Laravel Zero...
         LaravelZero\Framework\Commands\BuildCommand::class,
@@ -93,7 +91,8 @@ return [
     */
 
     'remove' => [
-        // ..
+        Illuminate\Foundation\Console\VendorPublishCommand::class,
+        Symfony\Component\Console\Command\DumpCompletionCommand::class,
     ],
 
 ];
