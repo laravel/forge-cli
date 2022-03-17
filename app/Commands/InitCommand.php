@@ -2,6 +2,8 @@
 
 namespace App\Commands;
 
+use Illuminate\Support\Facades\File;
+
 class InitCommand extends Command
 {
     /**
@@ -27,17 +29,17 @@ class InitCommand extends Command
     {
         $path = getcwd() . '/.laravel-forge';
 
-        if (! is_dir($path)) {
-            mkdir($path);
+        if (! File::isDirectory($path)) {
+            File::makeDirectory($path);
         }
 
         $gitignore = getcwd() . '/.gitignore';
 
-        if (is_writeable($gitignore)) {
-            $this->updateGitignore($gitignore);
+        if (File::isWritable($gitignore)) {
+            File::append($gitignore, '.laravel-forge' . PHP_EOL);
         }
 
-        $this->successfulStep("Initialized Successfully.");
+        $this->successfulStep("Initialized Successfully");
     }
 
     /**
@@ -48,9 +50,6 @@ class InitCommand extends Command
      */
     protected function updateGitignore(string $path)
     {
-        $contents = file_get_contents($path);
-        $contents .= '.laravel-forge' . PHP_EOL;
 
-        file_put_contents($path, $contents);
     }
 }
