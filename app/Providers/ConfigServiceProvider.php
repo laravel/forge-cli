@@ -25,9 +25,13 @@ class ConfigServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->singleton(ConfigRepository::class, function () {
-            $path = isset($_ENV['APP_ENV']) && $_ENV['APP_ENV'] == 'testing'
-                 ? base_path('tests')
-                 : ($_SERVER['HOME'] ?? $_SERVER['USERPROFILE']);
+            if (isset($_ENV['APP_ENV']) && $_ENV['APP_ENV'] == 'testing') {
+                $path = base_path('tests');
+            } elseif (is_dir(getcwd() . '/.laravel-forge')) {
+                $path = getcwd();
+            } else {
+                $path = ($_SERVER['HOME'] ?? $_SERVER['USERPROFILE']);
+            }
 
             $path .= '/.laravel-forge/config.json';
 
