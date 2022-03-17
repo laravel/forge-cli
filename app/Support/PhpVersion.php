@@ -50,8 +50,8 @@ class PhpVersion
      */
     public function release()
     {
-        $version = substr($this->version, -2);
+        $version = (int) substr($this->version, -2);
 
-        return number_format(substr($version, -2) / 10, 1, '.', '');
+        return number_format($version / 10, 1, '.', '');
     }
 }
