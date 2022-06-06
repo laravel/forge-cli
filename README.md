@@ -17,7 +17,7 @@ In addition, Forge can assist you in managing scheduled jobs, queue workers, SSL
 
 ## Official Documentation
 
-Documentation for Forge CLI can be found on the [Laravel Forge website](https://forge.laravel.com/docs/1.0/accounts/cli.html).
+Documentation for Forge CLI can be found on the [Laravel Forge website](https://forge.laravel.com/docs/1.0/cli.html).
 
 ## Contributing
 
