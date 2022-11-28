@@ -18,7 +18,7 @@ it('can create ssh connections', function () {
     $this->artisan('ssh')->assertExitCode(0);
 });
 
-it('can connect to a specific ssh user', function() {
+it('can connect to a specific ssh user', function () {
     $this->config->set('server', 1);
 
     $this->forge->shouldReceive('server')
@@ -36,11 +36,11 @@ it('can connect to a specific ssh user', function() {
         ->andReturn(0);
 
     $this->artisan('ssh', [
-        '--user' => 'testuser'
+        '--user' => 'testuser',
     ])->assertExitCode(0);
 });
 
-it('defaults to the forge user', function() {
+it('defaults to the forge user', function () {
     $this->config->set('server', 1);
 
     $this->forge->shouldReceive('server')

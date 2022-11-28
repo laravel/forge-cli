@@ -57,7 +57,7 @@ class RemoteRepository
      * Execute a command against the shell, and displays the output.
      *
      * @param  string|null  $command
-     * @param  string       $user
+     * @param  string  $user
      * @return int
      */
     public function passthru($command = null, $user = 'forge')
@@ -199,7 +199,7 @@ class RemoteRepository
      * Returns the "ssh" shell command to be run.
      *
      * @param  string|null  $command
-     * @param  string       $user
+     * @param  string  $user
      * @return string
      */
     protected function ssh($command = null, $user = 'forge')
