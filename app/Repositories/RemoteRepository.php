@@ -57,13 +57,14 @@ class RemoteRepository
      * Execute a command against the shell, and displays the output.
      *
      * @param  string|null  $command
+     * @param  string       $user
      * @return int
      */
-    public function passthru($command = null)
+    public function passthru($command = null, $user = 'forge')
     {
         $this->ensureSshIsConfigured();
 
-        passthru($this->ssh('"'.$command.'"'), $exitCode);
+        passthru($this->ssh('"'.$command.'"', $user), $exitCode);
 
         return (int) $exitCode;
     }
@@ -195,12 +196,13 @@ class RemoteRepository
     }
 
     /**
-     * Returns the "ssh" sheel command to be run.
+     * Returns the "ssh" shell command to be run.
      *
-     * @param  string  $command|null
+     * @param  string|null  $command
+     * @param  string       $user
      * @return string
      */
-    protected function ssh($command = null)
+    protected function ssh($command = null, $user = 'forge')
     {
         $options = collect([
             'ConnectTimeout' => 5,
@@ -221,8 +223,9 @@ class RemoteRepository
         }
 
         return trim(sprintf(
-            'ssh %s -t forge@%s %s',
+            'ssh %s -t %s@%s %s',
             $options,
+            $user,
             $this->server->ipAddress,
             $command,
         ));
