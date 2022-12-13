@@ -1,6 +1,12 @@
 # Release Notes
 
-## [Unreleased](https://github.com/laravel/forge-cli/compare/v1.4.0...master)
+## [Unreleased](https://github.com/laravel/forge-cli/compare/v1.4.1...master)
+
+## [v1.4.1](https://github.com/laravel/forge-cli/compare/v1.4.0...v1.4.1) - 2022-12-13
+
+### Changed
+
+- Update dependencies
 
 ## [v1.4.0](https://github.com/laravel/forge-cli/compare/v1.3.4...v1.4.0) - 2022-02-15
 
