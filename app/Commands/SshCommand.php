@@ -34,6 +34,7 @@ class SshCommand extends Command
         }
 
         $server = $this->currentServer();
+
         $username = $this->option('user') ?: 'forge';
 
         $this->step('Establishing secure connection');
