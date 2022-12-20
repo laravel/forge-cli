@@ -9,7 +9,7 @@ class SshCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'ssh {server? : The server name} {--u|user= : The remote username}';
+    protected $signature = 'ssh {server? : The server name} {--u|user= : The user to connect to the server as}';
 
     /**
      * The description of the command.
