@@ -64,7 +64,7 @@ class LocalRepository extends RemoteRepository
         $this->sanitizableOutput = $sanitizableOutput;
     }
 
-    protected function ssh($command = null)
+    protected function ssh($command = null, $user = null)
     {
         return $command;
     }

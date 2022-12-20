@@ -27,6 +27,6 @@ class Panic
             - Operating System: %s
             - Error Message: %s.
             EOF
-        , config('app.version'), phpversion(), PHP_OS, $message));
+            , config('app.version'), phpversion(), PHP_OS, $message));
     }
 }

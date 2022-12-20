@@ -9,7 +9,7 @@ class SshCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'ssh {server? : The server name}';
+    protected $signature = 'ssh {server? : The server name} {--u|user= : The user to connect to the server as}';
 
     /**
      * The description of the command.
@@ -35,13 +35,15 @@ class SshCommand extends Command
 
         $server = $this->currentServer();
 
+        $username = $this->option('user') ?: 'forge';
+
         $this->step('Establishing secure connection');
 
         $this->remote->ensureSshIsConfigured();
 
         $this->successfulStep('Connected To <comment>['.$server->name.']</comment>');
 
-        $exitCode = $this->remote->passthru();
+        $exitCode = $this->remote->passthru(null, $username);
 
         abort_if($exitCode == 255, $exitCode, 'Unable to connect to remote server. Have you configured an SSH key?');
 
