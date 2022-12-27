@@ -12,7 +12,8 @@ class SshConfigureCommand extends Command
     protected $signature = 'ssh:configure
         {server? : The server name}
         {--key= : The path to the public key}
-        {--name= : The key name on Forge}';
+        {--name= : The key name on Forge}
+        {--user= : The server username}';
 
     /**
      * The description of the command.
@@ -38,7 +39,7 @@ class SshConfigureCommand extends Command
 
         $key = $this->getKey();
 
-        $privateKey = $this->ensureKeyExists($this->getKeyName($key), $key);
+        $privateKey = $this->ensureKeyExists($this->getKeyName($key), $key, $this->getServerUsername());
 
         $this->callSilently('ssh:test', ['--key' => $privateKey]);
 
@@ -50,9 +51,10 @@ class SshConfigureCommand extends Command
      *
      * @param  string  $name
      * @param  string|null  $key
+     * @param  string  $username
      * @return string
      */
-    protected function ensureKeyExists($name, $key = null)
+    protected function ensureKeyExists($name, $key = null, $username = 'forge')
     {
         $server = $this->currentServer();
 
@@ -66,7 +68,7 @@ class SshConfigureCommand extends Command
 
         $this->step('Adding Key <comment>['.$localName.']</comment>'.' With The Name <comment>['.$name.']</comment> To Server <comment>['.$server->name.']</comment>');
 
-        $this->forge->createSSHKey($server->id, ['key' => $key, 'name' => $name], true);
+        $this->forge->createSSHKey($server->id, ['key' => $key, 'name' => $name, 'username' => $username], true);
 
         return $this->keys->keysPath().'/'.basename($localName, '.pub');
     }
@@ -110,5 +112,17 @@ class SshConfigureCommand extends Command
         }
 
         return $this->option('name') ?: $this->askStep($question, get_current_user());
+    }
+
+    /**
+     * Prompt for a "server user"
+     *
+     * @return string
+     */
+    protected function getServerUsername()
+    {
+        $question = 'What username should we use for the selected server';
+
+        return $this->option('user') ?: $this->askStep($question, 'forge');
     }
 }
