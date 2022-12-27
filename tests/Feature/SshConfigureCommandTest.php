@@ -32,7 +32,7 @@ it('can create ssh keys', function () {
     $this->forge->shouldReceive('createSSHKey')->with(1, [
         'name' => 'driesvints',
         'key' => 'MY KEY Content',
-        'username' => 'morales2k'
+        'username' => 'morales2k',
     ], true)->once();
 
     $this->remote->shouldReceive('resolvePrivateKeyUsing')->once();
@@ -80,7 +80,7 @@ it('can reuse ssh keys', function () {
     $this->forge->shouldReceive('createSSHKey')->with(2, [
         'name' => 'driesvints',
         'key' => 'MY KEY Content',
-        'username' => 'morales2k'
+        'username' => 'morales2k',
     ], true)->once();
 
     $this->remote->shouldReceive('resolvePrivateKeyUsing')->once();
