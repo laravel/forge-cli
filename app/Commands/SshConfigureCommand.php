@@ -115,7 +115,7 @@ class SshConfigureCommand extends Command
     }
 
     /**
-     * Prompt for a "server user"
+     * Prompt for a "server user".
      *
      * @return string
      */
