@@ -1,6 +1,12 @@
 # Release Notes
 
-## [Unreleased](https://github.com/laravel/forge-cli/compare/v1.4.1...master)
+## [Unreleased](https://github.com/laravel/forge-cli/compare/v1.5.0...master)
+
+## [v1.5.0](https://github.com/laravel/forge-cli/compare/v1.4.1...v1.5.0) - 2023-01-03
+
+### Added
+
+- Add option for specifying remote user when calling the ssh command by @tkuijer in https://github.com/laravel/forge-cli/pull/67
 
 ## [v1.4.1](https://github.com/laravel/forge-cli/compare/v1.4.0...v1.4.1) - 2022-12-13
 
