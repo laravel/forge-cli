@@ -1,6 +1,12 @@
 # Release Notes
 
-## [Unreleased](https://github.com/laravel/forge-cli/compare/v1.5.0...master)
+## [Unreleased](https://github.com/laravel/forge-cli/compare/v1.6.0...master)
+
+## [v1.6.0](https://github.com/laravel/forge-cli/compare/v1.5.0...v1.6.0) - 2023-01-31
+
+### Added
+
+- Add prompt/option for username parameter required by forge api by @morales2k in https://github.com/laravel/forge-cli/pull/70
 
 ## [v1.5.0](https://github.com/laravel/forge-cli/compare/v1.4.1...v1.5.0) - 2023-01-03
 
