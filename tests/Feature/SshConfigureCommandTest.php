@@ -32,6 +32,7 @@ it('can create ssh keys', function () {
     $this->forge->shouldReceive('createSSHKey')->with(1, [
         'name' => 'driesvints',
         'key' => 'MY KEY Content',
+        'username' => 'morales2k',
     ], true)->once();
 
     $this->remote->shouldReceive('resolvePrivateKeyUsing')->once();
@@ -41,6 +42,7 @@ it('can create ssh keys', function () {
         ->expectsQuestion('<fg=yellow>‣</> <options=bold>Which Server Would You Like To Configure The SSH Key Based Secure Authentication</>', 1)
         ->expectsQuestion('<fg=yellow>‣</> <options=bold>Which Key Would You Like To Use</>', 0)
         ->expectsQuestion('<fg=yellow>‣</> <options=bold>What Should The SSH Key Be Named</>', 'driesvints')
+        ->expectsQuestion('<fg=yellow>‣</> <options=bold>What Username Should We Use For The Selected Server</>', 'morales2k')
         ->expectsOutput('==> Creating Key [driesvints_rsa.pub]')
         ->expectsOutput('==> Adding Key [driesvints_rsa.pub] With The Name [driesvints] To Server [production]')
         ->expectsOutput('==> SSH Key Based Secure Authentication Configured Successfully');
@@ -78,6 +80,7 @@ it('can reuse ssh keys', function () {
     $this->forge->shouldReceive('createSSHKey')->with(2, [
         'name' => 'driesvints',
         'key' => 'MY KEY Content',
+        'username' => 'morales2k',
     ], true)->once();
 
     $this->remote->shouldReceive('resolvePrivateKeyUsing')->once();
@@ -86,6 +89,7 @@ it('can reuse ssh keys', function () {
     $this->artisan('ssh:configure', ['server' => 2])
         ->expectsQuestion('<fg=yellow>‣</> <options=bold>Which Key Would You Like To Use</>', 1)
         ->expectsQuestion('<fg=yellow>‣</> <options=bold>What Should The SSH Key Be Named In Forge</>', 'driesvints')
+        ->expectsQuestion('<fg=yellow>‣</> <options=bold>What Username Should We Use For The Selected Server</>', 'morales2k')
         ->expectsOutput('==> Adding Key [id_rsa.pub] With The Name [driesvints] To Server [production]')
         ->expectsOutput('==> SSH Key Based Secure Authentication Configured Successfully');
 });
