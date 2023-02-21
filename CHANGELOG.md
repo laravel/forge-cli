@@ -1,6 +1,10 @@
 # Release Notes
 
-## [Unreleased](https://github.com/laravel/forge-cli/compare/v1.6.0...master)
+## [Unreleased](https://github.com/laravel/forge-cli/compare/v1.7.0...master)
+
+## [v1.7.0](https://github.com/laravel/forge-cli/compare/v1.6.0...v1.7.0) - 2023-02-21
+
+- Migrates to Laravel Zero 10 by @nunomaduro in https://github.com/laravel/forge-cli/pull/71
 
 ## [v1.6.0](https://github.com/laravel/forge-cli/compare/v1.5.0...v1.6.0) - 2023-01-31
 
