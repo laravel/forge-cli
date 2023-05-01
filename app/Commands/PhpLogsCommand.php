@@ -33,7 +33,7 @@ class PhpLogsCommand extends Command
         $this->ensurePhpExists();
 
         $version = $this->argument('version');
-        $versions = ['5.6', '7.0', '7.1', '7.2', '7.3', '7.4', '8.0', '8.1'];
+        $versions = PhpVersion::VERSIONS;
 
         abort_if(
             ! is_null($version) && ! in_array($version, $versions),
