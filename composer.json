@@ -18,11 +18,11 @@
         "phpseclib/phpseclib": "^3.0.19"
     },
     "require-dev": {
-        "laravel-zero/framework": "^10.0.0",
-        "laravel/forge-sdk": "^3.13.3",
+        "laravel-zero/framework": "^10.0.2",
+        "laravel/forge-sdk": "^3.13.4",
         "mockery/mockery": "^1.5.1",
-        "nunomaduro/larastan": "^2.4.0",
-        "pestphp/pest": "^1.22.4",
+        "nunomaduro/larastan": "^2.6.0",
+        "pestphp/pest": "^1.23.0",
         "spatie/once": "^3.1.0"
     },
     "autoload": {

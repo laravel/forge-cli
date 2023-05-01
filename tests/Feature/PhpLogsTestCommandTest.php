@@ -37,7 +37,7 @@ it('can not retrieve logs when php version is incorrect', function () {
     );
 
     $this->artisan('php:logs', ['version' => '2.0']);
-})->throws('PHP version needs to be one of these values: 5.6, 7.0, 7.1, 7.2, 7.3, 7.4, 8.0, 8.1.');
+})->throws('PHP version needs to be one of these values: 5.6, 7.0, 7.1, 7.2, 7.3, 7.4, 8.0, 8.1, 8.2.');
 
 it('can not display the logs when there is no php', function () {
     $this->client->shouldReceive('server')->andReturn(
