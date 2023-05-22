@@ -22,6 +22,7 @@ class PhpVersion
      * Creates a new PHP Version instance.
      *
      * @param  string  $version
+     * @return void
      */
     public function __construct($version)
     {

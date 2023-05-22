@@ -62,6 +62,8 @@ abstract class Command extends BaseCommand
 
     /**
      * Creates a new command instance.
+     *
+     * @return void
      */
     public function __construct(
         ConfigRepository $config,

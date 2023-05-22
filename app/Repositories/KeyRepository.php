@@ -19,6 +19,7 @@ class KeyRepository
      * Creates a new repository instance.
      *
      * @param  string  $keysPath
+     * @return void
      */
     public function __construct($keysPath)
     {

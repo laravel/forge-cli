@@ -46,6 +46,7 @@ class RemoteRepository
      * Creates a new repository instance.
      *
      * @param  string  $socketsPath
+     * @return void
      */
     public function __construct($socketsPath)
     {

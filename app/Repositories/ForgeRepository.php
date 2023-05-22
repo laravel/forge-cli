@@ -30,6 +30,7 @@ class ForgeRepository
      *
      * @param  \App\Repositories\ConfigRepository  $config
      * @param  \Laravel\Forge\Forge  $client
+     * @return void
      */
     public function __construct($config, $client)
     {
