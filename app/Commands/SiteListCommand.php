@@ -45,7 +45,6 @@ class SiteListCommand extends Command
             return [
                 $site->id,
                 $name,
-                // @phpstan-ignore-next-line
                 $site->phpVersion ? PhpVersion::of($site->phpVersion)->release() : 'None',
             ];
         })->all());
