@@ -18,7 +18,6 @@ class ConfigRepository
      * Creates a new repository instance.
      *
      * @param  string  $path
-     * @return void
      */
     public function __construct($path)
     {
