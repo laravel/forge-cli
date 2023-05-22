@@ -13,7 +13,6 @@ trait InteractsWithIO
      * @param  array  $headers
      * @param  \Illuminate\Contracts\Support\Arrayable|array  $rows
      * @param  string  $tableStyle
-     * @param  array  $columnStyles
      * @return void
      */
     public function table($headers, $rows, $tableStyle = 'default', array $columnStyles = [])
