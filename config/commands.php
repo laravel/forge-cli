@@ -72,11 +72,6 @@ return [
 
         // Symfony...
         Symfony\Component\Console\Command\HelpCommand::class,
-
-        // Pest
-        Pest\Laravel\Commands\PestDatasetCommand::class,
-        Pest\Laravel\Commands\PestInstallCommand::class,
-        Pest\Laravel\Commands\PestTestCommand::class,
     ],
 
     /*

@@ -92,7 +92,6 @@ class Forge extends BaseForge
     /**
      * Handle the request error.
      *
-     * @param  \Psr\Http\Message\ResponseInterface  $response
      * @return void
      */
     protected function handleRequestError(ResponseInterface $response)

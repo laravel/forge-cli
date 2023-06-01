@@ -62,13 +62,6 @@ abstract class Command extends BaseCommand
 
     /**
      * Creates a new command instance.
-     *
-     * @param  \App\Repositories\ConfigRepository  $config
-     * @param  \App\Repositories\ForgeRepository  $forge
-     * @param  \App\Repositories\KeyRepository  $keys
-     * @param  \App\Repositories\RemoteRepository  $remote
-     * @param  \App\Support\Time  $time
-     * @return void
      */
     public function __construct(
         ConfigRepository $config,
@@ -94,8 +87,6 @@ abstract class Command extends BaseCommand
     /**
      * Execute the console command.
      *
-     * @param  \Symfony\Component\Console\Input\InputInterface  $input
-     * @param  \Symfony\Component\Console\Output\OutputInterface  $output
      * @return int
      */
     protected function execute(InputInterface $input, OutputInterface $output)

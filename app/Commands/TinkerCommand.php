@@ -33,7 +33,6 @@ class TinkerCommand extends Command
 
         $this->step('Establishing Tinker Connection');
 
-        // @phpstan-ignore-next-line
         $phpVersion = $site->phpVersion;
 
         return $this->remote->passthru(sprintf(
