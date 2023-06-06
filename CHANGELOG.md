@@ -1,6 +1,10 @@
 # Release Notes
 
-## [Unreleased](https://github.com/laravel/forge-cli/compare/v1.7.0...master)
+## [Unreleased](https://github.com/laravel/forge-cli/compare/v1.8.0...master)
+
+## [v1.8.0](https://github.com/laravel/forge-cli/compare/v1.7.0...v1.8.0) - 2023-06-06
+
+- Support PHP 8.2 and use single source of truth by @jbrooksuk in https://github.com/laravel/forge-cli/pull/73
 
 ## [v1.7.0](https://github.com/laravel/forge-cli/compare/v1.6.0...v1.7.0) - 2023-02-21
 
