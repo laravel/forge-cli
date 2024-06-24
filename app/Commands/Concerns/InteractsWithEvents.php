@@ -45,19 +45,30 @@ trait InteractsWithEvents
             }
 
             if ($exitCode == 0) {
-                collect($output)->slice(count($this->outputBuffer[$eventId]))
-                    ->map('trim')
-                    ->filter(function ($line) {
-                        return ! empty($line);
-                    })->each(function ($line) {
-                        $this->line("  <fg=#6C7280>▕</> $line");
-                    });
+                $this->displayOutput(collect($output)->slice(count($this->outputBuffer[$eventId]))
+                    ->map('trim'));
 
                 $this->outputBuffer[$eventId] = $output;
             }
         } while ($while && call_user_func($while));
 
         $while ? $this->displayEventOutput($username, $eventId) : $this->line('');
+    }
+
+    /**
+     * Display the output of the given collection indenting each line.
+     *
+     * @param  \Illuminate\Support\Collection  $collection
+     * @return void
+     */
+    protected function displayOutput($collection)
+    {
+        $collection->map('trim')
+            ->filter(function ($line) {
+                return ! empty($line);
+            })->each(function ($line) {
+                return $this->line("  <fg=#6C7280>▕</> $line");
+            });
     }
 
     /**
