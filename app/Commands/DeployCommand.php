@@ -52,15 +52,13 @@ class DeployCommand extends Command
 
         $this->forge->deploySite($server->id, $site->id, false);
 
-        [$deploymentId, $eventId] = $this->ensureDeploymentHaveStarted($site);
+        $deploymentId = $this->ensureDeploymentHaveStarted($site);
 
-        $deployment = null;
+        $deployment = $this->ensureDeploymentHaveFinished($server, $site, $deploymentId);
 
-        $this->displayEventOutput($site->username, $eventId, function () use ($server, $site, $deploymentId, &$deployment) {
-            $deployment = $this->forge->siteDeployment($server->id, $site->id, $deploymentId);
-
-            return $deployment->status == 'deploying';
-        });
+        $output = $this->forge->siteDeploymentOutput($server->id, $site->id, $deploymentId);
+        $output = explode(PHP_EOL, $output);
+        $this->displayOutput(collect($output));
 
         abort_if($deployment->status == 'failed', 1, 'The deployment failed.');
 
@@ -71,7 +69,7 @@ class DeployCommand extends Command
      * Ensure the deployment have started on the server.
      *
      * @param  \Laravel\Forge\Resources\Site  $site
-     * @return array
+     * @return int
      */
     protected function ensureDeploymentHaveStarted($site)
     {
@@ -88,17 +86,31 @@ class DeployCommand extends Command
 
         $this->step('Deploying');
 
-        $eventId = $this->findEventId(sprintf(
-            'Deploying Pushed Code (%s).',
-            $site->name
-        ));
-
         $deploymentId = collect($this->forge->siteDeployments(
             $this->currentServer()->id,
             $site->id,
         ))->first()['id'];
 
-        return [$deploymentId, $eventId];
+        return $deploymentId;
+    }
+
+    /**
+     * Ensure the deployment have finished on the server.
+     *
+     * @param  \Laravel\Forge\Resources\Server  $server
+     * @param  \Laravel\Forge\Resources\Site  $site
+     * @param  \Laravel\Forge\Resources\Site  $site
+     * @return object
+     */
+    protected function ensureDeploymentHaveFinished($server, $site, $deploymentId)
+    {
+        do {
+            $this->time->sleep(1);
+
+            $deployment = $this->forge->siteDeployment($server->id, $site->id, $deploymentId);
+        } while ($deployment->status == 'deploying');
+
+        return $deployment;
     }
 
     /**
