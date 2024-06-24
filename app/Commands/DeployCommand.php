@@ -54,7 +54,7 @@ class DeployCommand extends Command
 
         $deploymentId = $this->ensureDeploymentHaveStarted($site);
 
-        $deployment = $this->ensureDeploymentHaveFinished($server, $site, $deploymentId);
+        $deployment = $this->ensureDeploymentHasFinished($server, $site, $deploymentId);
 
         $output = $this->forge->siteDeploymentOutput($server->id, $site->id, $deploymentId);
         $output = explode(PHP_EOL, $output);
@@ -95,14 +95,14 @@ class DeployCommand extends Command
     }
 
     /**
-     * Ensure the deployment have finished on the server.
+     * Ensure the deployment has finished on the server.
      *
      * @param  \Laravel\Forge\Resources\Server  $server
      * @param  \Laravel\Forge\Resources\Site  $site
-     * @param  \Laravel\Forge\Resources\Site  $site
+     * @param  int  $deploymentId
      * @return object
      */
-    protected function ensureDeploymentHaveFinished($server, $site, $deploymentId)
+    protected function ensureDeploymentHasFinished($server, $site, $deploymentId)
     {
         do {
             $this->time->sleep(1);
