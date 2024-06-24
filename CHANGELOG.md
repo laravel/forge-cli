@@ -1,6 +1,11 @@
 # Release Notes
 
-## [Unreleased](https://github.com/laravel/forge-cli/compare/v1.8.0...master)
+## [Unreleased](https://github.com/laravel/forge-cli/compare/v1.8.1...master)
+
+## [v1.8.1](https://github.com/laravel/forge-cli/compare/v1.8.0...v1.8.1) - 2024-06-24
+
+* fix: Use custom ssh port in CLI commands if defined by [@olivernybroe](https://github.com/olivernybroe) in https://github.com/laravel/forge-cli/pull/87
+* fix: deployment command showing wrong output by [@olivernybroe](https://github.com/olivernybroe) in https://github.com/laravel/forge-cli/pull/88
 
 ## [v1.8.0](https://github.com/laravel/forge-cli/compare/v1.7.0...v1.8.0) - 2023-06-06
 
