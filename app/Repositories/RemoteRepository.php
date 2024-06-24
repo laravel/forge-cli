@@ -223,8 +223,9 @@ class RemoteRepository
         }
 
         return trim(sprintf(
-            'ssh %s -t %s@%s %s',
+            'ssh %s -p %s -t %s@%s %s',
             $options,
+            $this->server->sshPort ?? 22,
             $user,
             $this->server->ipAddress,
             $command,
