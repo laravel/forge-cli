@@ -4,7 +4,7 @@ namespace App\Commands;
 
 class DatabaseLogsCommand extends Command
 {
-    use Concerns\InteractsWithLogs, Concerns\InteractsWithDatabase;
+    use Concerns\InteractsWithDatabase, Concerns\InteractsWithLogs;
 
     /**
      * The signature of the command.
