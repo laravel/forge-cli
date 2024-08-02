@@ -27,7 +27,7 @@ class TimeServiceProvider extends ServiceProvider
         $this->app->singleton(Time::class, function () {
             return isset($_ENV['APP_ENV']) && $_ENV['APP_ENV'] == 'testing'
                 ? $this->fakeTime()
-                : new Time();
+                : new Time;
         });
     }
 
