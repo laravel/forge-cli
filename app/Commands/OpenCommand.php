@@ -42,10 +42,11 @@ class OpenCommand extends Command
             $open = 'xdg-open';
         } else {
             $this->step("Can't open your browser, you'll have to manually navigate to {$url}");
+
             return;
         }
 
-        $this->step("Opening site in your browser...");
+        $this->step('Opening site in your browser...');
 
         $command = [$open, $url];
 
