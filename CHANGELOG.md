@@ -1,6 +1,12 @@
 # Release Notes
 
-## [Unreleased](https://github.com/laravel/forge-cli/compare/v1.8.1...master)
+## [Unreleased](https://github.com/laravel/forge-cli/compare/v1.8.2...master)
+
+## [v1.8.2](https://github.com/laravel/forge-cli/compare/v1.8.1...v1.8.2) - 2024-09-27
+
+* Replace dead link in Security Policy by [@Jubeki](https://github.com/Jubeki) in https://github.com/laravel/forge-cli/pull/90
+* Add "open" command by [@mpociot](https://github.com/mpociot) in https://github.com/laravel/forge-cli/pull/91
+* Set a User-Agent string by [@jbrooksuk](https://github.com/jbrooksuk) in https://github.com/laravel/forge-cli/pull/92
 
 ## [v1.8.1](https://github.com/laravel/forge-cli/compare/v1.8.0...v1.8.1) - 2024-06-24
 
