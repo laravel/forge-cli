@@ -93,6 +93,7 @@ class ForgeRepository
                     'Authorization' => 'Bearer '.$token,
                     'Accept' => 'application/json',
                     'Content-Type' => 'application/json',
+                    'User-Agent' => 'Laravel Forge CLI/v'.config('app.version'),
                 ],
             ]) : null;
 
