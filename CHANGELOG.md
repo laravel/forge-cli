@@ -1,6 +1,12 @@
 # Release Notes
 
-## [Unreleased](https://github.com/laravel/forge-cli/compare/v1.8.2...master)
+## [Unreleased](https://github.com/laravel/forge-cli/compare/v1.8.3...master)
+
+## [v1.8.3](https://github.com/laravel/forge-cli/compare/v1.8.2...v1.8.3) - 2024-09-30
+
+### What's Changed
+
+* Always set user agent to Forge CLI by [@olivernybroe](https://github.com/olivernybroe) in https://github.com/laravel/forge-cli/pull/93
 
 ## [v1.8.2](https://github.com/laravel/forge-cli/compare/v1.8.1...v1.8.2) - 2024-09-27
 
