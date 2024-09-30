@@ -85,17 +85,16 @@ class ForgeRepository
 
         abort_if($token == null, 1, 'Please authenticate using the \'login\' command before proceeding.');
 
-        $guzzle = isset($_SERVER['FORGE_API_BASE'])
-            ? new GuzzleHttp\Client([ // http://forge.test/api/v1/
-                'base_uri' => $_SERVER['FORGE_API_BASE'], // 'https://forge.laravel.com/api/v1/',
-                'http_errors' => false,
-                'headers' => [
-                    'Authorization' => 'Bearer '.$token,
-                    'Accept' => 'application/json',
-                    'Content-Type' => 'application/json',
-                    'User-Agent' => 'Laravel Forge CLI/v'.config('app.version'),
-                ],
-            ]) : null;
+        $guzzle = new GuzzleHttp\Client([
+            'base_uri' => isset($_SERVER['FORGE_API_BASE']) ? $_SERVER['FORGE_API_BASE'] : 'https://forge.laravel.com/api/v1/',
+            'http_errors' => false,
+            'headers' => [
+                'Authorization' => 'Bearer '.$token,
+                'Accept' => 'application/json',
+                'Content-Type' => 'application/json',
+                'User-Agent' => 'Laravel Forge CLI/v'.config('app.version'),
+            ],
+        ]);
 
         $this->client->setApiKey($token, $guzzle);
     }
