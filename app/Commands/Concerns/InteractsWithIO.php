@@ -42,16 +42,25 @@ trait InteractsWithIO
      */
     public function askForSite($question)
     {
-        $name = $this->argument('site');
+        $name = $this->hasArgument('site') ? $this->argument('site') : null;
 
         $answers = collect($this->forge->sites($this->currentServer()->id));
 
         abort_if($answers->isEmpty(), 1, 'This server does not have any sites.');
 
+        // Priority 1: Command argument
         if (! is_null($name)) {
             return optional($answers->where('name', $name)->first())->id ?: $name;
         }
 
+        // Priority 2: Environment config (named environments or legacy .forge)
+        $envSiteId = $this->getEnvironmentSiteId();
+
+        if ($envSiteId) {
+            return $envSiteId;
+        }
+
+        // Priority 3: Interactive prompt
         return $this->choiceStep($question, $answers->mapWithKeys(function ($resource) {
             return [$resource->id => $resource->name];
         })->all());
@@ -65,7 +74,7 @@ trait InteractsWithIO
      */
     public function askForServer($question)
     {
-        $name = $this->argument('server');
+        $name = $this->hasArgument('server') ? $this->argument('server') : null;
 
         $answers = collect($this->forge->servers());
 

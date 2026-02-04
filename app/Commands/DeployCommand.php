@@ -13,7 +13,10 @@ class DeployCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'deploy {site? : The site name}';
+    protected $signature = 'deploy
+        {target? : Environment name (e.g., staging, production) or site name}
+        {--site= : Explicit site name (bypasses environment detection)}
+        {--force : Skip confirmation prompt}';
 
     /**
      * The description of the command.
@@ -25,17 +28,128 @@ class DeployCommand extends Command
     /**
      * Execute the console command.
      *
-     * @return void
+     * @return int|void
      */
     public function handle()
     {
-        $siteId = $this->askForSite('Which site would you like to deploy');
+        $target = $this->argument('target');
+        $explicitSite = $this->option('site');
+
+        // If --site is provided, bypass all environment logic
+        if ($explicitSite) {
+            return $this->deployToSite($explicitSite);
+        }
+
+        // Smart detection: is target an environment name?
+        if ($target && $this->isEnvironmentName($target)) {
+            $this->setEnvironment($target);
+            return $this->deployToEnvironment($target);
+        }
+
+        // If target provided but not an environment, treat as site name
+        if ($target) {
+            return $this->deployToSite($target);
+        }
+
+        // No target: use default environment from .forge if available
+        if ($this->hasEnvironmentConfig()) {
+            $envName = $this->getEnvironmentName();
+            return $this->deployToEnvironment($envName);
+        }
+
+        // Fallback: prompt for site (original behavior)
+        return $this->deployToSite(null);
+    }
+
+    /**
+     * Check if the given name matches a configured environment.
+     *
+     * @param  string  $name
+     * @return bool
+     */
+    protected function isEnvironmentName($name)
+    {
+        $envNames = $this->localConfig->getEnvironmentNames();
+        return in_array(strtolower($name), array_map('strtolower', $envNames));
+    }
+
+    /**
+     * Set the environment to use for this deployment.
+     *
+     * @param  string  $name
+     * @return void
+     */
+    protected function setEnvironment($name)
+    {
+        // Override the resolved environment
+        $this->resolvedEnvironment = $this->localConfig->resolveEnvironment($name);
+    }
+
+    /**
+     * Deploy to a configured environment.
+     *
+     * @param  string  $envName
+     * @return int|void
+     */
+    protected function deployToEnvironment($envName)
+    {
+        // Check for confirmation if required
+        if (! $this->confirmEnvironmentAction('deploy')) {
+            $this->warnStep('Deployment cancelled.');
+            return 0;
+        }
+
+        $this->step(['Deploying to %s environment', strtoupper($envName)]);
+
+        $siteId = $this->getEnvironmentSiteId();
+
+        if (! $siteId) {
+            $this->error("No site configured for environment '{$envName}'");
+            return 1;
+        }
 
         $site = $this->forge->site($this->currentServer()->id, $siteId);
 
         abort_unless(is_null($site->deploymentStatus), 1, 'This site is already deploying.');
 
         $this->deploy($site);
+    }
+
+    /**
+     * Deploy to a site by name (original behavior).
+     *
+     * @param  string|null  $siteName
+     * @return int|void
+     */
+    protected function deployToSite($siteName)
+    {
+        // Clear environment config so we don't use it
+        $this->resolvedEnvironment = ['name' => null, 'config' => []];
+
+        $siteId = $siteName
+            ? $this->resolveSiteByName($siteName)
+            : $this->askForSite('Which site would you like to deploy');
+
+        $site = $this->forge->site($this->currentServer()->id, $siteId);
+
+        abort_unless(is_null($site->deploymentStatus), 1, 'This site is already deploying.');
+
+        $this->deploy($site);
+    }
+
+    /**
+     * Resolve a site ID from its name.
+     *
+     * @param  string  $name
+     * @return int|string
+     */
+    protected function resolveSiteByName($name)
+    {
+        $sites = collect($this->forge->sites($this->currentServer()->id));
+
+        $site = $sites->where('name', $name)->first();
+
+        return $site ? $site->id : $name;
     }
 
     /**

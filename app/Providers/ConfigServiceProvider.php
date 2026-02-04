@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Repositories\ConfigRepository;
+use App\Repositories\LocalConfigRepository;
 use Illuminate\Support\ServiceProvider;
 
 class ConfigServiceProvider extends ServiceProvider
@@ -32,6 +33,10 @@ class ConfigServiceProvider extends ServiceProvider
             $path .= '/.laravel-forge/config.json';
 
             return new ConfigRepository($path);
+        });
+
+        $this->app->singleton(LocalConfigRepository::class, function () {
+            return new LocalConfigRepository();
         });
     }
 }

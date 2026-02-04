@@ -5,6 +5,7 @@ namespace App\Commands;
 use App\Repositories\ConfigRepository;
 use App\Repositories\ForgeRepository;
 use App\Repositories\KeyRepository;
+use App\Repositories\LocalConfigRepository;
 use App\Repositories\RemoteRepository;
 use App\Support\Time;
 use Laravel\Forge\Forge;
@@ -16,6 +17,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 abstract class Command extends BaseCommand
 {
     use Concerns\InteractsWithIO,
+        Concerns\InteractsWithEnvironments,
         Concerns\InteractsWithVersions;
 
     /**
@@ -31,6 +33,13 @@ abstract class Command extends BaseCommand
      * @var \App\Repositories\ConfigRepository
      */
     protected $config;
+
+    /**
+     * The local configuration repository.
+     *
+     * @var \App\Repositories\LocalConfigRepository
+     */
+    protected $localConfig;
 
     /**
      * The forge repository.
@@ -65,6 +74,7 @@ abstract class Command extends BaseCommand
      */
     public function __construct(
         ConfigRepository $config,
+        LocalConfigRepository $localConfig,
         ForgeRepository $forge,
         KeyRepository $keys,
         RemoteRepository $remote,
@@ -73,6 +83,7 @@ abstract class Command extends BaseCommand
         parent::__construct();
 
         $this->config = $config;
+        $this->localConfig = $localConfig;
         $this->forge = $forge;
         $this->keys = $keys;
         $this->time = $time;
@@ -120,6 +131,14 @@ abstract class Command extends BaseCommand
     public function currentServer()
     {
         return once(function () {
+            // Priority 1: Environment-based config (named environments or legacy .forge)
+            $envServerId = $this->getEnvironmentServerId();
+
+            if ($envServerId) {
+                return $this->forge->server($envServerId);
+            }
+
+            // Priority 2: Global config
             $this->ensureCurrentTeamIsSet();
 
             return $this->forge->server(
