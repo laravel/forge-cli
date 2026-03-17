@@ -34,7 +34,7 @@ class OpenCommand extends Command
 
         $url = "https://forge.laravel.com/servers/$serverId/sites/$siteId";
 
-        $os = strtolower(php_uname(PHP_OS));
+        $os = strtolower(PHP_OS);
 
         if (strpos($os, 'darwin') !== false) {
             $open = 'open';
