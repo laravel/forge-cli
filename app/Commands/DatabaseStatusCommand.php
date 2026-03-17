@@ -34,9 +34,9 @@ class DatabaseStatusCommand extends Command
         // @phpstan-ignore-next-line
         $databaseType = $server->databaseType;
 
-        if (in_array($databaseType, ['mysql', 'mysql8', 'mariadb'])) {
+        if ($this->isMysqlDatabase($databaseType)) {
             $this->ensureServiceIsRunning($server, 'mysql');
-        } elseif (in_array($databaseType, ['postgres', 'postgres13'])) {
+        } elseif ($this->isPostgresDatabase($databaseType)) {
             $this->ensureServiceIsRunning($server, 'postgres');
         } else {
             abort(1, 'Checking the status of ['.$databaseType.'] databases is not supported.');

@@ -34,9 +34,9 @@ class DatabaseRestartCommand extends Command
         // @phpstan-ignore-next-line
         $databaseType = $server->databaseType;
 
-        if (in_array($databaseType, ['mysql', 'mysql8', 'mariadb'])) {
+        if ($this->isMysqlDatabase($databaseType)) {
             $restarting = $this->restartMysql($server->id);
-        } elseif (in_array($databaseType, ['postgres', 'postgres13'])) {
+        } elseif ($this->isPostgresDatabase($databaseType)) {
             $restarting = $this->restartPostgres($server->id);
         } else {
             abort(1, 'Restarting ['.$databaseType.'] databases is not supported.');

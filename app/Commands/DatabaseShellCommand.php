@@ -51,9 +51,9 @@ class DatabaseShellCommand extends Command
 
         abort_if(is_null($password), 1, 'Password can not be empty.');
 
-        if (in_array($databaseType, ['mysql', 'mysql8', 'mariadb'])) {
+        if ($this->isMysqlDatabase($databaseType)) {
             return $this->connectToMysql($server->id, $user, $password, $database);
-        } elseif (in_array($databaseType, ['postgres', 'postgres13'])) {
+        } elseif ($this->isPostgresDatabase($databaseType)) {
             return $this->connectToPostgres($server->id, $user, $password, $database);
         }
 
