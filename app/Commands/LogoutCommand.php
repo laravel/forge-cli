@@ -25,6 +25,10 @@ class LogoutCommand extends Command
      */
     public function handle()
     {
+        if (! $this->confirmStep('Are you sure you want to log out? This will remove your stored API token and configuration')) {
+            return;
+        }
+
         $this->config->flush();
 
         $this->successfulStep('Logged Out Successfully');

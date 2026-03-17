@@ -72,7 +72,7 @@ class DatabaseShellCommand extends Command
     public function connectToMysql($serverId, $user, $password, $database)
     {
         return $this->remote->passthru(sprintf(
-            'mysql -u %s -p%s %s', $user, $password, $database
+            'MYSQL_PWD=%s mysql -u %s %s', $password, $user, $database
         ));
     }
 
