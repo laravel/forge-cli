@@ -12,7 +12,7 @@ class DaemonLogsCommand extends Command
      * @var string
      */
     protected $signature = 'daemon:logs {daemon? : The daemon ID}
-    `                                   {--f|follow : Monitor the log changes in realtime}';
+                                        {--f|follow : Monitor the log changes in realtime}';
 
     /**
      * The description of the command.
