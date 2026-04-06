@@ -14,16 +14,15 @@
         }
     ],
     "require": {
-        "php": "^8.1.0",
+        "php": "^8.2",
         "phpseclib/phpseclib": "^3.0.19"
     },
     "require-dev": {
-        "laravel-zero/framework": "^10.0.2",
+        "laravel-zero/framework": "^12.0",
         "laravel/forge-sdk": "^3.13.4",
         "mockery/mockery": "^1.5.1",
-        "larastan/larastan": "^2.6.0",
-        "pestphp/pest": "^2.6.1",
-        "spatie/once": "^3.1.0"
+        "larastan/larastan": "^3.0",
+        "pestphp/pest": "^3.0"
     },
     "autoload": {
         "psr-4": {
@@ -38,7 +37,7 @@
     "config": {
         "sort-packages": true,
         "platform": {
-            "php": "8.1.0"
+            "php": "8.2"
         },
         "allow-plugins": {
             "pestphp/pest-plugin": true
