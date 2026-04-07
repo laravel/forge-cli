@@ -16,7 +16,7 @@ class LogoutCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Logout from Laravel Forge and remove your stored API token and server configuration';
+    protected $description = 'Log out from Laravel Forge';
 
     /**
      * Execute the console command.
