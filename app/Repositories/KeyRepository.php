@@ -42,6 +42,8 @@ class KeyRepository
 
         $keys = json_decode(exec($basePath.'/scripts/keysFactory.php'), true);
 
+        abort_if(is_null($keys), 1, 'Failed to generate SSH key. Ensure PHP can execute '.$basePath.'/scripts/keysFactory.php');
+
         File::put($this->keysPath.'/'.$this->privateKeyName($name), $keys['private']);
         File::chmod($this->keysPath.'/'.$this->privateKeyName($name), 0600);
 
