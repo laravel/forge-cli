@@ -29,6 +29,14 @@ class EnvPushCommand extends Command
      */
     public function handle()
     {
+        if ($file = $this->argument('file')) {
+            abort_unless(
+                File::exists($file),
+                1,
+                "The file [{$file}] does not exist."
+            );
+        }
+
         $siteId = $this->askForSite('Which site would you like to upload the environment file to');
 
         $server = $this->currentServer();
