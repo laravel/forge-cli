@@ -46,8 +46,10 @@ class CommandCommand extends Command
         do {
             $this->time->sleep(1);
 
-            /** @var \Laravel\Forge\Resources\SiteCommand $command */
+            /** @var \Laravel\Forge\Resources\SiteCommand|null $command */
             $command = collect($this->forge->getSiteCommand($server->id, $siteId, $command->id))->first();
+
+            abort_if(is_null($command), 1, 'The command could not be found.');
         } while ($command->status == 'waiting');
 
         $this->step('Running');
@@ -57,9 +59,11 @@ class CommandCommand extends Command
         $username = $this->forge->site($server->id, $siteId)->username;
 
         $this->displayEventOutput($username, $eventId, function () use ($server, $siteId, &$command) {
+            /** @var \Laravel\Forge\Resources\SiteCommand|null $command */
             $command = collect($this->forge->getSiteCommand($server->id, $siteId, $command->id))->first();
 
-            /** @var \Laravel\Forge\Resources\SiteCommand $command */
+            abort_if(is_null($command), 1, 'The command could not be found.');
+
             return $command->status == 'running';
         });
 
