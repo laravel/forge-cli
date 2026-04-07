@@ -25,7 +25,7 @@ class LogoutCommand extends Command
      */
     public function handle()
     {
-        if (! $this->option('force') && ! $this->confirmStep('Are you sure you want to log out? This will remove your stored API token and configuration')) {
+        if (! $this->option('force') && ! $this->option('no-interaction') && ! $this->confirmStep('Are you sure you want to log out? This will remove your stored API token and configuration')) {
             return;
         }
 
