@@ -19,6 +19,13 @@ class DaemonStatusCommand extends Command
     protected $description = 'Get the current status of a daemon';
 
     /**
+     * Indicates whether the command should be shown in the Artisan command list.
+     *
+     * @var bool
+     */
+    protected $hidden = true;
+
+    /**
      * Execute the console command.
      *
      * @return void
