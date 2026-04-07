@@ -48,7 +48,7 @@ it('can push environment variables from specific env file', function () {
         (object) ['id' => 2, 'name' => 'something.com'],
     );
 
-    File::shouldReceive('exists')->once()->with('.env')->andReturn(true);
+    File::shouldReceive('exists')->twice()->with('.env')->andReturn(true);
 
     $content = "BAR=FOO\nFOO=BAR\n";
 
