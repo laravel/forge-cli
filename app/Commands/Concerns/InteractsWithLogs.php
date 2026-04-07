@@ -50,7 +50,7 @@ trait InteractsWithLogs
         $sitePath = '/home/'.$site->username.'/'.$site->name;
 
         $sitePath = basename($sitePath) == 'current'
-            ? basename($sitePath)
+            ? dirname($sitePath)
             : $sitePath;
 
         $this->showRemoteLogs(collect($files)->map(function ($file) use ($sitePath) {
