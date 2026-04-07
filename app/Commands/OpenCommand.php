@@ -37,7 +37,7 @@ class OpenCommand extends Command
         $command = match (PHP_OS_FAMILY) {
             'Darwin' => ['open', $url],
             'Linux' => ['xdg-open', $url],
-            'Windows' => ['rundll32', 'url.dll,FileProtocolHandler', $url],
+            'Windows' => ['cmd', '/c', 'start', '', $url],
             default => null,
         };
 
