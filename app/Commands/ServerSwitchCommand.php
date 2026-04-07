@@ -2,6 +2,8 @@
 
 namespace App\Commands;
 
+use Illuminate\Support\Once;
+
 class ServerSwitchCommand extends Command
 {
     /**
@@ -38,6 +40,8 @@ class ServerSwitchCommand extends Command
 
         $server = $this->forge->server($serverId);
 
+
+        Once::flush();
         $this->config->set('server', $server->id);
 
         $this->successfulStep(

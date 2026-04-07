@@ -8,6 +8,7 @@ use App\Repositories\KeyRepository;
 use App\Repositories\RemoteRepository;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Once;
 use LaravelZero\Framework\Testing\TestCase;
 use Tests\CreatesApplication;
 
@@ -24,6 +25,8 @@ use Tests\CreatesApplication;
 
 uses(TestCase::class, CreatesApplication::class)
     ->beforeEach(function () {
+        Once::flush();
+
         (new Filesystem)->deleteDirectory(base_path('tests/.laravel-forge'));
 
         $this->client = tap(Mockery::mock(Forge::class), function ($mock) {
@@ -45,6 +48,8 @@ uses(TestCase::class, CreatesApplication::class)
             return config('app.version');
         });
     })->afterEach(function () {
+        Once::flush();
+
         (new Filesystem)->deleteDirectory(base_path('tests/.laravel-forge'));
     })->in('Feature', 'Unit');
 

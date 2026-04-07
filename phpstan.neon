@@ -1,3 +1,5 @@
+includes:
+  - ./vendor/larastan/larastan/extension.neon
 parameters:
   paths:
     - app
@@ -8,9 +10,3 @@ parameters:
   ignoreErrors:
     - '#Unsafe usage of new static\(\)#'
     - '#does not have argument#'
-  scanDirectories:
-    - app
-    - bootstrap
-    - config
-  rootDir: .
-  tmpDir: .phpstan
