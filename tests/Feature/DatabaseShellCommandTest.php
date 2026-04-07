@@ -10,7 +10,7 @@ it('can open shell connections to mysql databases', function () {
     ]);
 
     $this->remote->shouldReceive('passthru')
-        ->with('mysql -u forge -pmy-secret-password forge-default-database')
+        ->with("MYSQL_PWD='my-secret-password' mysql -u 'forge' 'forge-default-database'")
         ->andReturn(0);
 
     $this->artisan('database:shell')
@@ -28,7 +28,7 @@ it('can open shell connections to postgres databases', function () {
     ]);
 
     $this->remote->shouldReceive('passthru')
-        ->with('PGPASSWORD=my-secret-password psql -U forge forge-default-database')
+        ->with("PGPASSWORD='my-secret-password' psql -U 'forge' 'forge-default-database'")
         ->andReturn(0);
 
     $this->artisan('database:shell')
@@ -46,7 +46,7 @@ test('exit code gets returned', function () {
     ]);
 
     $this->remote->shouldReceive('passthru')
-        ->with('mysql -u forge -pmy-wrong-secret-password forge-default-database')
+        ->with("MYSQL_PWD='my-wrong-secret-password' mysql -u 'forge' 'forge-default-database'")
         ->andReturn(1);
 
     $this->artisan('database:shell')
@@ -61,7 +61,7 @@ it('can open shell connections with custom database name and user', function () 
     );
 
     $this->remote->shouldReceive('passthru')
-        ->with('PGPASSWORD=my-secret-password psql -U my-user my-database')
+        ->with("PGPASSWORD='my-secret-password' psql -U 'my-user' 'my-database'")
         ->andReturn(0);
 
     $this->artisan('database:shell', ['database' => 'my-database', '--user' => 'my-user'])
