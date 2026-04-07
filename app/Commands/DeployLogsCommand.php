@@ -31,10 +31,12 @@ class DeployLogsCommand extends Command
 
         $this->step('Retrieving the latest deployment logs');
 
-        $lastDeploymentId = optional(collect($this->forge->siteDeployments(
+        $lastDeployment = collect($this->forge->siteDeployments(
             $this->currentServer()->id,
             $siteId,
-        ))->first())['id'];
+        ))->first();
+
+        $lastDeploymentId = $lastDeployment ? $lastDeployment['id'] : null;
 
         abort_if(is_null($lastDeploymentId), 1, 'This site has not been deployed.');
 
