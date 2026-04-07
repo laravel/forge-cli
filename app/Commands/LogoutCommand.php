@@ -9,14 +9,14 @@ class LogoutCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'logout';
+    protected $signature = 'logout {--force : Skip confirmation prompt}';
 
     /**
      * The description of the command.
      *
      * @var string
      */
-    protected $description = 'Logout from Laravel Forge';
+    protected $description = 'Log out from Laravel Forge';
 
     /**
      * Execute the console command.
@@ -25,6 +25,10 @@ class LogoutCommand extends Command
      */
     public function handle()
     {
+        if (! $this->option('force') && ! $this->option('no-interaction') && ! $this->confirmStep('Are you sure you want to log out? This will remove your stored API token and configuration')) {
+            return;
+        }
+
         $this->config->flush();
 
         $this->successfulStep('Logged Out Successfully');
