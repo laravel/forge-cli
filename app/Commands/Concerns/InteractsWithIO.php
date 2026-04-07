@@ -49,7 +49,8 @@ trait InteractsWithIO
         abort_if($answers->isEmpty(), 1, 'This server does not have any sites.');
 
         if (! is_null($name)) {
-            return optional($answers->where('name', $name)->first())->id ?: $name;
+            $site = $answers->where('name', $name)->first();
+            return $site ? $site->id : $name;
         }
 
         return $this->choiceStep($question, $answers->mapWithKeys(function ($resource) {
@@ -72,7 +73,8 @@ trait InteractsWithIO
         abort_if($answers->isEmpty(), 1, 'This account does not have any servers.');
 
         if (! is_null($name)) {
-            return optional($answers->where('name', $name)->first())->id ?: $name;
+            $server = $answers->where('name', $name)->first();
+            return $server ? $server->id : $name;
         }
 
         return $this->choiceStep($question, $answers->mapWithKeys(function ($resource) {
