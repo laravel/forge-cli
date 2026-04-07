@@ -72,7 +72,7 @@ class DatabaseShellCommand extends Command
     public function connectToMysql($serverId, $user, $password, $database)
     {
         return $this->remote->passthru(sprintf(
-            'mysql -u %s -p%s %s', $user, $password, $database
+            'MYSQL_PWD=%s mysql -u %s %s', escapeshellarg($password), escapeshellarg($user), escapeshellarg($database)
         ));
     }
 
@@ -88,7 +88,7 @@ class DatabaseShellCommand extends Command
     public function connectToPostgres($serverId, $user, $password, $database)
     {
         return $this->remote->passthru(sprintf(
-            'PGPASSWORD=%s psql -U %s %s', $password, $user, $database
+            'PGPASSWORD=%s psql -U %s %s', escapeshellarg($password), escapeshellarg($user), escapeshellarg($database)
         ));
     }
 }
