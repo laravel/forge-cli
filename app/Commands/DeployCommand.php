@@ -3,6 +3,8 @@
 namespace App\Commands;
 
 use Illuminate\Support\Carbon;
+use Laravel\Forge\Resources\Server;
+use Laravel\Forge\Resources\Site;
 
 class DeployCommand extends Command
 {
@@ -41,7 +43,7 @@ class DeployCommand extends Command
     /**
      * Deploy an site.
      *
-     * @param  \Laravel\Forge\Resources\Site  $site
+     * @param  Site  $site
      * @return void
      */
     public function deploy($site)
@@ -68,7 +70,7 @@ class DeployCommand extends Command
     /**
      * Ensure the deployment have started on the server.
      *
-     * @param  \Laravel\Forge\Resources\Site  $site
+     * @param  Site  $site
      * @return int
      */
     protected function ensureDeploymentHaveStarted($site)
@@ -97,8 +99,8 @@ class DeployCommand extends Command
     /**
      * Ensure the deployment has finished on the server.
      *
-     * @param  \Laravel\Forge\Resources\Server  $server
-     * @param  \Laravel\Forge\Resources\Site  $site
+     * @param  Server  $server
+     * @param  Site  $site
      * @param  int  $deploymentId
      * @return object
      */
@@ -116,7 +118,7 @@ class DeployCommand extends Command
     /**
      * Ends the deployment by displaying a deployment success output.
      *
-     * @param  \Laravel\Forge\Resources\Site  $site
+     * @param  Site  $site
      * @param  object  $deployment
      * @return void
      */

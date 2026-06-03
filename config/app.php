@@ -1,5 +1,12 @@
 <?php
 
+use App\Providers\AppServiceProvider;
+use App\Providers\ConfigServiceProvider;
+use App\Providers\ForgeServiceProvider;
+use App\Providers\KeyServiceProvider;
+use App\Providers\RemoteServiceProvider;
+use App\Providers\TimeServiceProvider;
+
 return [
 
     /*
@@ -54,12 +61,12 @@ return [
     */
 
     'providers' => [
-        App\Providers\AppServiceProvider::class,
-        App\Providers\ConfigServiceProvider::class,
-        App\Providers\ForgeServiceProvider::class,
-        App\Providers\KeyServiceProvider::class,
-        App\Providers\RemoteServiceProvider::class,
-        App\Providers\TimeServiceProvider::class,
+        AppServiceProvider::class,
+        ConfigServiceProvider::class,
+        ForgeServiceProvider::class,
+        KeyServiceProvider::class,
+        RemoteServiceProvider::class,
+        TimeServiceProvider::class,
     ],
 
 ];

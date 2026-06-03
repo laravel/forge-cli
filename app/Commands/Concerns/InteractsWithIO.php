@@ -2,6 +2,7 @@
 
 namespace App\Commands\Concerns;
 
+use Illuminate\Contracts\Support\Arrayable;
 use Laravel\Forge\Resources\Server;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 
@@ -11,7 +12,7 @@ trait InteractsWithIO
      * Format input to textual table.
      *
      * @param  array  $headers
-     * @param  \Illuminate\Contracts\Support\Arrayable|array  $rows
+     * @param  Arrayable|array  $rows
      * @param  string  $tableStyle
      * @return void
      */
@@ -76,7 +77,7 @@ trait InteractsWithIO
         }
 
         return $this->choiceStep($question, $answers->mapWithKeys(function ($resource) {
-            /** @var \Laravel\Forge\Resources\Server $resource */
+            /** @var Server $resource */
             $tags = ! empty($resource->tags) ? " ({$resource->tags()})" : null;
 
             return [$resource->id => $resource->name.$tags];

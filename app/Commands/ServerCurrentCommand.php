@@ -2,6 +2,8 @@
 
 namespace App\Commands;
 
+use Laravel\Forge\Resources\Server;
+
 class ServerCurrentCommand extends Command
 {
     /**
@@ -36,7 +38,7 @@ class ServerCurrentCommand extends Command
     {
         $this->ensureCurrentTeamIsSet();
 
-        /** @var \Laravel\Forge\Resources\Server $server */
+        /** @var Server $server */
         $server = $this->forge->server(
             $this->config->get('server')
         );

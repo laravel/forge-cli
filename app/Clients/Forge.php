@@ -4,6 +4,7 @@ namespace App\Clients;
 
 use App\Support\Panic;
 use Laravel\Forge\Forge as BaseForge;
+use Laravel\Forge\Resources\Server;
 use Psr\Http\Message\ResponseInterface;
 
 class Forge extends BaseForge
@@ -18,7 +19,7 @@ class Forge extends BaseForge
     /**
      * Get the collection of servers.
      *
-     * @return \Laravel\Forge\Resources\Server[]
+     * @return Server[]
      */
     public function servers()
     {

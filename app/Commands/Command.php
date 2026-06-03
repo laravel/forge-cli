@@ -28,35 +28,35 @@ abstract class Command extends BaseCommand
     /**
      * The configuration repository.
      *
-     * @var \App\Repositories\ConfigRepository
+     * @var ConfigRepository
      */
     protected $config;
 
     /**
      * The forge repository.
      *
-     * @var \App\Repositories\ForgeRepository
+     * @var ForgeRepository
      */
     protected $forge;
 
     /**
      * The keys repository.
      *
-     * @var \App\Repositories\KeyRepository
+     * @var KeyRepository
      */
     protected $keys;
 
     /**
      * The remote connection.
      *
-     * @var \App\Repositories\RemoteRepository
+     * @var RemoteRepository
      */
     protected $remote;
 
     /**
      * The time.
      *
-     * @var \App\Support\Time
+     * @var Time
      */
     protected $time;
 
@@ -115,7 +115,7 @@ abstract class Command extends BaseCommand
     /**
      * Gets the current server.
      *
-     * @return \Laravel\Forge\Resources\Server
+     * @return Server
      */
     public function currentServer()
     {
@@ -131,7 +131,7 @@ abstract class Command extends BaseCommand
     /**
      * Ensure the given service is running.
      *
-     * @param  \Laravel\Forge\Resources\Server  $server
+     * @param  Server  $server
      * @param  string  $name
      * @return void
      */

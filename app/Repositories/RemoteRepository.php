@@ -3,6 +3,8 @@
 namespace App\Repositories;
 
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
+use Laravel\Forge\Resources\Server;
 use Symfony\Component\Process\Process;
 
 class RemoteRepository
@@ -24,7 +26,7 @@ class RemoteRepository
     /**
      * The server.
      *
-     * @var \Laravel\Forge\Resources\Server|null
+     * @var Server|null
      */
     protected $server = null;
 
@@ -181,7 +183,7 @@ class RemoteRepository
     /**
      * Ensures the given files are tailable.
      *
-     * @param  \Illuminate\Support\Collection  $files
+     * @param  Collection  $files
      * @return void
      */
     protected function ensuresFilesAreTailable($files)

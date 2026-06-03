@@ -3,6 +3,7 @@
 namespace App\Commands\Concerns;
 
 use Illuminate\Support\Str;
+use Laravel\Forge\Resources\Site;
 
 trait InteractsWithLogs
 {
@@ -30,7 +31,7 @@ trait InteractsWithLogs
     /**
      * Shows the given site logs.
      *
-     * @param  \Laravel\Forge\Resources\Site  $site
+     * @param  Site  $site
      * @param  bool  $follow
      * @return void
      */

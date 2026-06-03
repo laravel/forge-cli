@@ -2,6 +2,8 @@
 
 namespace App\Commands;
 
+use Laravel\Forge\Resources\SiteCommand;
+
 class CommandCommand extends Command
 {
     use Concerns\InteractsWithEvents;
@@ -46,7 +48,7 @@ class CommandCommand extends Command
         do {
             $this->time->sleep(1);
 
-            /** @var \Laravel\Forge\Resources\SiteCommand $command */
+            /** @var SiteCommand $command */
             $command = collect($this->forge->getSiteCommand($server->id, $siteId, $command->id))->first();
         } while ($command->status == 'waiting');
 
@@ -59,7 +61,7 @@ class CommandCommand extends Command
         $this->displayEventOutput($username, $eventId, function () use ($server, $siteId, &$command) {
             $command = collect($this->forge->getSiteCommand($server->id, $siteId, $command->id))->first();
 
-            /** @var \Laravel\Forge\Resources\SiteCommand $command */
+            /** @var SiteCommand $command */
             return $command->status == 'running';
         });
 

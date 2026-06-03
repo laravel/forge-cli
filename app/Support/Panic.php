@@ -9,7 +9,7 @@ class Panic
     /**
      * Abort in unexpected issues.
      *
-     * @param  \Throwable|string  $message
+     * @param  Throwable|string  $message
      * @return never
      */
     public static function abort($message)

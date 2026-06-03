@@ -2,6 +2,8 @@
 
 namespace App\Commands\Concerns;
 
+use Illuminate\Support\Collection;
+
 trait InteractsWithEvents
 {
     /**
@@ -58,7 +60,7 @@ trait InteractsWithEvents
     /**
      * Display the output of the given collection indenting each line.
      *
-     * @param  \Illuminate\Support\Collection  $collection
+     * @param  Collection  $collection
      * @return void
      */
     protected function displayOutput($collection)

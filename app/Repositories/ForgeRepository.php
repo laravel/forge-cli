@@ -2,19 +2,20 @@
 
 namespace App\Repositories;
 
+use App\Clients\Forge;
 use Exception;
 use GuzzleHttp;
 use Laravel\Forge\Exceptions\NotFoundException;
 
 /**
- * @mixin \App\Clients\Forge
+ * @mixin Forge
  */
 class ForgeRepository
 {
     /**
      * The configuration repository.
      *
-     * @var \App\Repositories\ConfigRepository
+     * @var ConfigRepository
      */
     protected $config;
 
@@ -28,7 +29,7 @@ class ForgeRepository
     /**
      * Creates a new repository instance.
      *
-     * @param  \App\Repositories\ConfigRepository  $config
+     * @param  ConfigRepository  $config
      * @param  \Laravel\Forge\Forge  $client
      * @return void
      */

@@ -34,7 +34,7 @@ class TimeServiceProvider extends ServiceProvider
     /**
      * Creates a new fake instance of Time.
      *
-     * @return \App\Support\Time
+     * @return Time
      */
     public function fakeTime()
     {
