@@ -2,8 +2,6 @@
 
 namespace App\Commands;
 
-use Spatie\Once;
-
 class ServerSwitchCommand extends Command
 {
     /**
@@ -41,8 +39,6 @@ class ServerSwitchCommand extends Command
         $server = $this->forge->server($serverId);
 
         $this->config->set('server', $server->id);
-
-        Once\Cache::getInstance()->flush();
 
         $this->successfulStep(
             'Current server context changed successfully to <comment>['.$server->name.']</comment>'

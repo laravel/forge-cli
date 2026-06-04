@@ -9,7 +9,6 @@ use App\Repositories\RemoteRepository;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\File;
 use LaravelZero\Framework\Testing\TestCase;
-use Spatie\Once;
 use Tests\CreatesApplication;
 
 /*
@@ -25,8 +24,6 @@ use Tests\CreatesApplication;
 
 uses(TestCase::class, CreatesApplication::class)
     ->beforeEach(function () {
-        Once\Cache::getInstance()->flush();
-
         (new Filesystem)->deleteDirectory(base_path('tests/.laravel-forge'));
 
         $this->client = tap(Mockery::mock(Forge::class), function ($mock) {
