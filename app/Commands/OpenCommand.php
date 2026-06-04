@@ -34,21 +34,20 @@ class OpenCommand extends Command
 
         $url = "https://forge.laravel.com/servers/$serverId/sites/$siteId";
 
-        $os = strtolower(php_uname(PHP_OS));
+        $command = match (PHP_OS_FAMILY) {
+            'Darwin' => ['open', $url],
+            'Linux' => ['xdg-open', $url],
+            'Windows' => ['cmd', '/c', 'start', '', $url],
+            default => null,
+        };
 
-        if (strpos($os, 'darwin') !== false) {
-            $open = 'open';
-        } elseif (strpos($os, 'linux') !== false) {
-            $open = 'xdg-open';
-        } else {
+        if ($command === null) {
             $this->step("Can't open your browser, you'll have to manually navigate to {$url}");
 
             return;
         }
 
         $this->step('Opening site in your browser...');
-
-        $command = [$open, $url];
 
         $process = new Process($command);
         $process->run();
