@@ -28,7 +28,7 @@ class DaemonLogsCommand extends Command
      */
     public function handle()
     {
-        $daemonId = $this->askForDaemon('Which daemon would you like to retrieve the logs from');
+        $daemonId = $this->argument('daemon') ?? $this->askForDaemon('Which daemon would you like to retrieve the logs from');
 
         $daemon = $this->forge->daemon($this->currentServer()->id, $daemonId);
 
