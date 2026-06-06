@@ -28,7 +28,7 @@ class LoginCommand extends Command
         $token = $this->option('token');
 
         if ($token === null) {
-            $token = $this->askStep('Please enter your Forge API token');
+            $token = $this->secretStep('Please enter your Forge API token');
         }
 
         $this->config->set('token', $token);
