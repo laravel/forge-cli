@@ -33,12 +33,28 @@ trait InteractsWithVersions
     protected function getLatestVersion()
     {
         $resolver = static::$latestVersionResolver ?? function () {
-            $package = json_decode(file_get_contents(
-                'https://packagist.org/p2/laravel/forge-cli.json'
-            ), true);
+            try {
+                $context = stream_context_create([
+                    'http' => ['timeout' => 5],
+                ]);
 
-            return collect($package['packages']['laravel/forge-cli'])
-                ->first()['version'];
+                $response = file_get_contents(
+                    'https://packagist.org/p2/laravel/forge-cli.json',
+                    false,
+                    $context
+                );
+
+                if ($response === false) {
+                    return 'v'.config('app.version');
+                }
+
+                $package = json_decode($response, true);
+
+                return collect($package['packages']['laravel/forge-cli'])
+                    ->first()['version'];
+            } catch (\Throwable $e) {
+                return 'v'.config('app.version');
+            }
         };
 
         if (is_null($this->config->get('latest_version_verified_at'))) {
