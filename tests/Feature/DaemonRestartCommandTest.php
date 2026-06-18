@@ -37,4 +37,4 @@ it('can not restart daemons that are not running', function () {
 
     $this->artisan('daemon:restart')
         ->expectsQuestion('<fg=yellow>‣</> <options=bold>Which Daemon Would You Like To Restart</>', 1);
-})->throws('This deamon is not installed or is not running.');
+})->throws('This daemon is not installed or is not running.');

@@ -31,7 +31,7 @@ class DaemonRestartCommand extends Command
 
         $daemon = $this->forge->daemon($server->id, $daemonId);
 
-        abort_unless($daemon->status == 'installed', 1, 'This deamon is not installed or is not running.');
+        abort_unless($daemon->status == 'installed', 1, 'This daemon is not installed or is not running.');
 
         $this->step(['Restarting Daemon %s', $daemon->command]);
 
