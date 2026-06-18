@@ -27,7 +27,7 @@ class DaemonRestartCommand extends Command
     {
         $server = $this->currentServer();
 
-        $daemonId = $this->askForDaemon('Which daemon would you like to restart');
+        $daemonId = $this->argument('daemon') ?? $this->askForDaemon('Which daemon would you like to restart');
 
         $daemon = $this->forge->daemon($server->id, $daemonId);
 
