@@ -32,7 +32,7 @@ class DatabaseLogsCommand extends Command
         // @phpstan-ignore-next-line
         $databaseType = $this->currentServer()->databaseType;
 
-        if (! in_array($databaseType, ['mysql', 'mysql8', 'postgres'])) {
+        if (! in_array($databaseType, ['mysql', 'mysql8', 'mariadb', 'postgres', 'postgres13'])) {
             abort(1, 'Retrieving logs from ['.$databaseType.'] databases is not supported.');
         }
 
