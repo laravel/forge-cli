@@ -97,22 +97,6 @@ abstract class Command extends BaseCommand
     }
 
     /**
-     * Ensure the current team is set in the configuration file.
-     *
-     * @return void
-     */
-    protected function ensureCurrentTeamIsSet()
-    {
-        if (! $this->config->get('server', false)) {
-            $server = collect($this->forge->servers())->first();
-
-            abort_if($server == null, 1, 'Please create a server first.');
-
-            $this->config->set('server', $server->id);
-        }
-    }
-
-    /**
      * Gets the current server.
      *
      * @return Server
@@ -120,8 +104,6 @@ abstract class Command extends BaseCommand
     public function currentServer()
     {
         return once(function () {
-            $this->ensureCurrentTeamIsSet();
-
             return $this->forge->server(
                 $this->config->get('server')
             );

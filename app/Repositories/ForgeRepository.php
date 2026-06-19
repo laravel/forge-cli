@@ -62,7 +62,6 @@ class ForgeRepository
     public function __call($method, $parameters)
     {
         $this->ensureApiToken();
-        $this->ensureCurrentTeamIsSet();
 
         try {
             return $this->client->{$method}(...$parameters);
@@ -87,32 +86,16 @@ class ForgeRepository
         abort_if($token == null, 1, 'Please authenticate using the \'login\' command before proceeding.');
 
         $guzzle = new GuzzleHttp\Client([
-            'base_uri' => isset($_SERVER['FORGE_API_BASE']) ? $_SERVER['FORGE_API_BASE'] : 'https://forge.laravel.com/api/v1/',
+            'base_uri' => isset($_SERVER['FORGE_API_BASE']) ? $_SERVER['FORGE_API_BASE'] : 'https://forge.laravel.com/api/',
             'http_errors' => false,
             'headers' => [
                 'Authorization' => 'Bearer '.$token,
-                'Accept' => 'application/json',
-                'Content-Type' => 'application/json',
+                'Accept' => 'application/vnd.api+json',
+                'Content-Type' => 'application/vnd.api+json',
                 'User-Agent' => 'Laravel Forge CLI/v'.config('app.version'),
             ],
         ]);
 
         $this->client->setApiKey($token, $guzzle);
-    }
-
-    /**
-     * Ensure the current team is set in the configuration file.
-     *
-     * @return void
-     */
-    protected function ensureCurrentTeamIsSet()
-    {
-        if (! $this->config->get('server', false)) {
-            $server = collect($this->client->servers())->first();
-
-            abort_if($server == null, 1, 'Please create a server first.');
-
-            $this->config->set('server', $server->id);
-        }
     }
 }

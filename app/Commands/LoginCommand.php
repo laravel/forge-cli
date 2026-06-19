@@ -2,6 +2,8 @@
 
 namespace App\Commands;
 
+use function Laravel\Prompts\password;
+
 class LoginCommand extends Command
 {
     /**
@@ -28,25 +30,16 @@ class LoginCommand extends Command
         $token = $this->option('token');
 
         if ($token === null) {
-            $token = $this->askStep('Please enter your Forge API token');
+            $token = password(
+                label: 'Please enter your Forge API token',
+                required: true,
+            );
         }
 
         $this->config->set('token', $token);
 
-        $email = $this->getUserEmail();
-
-        $this->ensureCurrentTeamIsSet();
+        $email = $this->forge->user()->email;
 
         $this->successfulStep("Authenticated successfully as <comment>[$email]</comment>");
-    }
-
-    /**
-     * Gets user's email.
-     *
-     * @return string
-     */
-    protected function getUserEmail()
-    {
-        return $this->forge->user()->email;
     }
 }

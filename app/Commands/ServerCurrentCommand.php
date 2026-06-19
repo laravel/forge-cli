@@ -36,8 +36,6 @@ class ServerCurrentCommand extends Command
      */
     public function handle()
     {
-        $this->ensureCurrentTeamIsSet();
-
         /** @var Server $server */
         $server = $this->forge->server(
             $this->config->get('server')
