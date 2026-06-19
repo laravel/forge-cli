@@ -2,6 +2,7 @@
 
 namespace App\Commands;
 
+use function Laravel\Prompts\info;
 use function Laravel\Prompts\password;
 
 class LoginCommand extends Command
@@ -40,6 +41,6 @@ class LoginCommand extends Command
 
         $email = $this->forge->user()->email;
 
-        $this->successfulStep("Authenticated successfully as <comment>[$email]</comment>");
+        info("Authenticated successfully as $email");
     }
 }

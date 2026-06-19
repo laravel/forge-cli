@@ -13,7 +13,7 @@ it('authenticates users', function () {
 
     $this->artisan('login')
         ->expectsQuestion('Please enter your Forge API token', '123123213')
-        ->expectsOutput('==> Authenticated Successfully As [nuno@laravel.com]');
+        ->expectsPromptsInfo('Authenticated successfully as nuno@laravel.com');
 
     expect($this->config->get('token'))->toBe('123123213');
 });
@@ -24,7 +24,7 @@ it('authenticates users with token', function () {
     );
 
     $this->artisan('login --token 123123123')
-        ->expectsOutput('==> Authenticated Successfully As [nuno@laravel.com]');
+        ->expectsPromptsInfo('Authenticated successfully as nuno@laravel.com');
 
     expect($this->config->get('token'))->toBe('123123123');
 });

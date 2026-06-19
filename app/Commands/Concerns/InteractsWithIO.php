@@ -6,6 +6,8 @@ use Illuminate\Contracts\Support\Arrayable;
 use Laravel\Forge\Resources\Server;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 
+use function Laravel\Prompts\select;
+
 trait InteractsWithIO
 {
     /**
@@ -81,6 +83,27 @@ trait InteractsWithIO
             $tags = ! empty($resource->tags) ? " ({$resource->tags()})" : null;
 
             return [$resource->id => $resource->name.$tags];
+        })->all());
+    }
+
+    /**
+     * Prompt the user for an "organization" input.
+     *
+     * @param  string  $question
+     * @return string
+     */
+    public function askForOrganization($question)
+    {
+        if (! is_null($slug = $this->argument('organization'))) {
+            return $slug;
+        }
+
+        $answers = collect($this->forge->organizations());
+
+        abort_if($answers->isEmpty(), 1, 'This account does not belong to any organizations.');
+
+        return select($question, $answers->mapWithKeys(function ($organization) {
+            return [$organization->slug => $organization->name];
         })->all());
     }
 

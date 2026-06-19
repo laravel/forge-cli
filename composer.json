@@ -18,10 +18,11 @@
         "phpseclib/phpseclib": "^3.0.19"
     },
     "require-dev": {
+        "larastan/larastan": "^3.0",
         "laravel-zero/framework": "^12.0",
         "laravel/forge-sdk": "^4.0",
+        "laravel/pint": "^1.29",
         "mockery/mockery": "^1.5.1",
-        "larastan/larastan": "^3.0",
         "pestphp/pest": "^3.0"
     },
     "autoload": {

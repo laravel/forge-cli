@@ -2,6 +2,8 @@
 
 namespace App\Commands;
 
+use function Laravel\Prompts\info;
+
 class LogoutCommand extends Command
 {
     /**
@@ -27,6 +29,6 @@ class LogoutCommand extends Command
     {
         $this->config->flush();
 
-        $this->successfulStep('Logged Out Successfully');
+        info('Logged out successfully');
     }
 }
