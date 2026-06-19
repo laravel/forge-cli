@@ -2,6 +2,7 @@
 
 namespace App\Commands;
 
+use function Laravel\Prompts\spin;
 use function Laravel\Prompts\table;
 
 class ServerListCommand extends Command
@@ -27,16 +28,19 @@ class ServerListCommand extends Command
      */
     public function handle()
     {
-        table(
-            ['ID', 'Name', 'IP Address'],
-            collect($this->forge->servers($this->currentOrganization())->lazy())
+        $servers = spin(
+            fn () => collect($this->forge->servers($this->currentOrganization())->lazy())
                 ->reject(function ($server) {
                     return $server->revoked;
-                })
-                ->map(function ($server) {
-                    return [$server->id, $server->name, $server->ipAddress];
-                })
-                ->all(),
+                }),
+            'Retrieving servers',
+        );
+
+        table(
+            ['ID', 'Name', 'IP Address'],
+            $servers->map(function ($server) {
+                return [$server->id, $server->name, $server->ipAddress];
+            })->all(),
         );
     }
 }

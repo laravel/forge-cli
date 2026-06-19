@@ -2,7 +2,9 @@
 
 namespace App\Commands;
 
-use App\Support\PhpVersion;
+use function Laravel\Prompts\spin;
+use function Laravel\Prompts\table;
+use function Laravel\Prompts\warning;
 
 class SiteListCommand extends Command
 {
@@ -27,26 +29,26 @@ class SiteListCommand extends Command
      */
     public function handle()
     {
-        $this->step('Retrieving the list of sites');
-
-        $sites = $this->forge->sites(
-            $this->currentServer()->id
+        $sites = spin(
+            fn () => collect($this->forge->serverSites($this->currentOrganization(), $this->currentServer()->id)->lazy()),
+            'Retrieving sites',
         );
 
-        $this->table([
-            'ID', 'Name', 'PHP',
-        ], collect($sites)->map(function ($site) {
-            $name = $site->name;
+        if ($sites->isEmpty()) {
+            warning('No sites found.');
 
-            if (! empty($tags = $site->tags(', '))) {
-                $name .= " <fg=gray>($tags)</>";
-            }
+            return;
+        }
 
-            return [
-                $site->id,
-                $name,
-                $site->phpVersion ? PhpVersion::of($site->phpVersion)->release() : 'None',
-            ];
-        })->all());
+        table(
+            ['ID', 'Name', 'PHP'],
+            $sites->map(function ($site) {
+                return [
+                    $site->id,
+                    $site->name,
+                    $site->phpVersion ? str_replace('PHP ', '', $site->phpVersion) : 'None',
+                ];
+            })->all(),
+        );
     }
 }

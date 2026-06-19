@@ -1,42 +1,34 @@
 <?php
 
+use Laravel\Forge\Resources\Server;
 use Laravel\Forge\Resources\Site;
 
 it('can display the list of sites', function () {
-    $this->client->shouldReceive('server')->andReturn(
-        (object) ['id' => 1],
+    $this->client->shouldReceive('server')->with('personal', 1)->andReturn(
+        new Server(['id' => 1]),
     );
 
-    $this->client->shouldReceive('sites')->andReturn([
-        new Site(['id' => 1, 'name' => 'production.com', 'phpVersion' => 'php56', 'tags' => [['name' => 'production'], ['name' => 'php 5.6']]]),
-        new Site(['id' => 2, 'name' => 'staging.com', 'phpVersion' => null, 'tags' => []]),
-        new Site(['id' => 3, 'name' => 'acceptance.com', 'phpVersion' => null, 'tags' => [['name' => 'acceptance']]]),
-    ]);
+    $this->client->shouldReceive('serverSites')->with('personal', 1)->andReturn(fakePaginator([
+        new Site(['id' => 1, 'name' => 'production.com', 'phpVersion' => 'PHP 8.4']),
+        new Site(['id' => 2, 'name' => 'staging.com', 'phpVersion' => null]),
+        new Site(['id' => 3, 'name' => 'acceptance.com', 'phpVersion' => 'PHP 8.0']),
+    ]));
 
     $this->artisan('site:list')
-        ->expectsTable(['   ID', '   Name', '   PHP'], [
-            ['id' => '   1', 'name' => '   production.com (production, php 5.6)', 'phpVersion' => '   5.6'],
-            ['id' => '   2', 'name' => '   staging.com', 'phpVersion' => '   None'],
-            ['id' => '   3', 'name' => '   acceptance.com (acceptance)', 'phpVersion' => '   None'],
-        ], 'compact');
+        ->expectsPromptsTable(['ID', 'Name', 'PHP'], [
+            [1, 'production.com', '8.4'],
+            [2, 'staging.com', 'None'],
+            [3, 'acceptance.com', '8.0'],
+        ]);
 });
 
-it('do not display archived servers', function () {
-    $this->client->shouldReceive('server')->andReturn(
-        (object) ['id' => 1],
+it('warns when there are no sites', function () {
+    $this->client->shouldReceive('server')->with('personal', 1)->andReturn(
+        new Server(['id' => 1]),
     );
 
-    $this->client->shouldReceive('sites')->andReturn([
-        new Site(['id' => 1, 'name' => 'production.com', 'phpVersion' => 'php56', 'tags' => []]),
-        new Site(['id' => 2, 'name' => 'staging.com', 'phpVersion' => null, 'tags' => []]),
-        new Site(['id' => 3, 'name' => 'archived.com', 'phpVersion' => 'php80', 'revoked' => true, 'tags' => []]),
-        new Site(['id' => 4, 'name' => 'non-archived.com', 'phpVersion' => null, 'revoked' => false, 'tags' => []]),
-    ]);
+    $this->client->shouldReceive('serverSites')->with('personal', 1)->andReturn(fakePaginator([]));
 
     $this->artisan('site:list')
-        ->expectsTable(['   ID', '   Name', '   PHP'], [
-            ['id' => '   1', 'name' => '   production.com', 'phpVersion' => '   5.6'],
-            ['id' => '   2', 'name' => '   staging.com', 'phpVersion' => '   None'],
-            ['id' => '   4', 'name' => '   non-archived.com', 'phpVersion' => '   None'],
-        ], 'compact');
+        ->expectsPromptsWarning('No sites found.');
 });

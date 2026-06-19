@@ -6,6 +6,7 @@ use Illuminate\Contracts\Support\Arrayable;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 
 use function Laravel\Prompts\search;
+use function Laravel\Prompts\spin;
 
 trait InteractsWithIO
 {
@@ -46,7 +47,7 @@ trait InteractsWithIO
     {
         $name = $this->argument('site');
 
-        $answers = collect($this->forge->sites($this->currentServer()->id));
+        $answers = collect($this->forge->serverSites($this->currentOrganization(), $this->currentServer()->id)->lazy());
 
         abort_if($answers->isEmpty(), 1, 'This server does not have any sites.');
 
@@ -76,10 +77,13 @@ trait InteractsWithIO
     {
         $name = $this->argument('server');
 
-        $answers = collect($this->forge->servers($this->currentOrganization())->lazy())
-            ->reject(function ($server) {
-                return $server->revoked;
-            });
+        $answers = spin(
+            fn () => collect($this->forge->servers($this->currentOrganization())->lazy())
+                ->reject(function ($server) {
+                    return $server->revoked;
+                }),
+            'Retrieving servers',
+        );
 
         abort_if($answers->isEmpty(), 1, 'This account does not have any servers.');
 
@@ -111,7 +115,10 @@ trait InteractsWithIO
             return $slug;
         }
 
-        $answers = collect($this->forge->organizations());
+        $answers = spin(
+            fn () => collect($this->forge->organizations()),
+            'Retrieving organizations',
+        );
 
         abort_if($answers->isEmpty(), 1, 'This account does not belong to any organizations.');
 

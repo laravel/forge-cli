@@ -2,6 +2,7 @@
 
 namespace App\Commands;
 
+use function Laravel\Prompts\spin;
 use function Laravel\Prompts\table;
 
 class OrganizationListCommand extends Command
@@ -36,9 +37,14 @@ class OrganizationListCommand extends Command
      */
     public function handle()
     {
+        $organizations = spin(
+            fn () => collect($this->forge->organizations()),
+            'Retrieving organizations',
+        );
+
         table(
             ['Name', 'Slug'],
-            collect($this->forge->organizations())->map(function ($organization) {
+            $organizations->map(function ($organization) {
                 return [$organization->name, $organization->slug];
             })->all(),
         );
