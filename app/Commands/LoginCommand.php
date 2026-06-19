@@ -41,6 +41,12 @@ class LoginCommand extends Command
 
         $email = $this->forge->user()->email;
 
+        $organizations = collect($this->forge->organizations());
+
+        if ($organizations->count() === 1) {
+            $this->config->set('organization', $organizations->first()->slug);
+        }
+
         info("Authenticated successfully as $email");
     }
 }
