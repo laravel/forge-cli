@@ -36,6 +36,7 @@ uses(TestCase::class, CreatesApplication::class)
         });
 
         $this->config = resolve(ConfigRepository::class)->set('token', '123123213');
+        $this->config = resolve(ConfigRepository::class)->set('organization', 'personal');
         $this->config = resolve(ConfigRepository::class)->set('server', 1);
 
         $this->keys = resolve(KeyRepository::class);

@@ -13,7 +13,12 @@ it('allows to switch the organization with a menu', function () {
     );
 
     $this->artisan('organization:switch')
-        ->expectsQuestion('Which organization would you like to switch to', 'acme')
+        ->expectsSearch(
+            'Which organization would you like to switch to',
+            answer: 'acme',
+            search: 'acme',
+            answers: ['acme' => 'Acme Inc'],
+        )
         ->expectsPromptsInfo('Current organization changed successfully to Acme Inc');
 
     expect($this->config->get('organization'))->toBe('acme');

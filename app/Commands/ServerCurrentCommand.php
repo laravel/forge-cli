@@ -4,6 +4,8 @@ namespace App\Commands;
 
 use Laravel\Forge\Resources\Server;
 
+use function Laravel\Prompts\info;
+
 class ServerCurrentCommand extends Command
 {
     /**
@@ -36,15 +38,13 @@ class ServerCurrentCommand extends Command
      */
     public function handle()
     {
+        $serverId = $this->config->get('server');
+
+        abort_if(is_null($serverId), 1, 'You have not selected a server. Use the \'server:switch\' command.');
+
         /** @var Server $server */
-        $server = $this->forge->server(
-            $this->config->get('server')
-        );
+        $server = $this->forge->server($this->currentOrganization(), $serverId);
 
-        $tags = ! empty($server->tags) ? " ({$server->tags(',')})" : null;
-
-        $this->successfulStep(
-            'You are currently within the <comment>['.$server->name.']'.$tags.'</comment> server context.'
-        );
+        info("You are currently within the {$server->name} server context.");
     }
 }

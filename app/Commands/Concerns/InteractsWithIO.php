@@ -3,10 +3,9 @@
 namespace App\Commands\Concerns;
 
 use Illuminate\Contracts\Support\Arrayable;
-use Laravel\Forge\Resources\Server;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 
-use function Laravel\Prompts\select;
+use function Laravel\Prompts\search;
 
 trait InteractsWithIO
 {
@@ -55,9 +54,16 @@ trait InteractsWithIO
             return optional($answers->where('name', $name)->first())->id ?: $name;
         }
 
-        return $this->choiceStep($question, $answers->mapWithKeys(function ($resource) {
-            return [$resource->id => $resource->name];
-        })->all());
+        return search($question, function (string $value) use ($answers) {
+            return $answers
+                ->filter(function ($site) use ($value) {
+                    return str_contains(strtolower($site->name), strtolower($value));
+                })
+                ->mapWithKeys(function ($site) {
+                    return [$site->id => $site->name];
+                })
+                ->all();
+        });
     }
 
     /**
@@ -70,20 +76,27 @@ trait InteractsWithIO
     {
         $name = $this->argument('server');
 
-        $answers = collect($this->forge->servers());
+        $answers = collect($this->forge->servers($this->currentOrganization())->lazy())
+            ->reject(function ($server) {
+                return $server->revoked;
+            });
 
         abort_if($answers->isEmpty(), 1, 'This account does not have any servers.');
 
         if (! is_null($name)) {
-            return optional($answers->where('name', $name)->first())->id ?: $name;
+            return optional($answers->firstWhere('name', $name))->id ?: $name;
         }
 
-        return $this->choiceStep($question, $answers->mapWithKeys(function ($resource) {
-            /** @var Server $resource */
-            $tags = ! empty($resource->tags) ? " ({$resource->tags()})" : null;
-
-            return [$resource->id => $resource->name.$tags];
-        })->all());
+        return search($question, function (string $value) use ($answers) {
+            return $answers
+                ->filter(function ($server) use ($value) {
+                    return str_contains(strtolower($server->name), strtolower($value));
+                })
+                ->mapWithKeys(function ($server) {
+                    return [$server->id => $server->name];
+                })
+                ->all();
+        });
     }
 
     /**
@@ -102,9 +115,17 @@ trait InteractsWithIO
 
         abort_if($answers->isEmpty(), 1, 'This account does not belong to any organizations.');
 
-        return select($question, $answers->mapWithKeys(function ($organization) {
-            return [$organization->slug => $organization->name];
-        })->all());
+        return search($question, function (string $value) use ($answers) {
+            return $answers
+                ->filter(function ($organization) use ($value) {
+                    return str_contains(strtolower($organization->name), strtolower($value))
+                        || str_contains(strtolower($organization->slug), strtolower($value));
+                })
+                ->mapWithKeys(function ($organization) {
+                    return [$organization->slug => $organization->name];
+                })
+                ->all();
+        });
     }
 
     /**
@@ -125,9 +146,16 @@ trait InteractsWithIO
             return optional($answers->where('command', $command)->first())->id ?: $command;
         }
 
-        return $this->choiceStep($question, $answers->mapWithKeys(function ($resource) {
-            return [$resource->id => $resource->command];
-        })->all());
+        return search($question, function (string $value) use ($answers) {
+            return $answers
+                ->filter(function ($daemon) use ($value) {
+                    return str_contains(strtolower($daemon->command), strtolower($value));
+                })
+                ->mapWithKeys(function ($daemon) {
+                    return [$daemon->id => $daemon->command];
+                })
+                ->all();
+        });
     }
 
     /**

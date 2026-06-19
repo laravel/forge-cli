@@ -4,6 +4,8 @@ namespace App\Commands;
 
 use Illuminate\Support\Once;
 
+use function Laravel\Prompts\info;
+
 class ServerSwitchCommand extends Command
 {
     /**
@@ -38,14 +40,12 @@ class ServerSwitchCommand extends Command
     {
         $serverId = $this->askForServer('Which server would you like to switch to');
 
-        $server = $this->forge->server($serverId);
+        $server = $this->forge->server($this->currentOrganization(), $serverId);
 
         $this->config->set('server', $server->id);
 
         Once::flush();
 
-        $this->successfulStep(
-            'Current server context changed successfully to <comment>['.$server->name.']</comment>'
-        );
+        info("Current server context changed successfully to {$server->name}");
     }
 }

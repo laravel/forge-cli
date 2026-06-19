@@ -26,6 +26,8 @@ it('can be run via the org:current alias', function () {
 });
 
 it('fails when no organization has been selected', function () {
+    $this->config->flush();
+
     $this->artisan('organization:current');
 })->throws('You have not selected an organization. Use the \'organization:switch\' command.');
 

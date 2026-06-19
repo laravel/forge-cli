@@ -86,14 +86,26 @@ abstract class Command extends BaseCommand
 
     /**
      * Execute the console command.
-     *
-     * @return int
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         return tap(parent::execute($input, $output), function () {
             $this->ensureLatestVersion();
         });
+    }
+
+    /**
+     * Gets the current organization slug.
+     *
+     * @return string
+     */
+    public function currentOrganization()
+    {
+        $slug = $this->config->get('organization');
+
+        abort_if(is_null($slug), 1, 'You have not selected an organization. Use the \'organization:switch\' command.');
+
+        return $slug;
     }
 
     /**
@@ -105,6 +117,7 @@ abstract class Command extends BaseCommand
     {
         return once(function () {
             return $this->forge->server(
+                $this->currentOrganization(),
                 $this->config->get('server')
             );
         });
