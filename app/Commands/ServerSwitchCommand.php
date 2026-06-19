@@ -2,7 +2,7 @@
 
 namespace App\Commands;
 
-use Spatie\Once;
+use Illuminate\Support\Once;
 
 class ServerSwitchCommand extends Command
 {
@@ -42,7 +42,7 @@ class ServerSwitchCommand extends Command
 
         $this->config->set('server', $server->id);
 
-        Once\Cache::getInstance()->flush();
+        Once::flush();
 
         $this->successfulStep(
             'Current server context changed successfully to <comment>['.$server->name.']</comment>'
