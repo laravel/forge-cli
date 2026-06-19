@@ -89,7 +89,7 @@ abstract class Command extends BaseCommand
      *
      * @return int
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         return tap(parent::execute($input, $output), function () {
             $this->ensureLatestVersion();

@@ -3,8 +3,8 @@
 namespace App\Clients;
 
 use App\Support\Panic;
+use Laravel\Forge\CursorPaginator;
 use Laravel\Forge\Forge as BaseForge;
-use Laravel\Forge\Resources\Server;
 use Psr\Http\Message\ResponseInterface;
 
 class Forge extends BaseForge
@@ -14,18 +14,19 @@ class Forge extends BaseForge
      *
      * @var int
      */
-    public $timeout = 60;
+    public int $timeout = 60;
 
     /**
      * Get the collection of servers.
      *
-     * @return Server[]
+     * TODO (v4 migration): the revoked-server filter previously applied here can no
+     * longer live in this override because v4 enforces a `: CursorPaginator` return
+     * type. Reinstate the `$server->revoked` filter at the call sites during the
+     * server-command migration.
      */
-    public function servers()
+    public function servers(string $organizationSlug, array $query = []): CursorPaginator
     {
-        return collect(parent::servers())->filter(function ($server) {
-            return $server->revoked == false;
-        })->values()->all();
+        return parent::servers($organizationSlug, $query);
     }
 
     /**
@@ -95,7 +96,7 @@ class Forge extends BaseForge
      *
      * @return void
      */
-    protected function handleRequestError(ResponseInterface $response)
+    protected function handleRequestError(ResponseInterface $response): never
     {
         if ($response->getStatusCode() >= 500) {
             Panic::abort($response->getBody());
