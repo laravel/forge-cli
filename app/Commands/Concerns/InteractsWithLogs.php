@@ -5,6 +5,8 @@ namespace App\Commands\Concerns;
 use Illuminate\Support\Str;
 use Laravel\Forge\Resources\Site;
 
+use function Laravel\Prompts\info;
+
 trait InteractsWithLogs
 {
     /**
@@ -37,9 +39,9 @@ trait InteractsWithLogs
      */
     protected function showSiteLogs($site, $follow)
     {
-        $this->step('Retrieving the latest site logs');
+        info('Retrieving the latest site logs');
 
-        switch (strtolower($site->app)) {
+        switch (strtolower($site->appType)) {
             case 'wordpress':
                 $files = ['public/wp-content/*.log', 'wp-content/*.log'];
                 break;
@@ -48,7 +50,7 @@ trait InteractsWithLogs
                 break;
         }
 
-        $sitePath = '/home/'.$site->username.'/'.$site->name;
+        $sitePath = '/home/'.$site->user.'/'.$site->name;
 
         $sitePath = basename($sitePath) == 'current'
             ? basename($sitePath)
