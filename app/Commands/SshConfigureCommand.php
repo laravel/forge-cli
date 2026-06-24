@@ -2,6 +2,10 @@
 
 namespace App\Commands;
 
+use function Laravel\Prompts\info;
+use function Laravel\Prompts\select;
+use function Laravel\Prompts\text;
+
 class SshConfigureCommand extends Command
 {
     /**
@@ -43,7 +47,7 @@ class SshConfigureCommand extends Command
 
         $this->callSilently('ssh:test', ['--key' => $privateKey]);
 
-        $this->successfulStep('SSH key based secure authentication configured successfully');
+        info('SSH key based secure authentication configured successfully');
     }
 
     /**
@@ -63,12 +67,12 @@ class SshConfigureCommand extends Command
         } else {
             [$localName, $key] = $this->keys->create($name);
 
-            $this->step('Creating Key <comment>['.$localName.']</comment>');
+            info("Creating key $localName");
         }
 
-        $this->step('Adding Key <comment>['.$localName.']</comment>'.' With The Name <comment>['.$name.']</comment> To Server <comment>['.$server->name.']</comment>');
+        info("Adding key $localName with the name $name to server {$server->name}");
 
-        $this->forge->createSSHKey($server->id, ['key' => $key, 'name' => $name, 'username' => $username], true);
+        $this->forge->createSshKey($this->currentOrganization(), $server->id, ['key' => trim($key), 'name' => $name, 'username' => $username]);
 
         return $this->keys->keysPath().'/'.basename($localName, '.pub');
     }
@@ -83,14 +87,14 @@ class SshConfigureCommand extends Command
         if (is_null($key = $this->option('key'))) {
             $localKeys = collect($this->keys->local());
 
-            $choices = collect(['<comment>Create new key</comment>'])->merge($localKeys->map(function ($key) {
-                return '<comment>Reuse</comment> '.str_replace($this->keys->keysPath().'/', '', $key);
-            }))->values()->all();
+            $choices = collect(['create' => 'Create new key'])->merge($localKeys->mapWithKeys(function ($key) {
+                return [$key => 'Reuse '.str_replace($this->keys->keysPath().'/', '', $key)];
+            }))->all();
 
-            $choice = $this->choiceStep('Which key would you like to use', $choices);
+            $choice = select('Which key would you like to use', $choices);
 
-            if ($choice > 0) {
-                $key = $localKeys->get($choice - 1);
+            if ($choice !== 'create') {
+                $key = $choice;
             }
         }
 
@@ -111,7 +115,7 @@ class SshConfigureCommand extends Command
             $question .= ' in Forge';
         }
 
-        return $this->option('name') ?: $this->askStep($question, get_current_user());
+        return $this->option('name') ?: text($question, default: get_current_user());
     }
 
     /**
@@ -123,6 +127,6 @@ class SshConfigureCommand extends Command
     {
         $question = 'What username should we use for the selected server';
 
-        return $this->option('user') ?: $this->askStep($question, 'forge');
+        return $this->option('user') ?: text($question, default: 'forge');
     }
 }
