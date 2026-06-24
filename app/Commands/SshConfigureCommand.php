@@ -2,8 +2,11 @@
 
 namespace App\Commands;
 
+use Throwable;
+
 use function Laravel\Prompts\info;
 use function Laravel\Prompts\select;
+use function Laravel\Prompts\spin;
 use function Laravel\Prompts\text;
 
 class SshConfigureCommand extends Command
@@ -45,7 +48,23 @@ class SshConfigureCommand extends Command
 
         $privateKey = $this->ensureKeyExists($this->getKeyName($key), $key, $this->getServerUsername());
 
-        $this->callSilently('ssh:test', ['--key' => $privateKey]);
+        $this->remote->resolvePrivateKeyUsing(fn () => $privateKey);
+
+        spin(function () {
+            for ($attempt = 1; $attempt <= 12; $attempt++) {
+                try {
+                    $this->remote->ensureSshIsConfigured();
+
+                    return;
+                } catch (Throwable $e) {
+                    if ($attempt === 12) {
+                        throw $e;
+                    }
+
+                    $this->time->sleep(5);
+                }
+            }
+        }, 'Waiting for SSH key to be configured');
 
         info('SSH key based secure authentication configured successfully');
     }

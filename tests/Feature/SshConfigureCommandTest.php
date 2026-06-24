@@ -100,3 +100,48 @@ it('can reuse ssh keys', function () {
         ->expectsPromptsInfo('Adding key id_rsa.pub with the name driesvints to server staging')
         ->expectsPromptsInfo('SSH key based secure authentication configured successfully');
 });
+
+it('waits for forge to install ssh keys before testing the connection', function () {
+    $this->config->set('server', 1);
+
+    $this->client->shouldReceive('servers')->with('personal')->andReturn(fakePaginator([
+        new Server(['id' => 1, 'name' => 'production', 'revoked' => false]),
+    ]));
+
+    $this->client->shouldReceive('server')
+        ->once()
+        ->with('personal', 1)
+        ->andReturn(new Server([
+            'id' => 1,
+            'name' => 'production',
+        ]));
+
+    $this->keys->shouldReceive('keysPath')
+        ->andReturn('/home/driesvints/.ssh');
+
+    $this->keys->shouldReceive('get')->with('/home/driesvints/.ssh/id_rsa.pub')->once()->andReturn([
+        'id_rsa.pub',
+        "MY KEY Content\n",
+    ]);
+
+    $this->client->shouldReceive('createSshKey')->with('personal', 1, [
+        'name' => 'driesvints',
+        'key' => 'MY KEY Content',
+        'username' => 'morales2k',
+    ])->once();
+
+    $this->remote->shouldReceive('resolvePrivateKeyUsing')->once();
+    $this->remote->shouldReceive('ensureSshIsConfigured')->once()->andThrow(
+        new Exception('Unable to connect to remote server. Maybe run [ssh:configure] to configure an SSH Key?'),
+    );
+    $this->remote->shouldReceive('ensureSshIsConfigured')->once();
+
+    $this->artisan('ssh:configure', [
+        'server' => 'production',
+        '--key' => '/home/driesvints/.ssh/id_rsa.pub',
+        '--name' => 'driesvints',
+        '--user' => 'morales2k',
+    ])
+        ->expectsPromptsInfo('Adding key id_rsa.pub with the name driesvints to server production')
+        ->expectsPromptsInfo('SSH key based secure authentication configured successfully');
+});
