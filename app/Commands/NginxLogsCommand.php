@@ -2,6 +2,8 @@
 
 namespace App\Commands;
 
+use function Laravel\Prompts\info;
+
 class NginxLogsCommand extends Command
 {
     use Concerns\InteractsWithLogs;
@@ -31,6 +33,20 @@ class NginxLogsCommand extends Command
 
         abort_if(! in_array($type, ['error', 'access']), 1, 'Log type must be "error" or "access".');
 
-        $this->showLogs('nginx_'.$type);
+        info("Retrieving the latest {$type} logs");
+
+        $logs = $this->forge->serverLog(
+            $this->currentOrganization(),
+            $this->currentServer()->id,
+            'nginx-'.$type,
+        );
+
+        abort_if(empty($logs), 1, 'The requested logs could not be found or they are empty.');
+
+        $this->newLine();
+
+        $this->displayLogs($logs);
+
+        $this->newLine();
     }
 }

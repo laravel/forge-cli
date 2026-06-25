@@ -2,6 +2,9 @@
 
 namespace App\Commands;
 
+use function Laravel\Prompts\info;
+use function Laravel\Prompts\spin;
+
 class NginxStatusCommand extends Command
 {
     /**
@@ -25,10 +28,12 @@ class NginxStatusCommand extends Command
      */
     public function handle()
     {
-        $server = $this->currentServer();
+        spin(function () {
+            [$exitCode] = $this->remote->exec('systemctl is-active --quiet nginx');
 
-        $this->ensureServiceIsRunning($server, 'nginx');
+            abort_if($exitCode != 0, 1, 'Service is not running.');
+        }, 'Checking the service status');
 
-        $this->successfulStep('Nginx is up & running');
+        info('Nginx is up & running');
     }
 }
