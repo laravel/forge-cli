@@ -4,7 +4,7 @@ namespace App\Commands;
 
 use App\Support\PhpVersion;
 
-use function Laravel\Prompts\info;
+use function Laravel\Prompts\spin;
 
 class PhpLogsCommand extends Command
 {
@@ -43,16 +43,18 @@ class PhpLogsCommand extends Command
             'PHP version needs to be one of these values: '.implode(', ', $versions).'.'
         );
 
-        $serverPhpVersion = $this->currentServer()->phpVersion;
+        $server = $this->currentServer();
+        $serverPhpVersion = $server->phpVersion;
 
         $version = PhpVersion::of($version ?: $serverPhpVersion);
 
-        info('Retrieving the latest logs');
-
-        $logs = $this->forge->serverLog(
-            $this->currentOrganization(),
-            $this->currentServer()->id,
-            $version->forgeKey(),
+        $logs = spin(
+            fn () => $this->forge->serverLog(
+                $this->currentOrganization(),
+                $server->id,
+                $version->forgeKey(),
+            ),
+            'Retrieving PHP logs',
         );
 
         abort_if(empty($logs), 1, 'The requested logs could not be found or they are empty.');

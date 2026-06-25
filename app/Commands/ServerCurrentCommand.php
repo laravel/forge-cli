@@ -2,8 +2,6 @@
 
 namespace App\Commands;
 
-use Laravel\Forge\Resources\Server;
-
 use function Laravel\Prompts\info;
 
 class ServerCurrentCommand extends Command
@@ -42,8 +40,7 @@ class ServerCurrentCommand extends Command
 
         abort_if(is_null($serverId), 1, 'You have not selected a server. Use the \'server:switch\' command.');
 
-        /** @var Server $server */
-        $server = $this->forge->server($this->currentOrganization(), $serverId);
+        $server = $this->currentServer();
 
         info("You are currently within the {$server->name} server context.");
     }

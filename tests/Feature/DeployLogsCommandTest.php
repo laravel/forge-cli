@@ -29,7 +29,6 @@ it('can retrieve deployment logs from sites with an menu', function () {
             search: 'something',
             answers: [2 => 'something.com'],
         )
-        ->expectsPromptsInfo('Retrieving the latest deployment logs')
         ->expectsOutput('  ▕ Restarting FPM...');
 });
 
@@ -52,7 +51,6 @@ it('can retrieve deployment logs from sites with an option', function () {
     );
 
     $this->artisan('deploy:logs', ['site' => 'pestphp.com'])
-        ->expectsPromptsInfo('Retrieving the latest deployment logs')
         ->expectsOutput('  ▕ Restarting FPM...');
 });
 

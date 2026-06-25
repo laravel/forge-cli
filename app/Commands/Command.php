@@ -13,6 +13,8 @@ use LaravelZero\Framework\Commands\Command as BaseCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+use function Laravel\Prompts\spin;
+
 abstract class Command extends BaseCommand
 {
     use Concerns\InteractsWithIO,
@@ -116,9 +118,12 @@ abstract class Command extends BaseCommand
     public function currentServer()
     {
         return once(function () {
-            return $this->forge->server(
-                $this->currentOrganization(),
-                $this->config->get('server')
+            return spin(
+                fn () => $this->forge->server(
+                    $this->currentOrganization(),
+                    $this->config->get('server')
+                ),
+                'Retrieving server',
             );
         });
     }

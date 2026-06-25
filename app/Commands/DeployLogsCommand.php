@@ -2,7 +2,7 @@
 
 namespace App\Commands;
 
-use function Laravel\Prompts\info;
+use function Laravel\Prompts\spin;
 
 class DeployLogsCommand extends Command
 {
@@ -33,20 +33,24 @@ class DeployLogsCommand extends Command
         $organization = $this->currentOrganization();
         $server = $this->currentServer();
 
-        info('Retrieving the latest deployment logs');
-
-        $deployment = collect($this->forge->deployments(
-            $organization,
-            $server->id,
-            $siteId,
-        )->lazy())->first();
+        $deployment = spin(
+            fn () => collect($this->forge->deployments(
+                $organization,
+                $server->id,
+                $siteId,
+            )->lazy())->first(),
+            'Retrieving deployments',
+        );
 
         abort_if(is_null($deployment), 1, 'This site has not been deployed.');
 
         $this->newLine();
 
         $this->displayLogs(
-            $this->forge->deploymentLog($organization, $server->id, $siteId, $deployment->id)
+            spin(
+                fn () => $this->forge->deploymentLog($organization, $server->id, $siteId, $deployment->id),
+                'Retrieving deployment logs',
+            )
         );
 
         $this->newLine();

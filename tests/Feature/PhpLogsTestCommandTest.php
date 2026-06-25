@@ -12,7 +12,6 @@ it('can retrieve logs from php', function () {
         ->andReturn("   [00:01] FOO\n[00:02] BAR\n   ");
 
     $this->artisan('php:logs')
-        ->expectsPromptsInfo('Retrieving the latest logs')
         ->expectsOutput('  ▕ [00:01] FOO')
         ->expectsOutput('  ▕ [00:02] BAR');
 });
@@ -27,7 +26,6 @@ it('can retrieve logs from a specific php version', function () {
         ->andReturn("   tail: cannot open '/var/log/php8.1-fpm.log' for reading: No such file or directory\n   ");
 
     $this->artisan('php:logs', ['version' => '8.1'])
-        ->expectsPromptsInfo('Retrieving the latest logs')
         ->expectsOutput("  ▕ tail: cannot open '/var/log/php8.1-fpm.log' for reading: No such file or directory");
 });
 

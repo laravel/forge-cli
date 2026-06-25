@@ -37,9 +37,11 @@ class EnvPushCommand extends Command
 
         $organization = $this->currentOrganization();
         $server = $this->currentServer();
-        $file = $this->getEnvironmentFile(
-            $site = $this->forge->organizationSite($organization, (int) $siteId)
+        $site = spin(
+            fn () => $this->forge->organizationSite($organization, (int) $siteId),
+            'Retrieving site',
         );
+        $file = $this->getEnvironmentFile($site);
 
         abort_unless(
             File::exists($file),

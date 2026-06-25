@@ -37,9 +37,11 @@ class EnvPullCommand extends Command
 
         $organization = $this->currentOrganization();
         $server = $this->currentServer();
-        $file = $this->getEnvironmentFile(
-            $site = $this->forge->organizationSite($organization, (int) $siteId)
+        $site = spin(
+            fn () => $this->forge->organizationSite($organization, (int) $siteId),
+            'Retrieving site',
         );
+        $file = $this->getEnvironmentFile($site);
 
         if (is_null($this->argument('file')) && File::exists($file) && ! confirm(
             'File already exists with the name '.basename($file).'. Would you like to overwrite it?'

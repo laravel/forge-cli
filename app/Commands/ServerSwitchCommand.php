@@ -5,6 +5,7 @@ namespace App\Commands;
 use Illuminate\Support\Once;
 
 use function Laravel\Prompts\info;
+use function Laravel\Prompts\spin;
 
 class ServerSwitchCommand extends Command
 {
@@ -40,7 +41,10 @@ class ServerSwitchCommand extends Command
     {
         $serverId = $this->askForServer('Which server would you like to switch to');
 
-        $server = $this->forge->server($this->currentOrganization(), $serverId);
+        $server = spin(
+            fn () => $this->forge->server($this->currentOrganization(), $serverId),
+            'Retrieving server',
+        );
 
         $this->config->set('server', $server->id);
 

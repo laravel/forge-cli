@@ -12,7 +12,6 @@ it('can retrieve error logs from nginx', function () {
         ->andReturn("   [00:01] FOO\n[00:02] BAR\n   ");
 
     $this->artisan('nginx:logs')
-        ->expectsPromptsInfo('Retrieving the latest error logs')
         ->expectsOutput('  ▕ [00:01] FOO')
         ->expectsOutput('  ▕ [00:02] BAR');
 });
@@ -27,7 +26,6 @@ it('can retrieve access logs from nginx', function () {
         ->andReturn("   [00:01] FOO\n[00:02] BAR\n   ");
 
     $this->artisan('nginx:logs', ['type' => 'access'])
-        ->expectsPromptsInfo('Retrieving the latest access logs')
         ->expectsOutput('  ▕ [00:01] FOO')
         ->expectsOutput('  ▕ [00:02] BAR');
 });

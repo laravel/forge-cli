@@ -47,7 +47,13 @@ trait InteractsWithIO
     {
         $name = $this->argument('site');
 
-        $answers = collect($this->forge->serverSites($this->currentOrganization(), $this->currentServer()->id)->lazy());
+        $organization = $this->currentOrganization();
+        $server = $this->currentServer();
+
+        $answers = spin(
+            fn () => collect($this->forge->serverSites($organization, $server->id)->lazy()),
+            'Retrieving sites',
+        );
 
         abort_if($answers->isEmpty(), 1, 'This server does not have any sites.');
 
@@ -145,7 +151,12 @@ trait InteractsWithIO
     {
         $command = $this->argument('daemon');
 
-        $answers = collect($this->forge->daemons($this->currentServer()->id));
+        $server = $this->currentServer();
+
+        $answers = spin(
+            fn () => collect($this->forge->daemons($server->id)),
+            'Retrieving daemons',
+        );
 
         abort_if($answers->isEmpty(), 1, 'This server does not have any daemons.');
 

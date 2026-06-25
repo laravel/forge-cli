@@ -2,6 +2,12 @@
 
 namespace App\Commands;
 
+use Laravel\Forge\Resources\Server;
+
+use function Laravel\Prompts\confirm;
+use function Laravel\Prompts\info;
+use function Laravel\Prompts\spin;
+
 class DatabaseRestartCommand extends Command
 {
     use Concerns\InteractsWithDatabase;
@@ -33,32 +39,33 @@ class DatabaseRestartCommand extends Command
 
         // @phpstan-ignore-next-line
         $databaseType = $server->databaseType;
+        $engine = $this->databaseEngine($databaseType);
 
-        if (in_array($databaseType, ['mysql', 'mysql8', 'mariadb'])) {
-            $restarting = $this->restartMysql($server->id);
-        } elseif (in_array($databaseType, ['postgres', 'postgres13'])) {
-            $restarting = $this->restartPostgres($server->id);
+        if ($engine == 'mysql') {
+            $restarting = $this->restartMysql($server);
+        } elseif ($engine == 'postgres') {
+            $restarting = $this->restartPostgres($server);
         } else {
             abort(1, 'Restarting ['.$databaseType.'] databases is not supported.');
         }
 
         if ($restarting) {
-            $this->successfulStep('Database restart initiated successfully');
+            info('Database restart initiated successfully.');
         }
     }
 
     /**
      * Restarts MySQL database service.
      *
-     * @param  string|int  $serverId
      * @return bool
      */
-    public function restartMysql($serverId)
+    public function restartMysql(Server $server)
     {
-        if ($restarting = $this->confirm('The database may become unavailable while the <comment>[MySQL]</comment> service restarts. Continue?')) {
-            $this->step('Restarting the database');
-
-            $this->forge->rebootMysql($serverId);
+        if ($restarting = confirm('The database may become unavailable while the MySQL service restarts. Continue?')) {
+            spin(
+                fn () => $server->rebootMysql(),
+                'Restarting MySQL',
+            );
         }
 
         return $restarting;
@@ -67,15 +74,15 @@ class DatabaseRestartCommand extends Command
     /**
      * Restarts PostgreSQL database service.
      *
-     * @param  string|int  $serverId
      * @return bool
      */
-    public function restartPostgres($serverId)
+    public function restartPostgres(Server $server)
     {
-        if ($restarting = $this->confirm('The database may become unavailable while the <comment>[PostgreSQL]</comment> service restarts. Continue?')) {
-            $this->step('Restarting the database');
-
-            $this->forge->rebootPostgres($serverId);
+        if ($restarting = confirm('The database may become unavailable while the PostgreSQL service restarts. Continue?')) {
+            spin(
+                fn () => $server->rebootPostgres(),
+                'Restarting PostgreSQL',
+            );
         }
 
         return $restarting;

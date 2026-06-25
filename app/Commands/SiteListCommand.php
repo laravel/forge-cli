@@ -29,8 +29,10 @@ class SiteListCommand extends Command
      */
     public function handle()
     {
+        $server = $this->currentServer();
+
         $sites = spin(
-            fn () => collect($this->forge->serverSites($this->currentOrganization(), $this->currentServer()->id)->lazy()),
+            fn () => collect($this->forge->serverSites($this->currentOrganization(), $server->id)->lazy()),
             'Retrieving sites',
         );
 
