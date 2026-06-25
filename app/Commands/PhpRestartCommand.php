@@ -3,6 +3,11 @@
 namespace App\Commands;
 
 use App\Support\PhpVersion;
+use Laravel\Forge\Resources\Server;
+
+use function Laravel\Prompts\confirm;
+use function Laravel\Prompts\info;
+use function Laravel\Prompts\spin;
 
 class PhpRestartCommand extends Command
 {
@@ -40,28 +45,25 @@ class PhpRestartCommand extends Command
             abort(1, 'PHP version needs to be one of these values: '.implode(', ', $versions).'.');
         }
 
-        $version = $version ?: PhpVersion::of($server->phpVersion)->release();
+        $version = PhpVersion::of($version ?: $server->phpVersion);
 
-        if ($this->restartPhp($server->id, $version)) {
-            $this->successfulStep('PHP '.$version.' restart initiated successfully.');
+        if ($this->restartPhp($server, $version)) {
+            info('PHP '.$version->release().' restart initiated successfully.');
         }
     }
 
     /**
      * Restarts PHP service.
      *
-     * @param  string|int  $serverId
-     * @param  string  $version
      * @return bool
      */
-    public function restartPhp($serverId, $version)
+    public function restartPhp(Server $server, PhpVersion $version)
     {
-        if ($restarting = $this->confirm('The sites may become unavailable while the <comment>[PHP '.$version.']</comment> service restarts. Continue?')) {
-            $this->step('Restarting PHP '.$version);
-
-            $this->forge->rebootPHP($serverId, [
-                'version' => 'php'.str_replace('.', '', $version),
-            ]);
+        if ($restarting = confirm('The sites may become unavailable while the PHP '.$version->release().' service restarts. Continue?')) {
+            spin(
+                fn () => $server->rebootPHP($version->forgeKey()),
+                'Restarting PHP '.$version->release(),
+            );
         }
 
         return $restarting;

@@ -4,6 +4,8 @@ namespace App\Commands;
 
 use App\Support\PhpVersion;
 
+use function Laravel\Prompts\info;
+
 class PhpLogsCommand extends Command
 {
     use Concerns\InteractsWithLogs,
@@ -43,8 +45,22 @@ class PhpLogsCommand extends Command
 
         $serverPhpVersion = $this->currentServer()->phpVersion;
 
-        $version = $version ?: PhpVersion::of($serverPhpVersion)->release();
+        $version = PhpVersion::of($version ?: $serverPhpVersion);
 
-        $this->showLogs('php'.str_replace('.', '', $version));
+        info('Retrieving the latest logs');
+
+        $logs = $this->forge->serverLog(
+            $this->currentOrganization(),
+            $this->currentServer()->id,
+            $version->forgeKey(),
+        );
+
+        abort_if(empty($logs), 1, 'The requested logs could not be found or they are empty.');
+
+        $this->newLine();
+
+        $this->displayLogs($logs);
+
+        $this->newLine();
     }
 }

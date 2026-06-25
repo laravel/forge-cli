@@ -4,6 +4,9 @@ namespace App\Commands;
 
 use App\Support\PhpVersion;
 
+use function Laravel\Prompts\info;
+use function Laravel\Prompts\spin;
+
 class PhpStatusCommand extends Command
 {
     use Concerns\InteractsWithPhp;
@@ -40,10 +43,17 @@ class PhpStatusCommand extends Command
             abort(1, 'PHP version needs to be one of these values: '.implode(', ', $versions).'.');
         }
 
-        $version = $version ?: PhpVersion::of($server->phpVersion)->release();
+        $version = PhpVersion::of($version ?: $server->phpVersion);
 
-        $this->ensureServiceIsRunning($server, 'php'.$version.'-fpm');
+        spin(function () use ($version) {
+            [$exitCode] = $this->remote->exec(sprintf(
+                'systemctl is-active --quiet %s',
+                $version->serviceName(),
+            ));
 
-        $this->successfulStep('PHP '.$version.' is up & running');
+            abort_if($exitCode != 0, 1, 'Service is not running.');
+        }, 'Checking the service status');
+
+        info('PHP '.$version->release().' is up & running');
     }
 }
