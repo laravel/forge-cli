@@ -4,6 +4,10 @@ namespace App\Commands;
 
 use Illuminate\Support\Facades\File;
 
+use function Laravel\Prompts\confirm;
+use function Laravel\Prompts\info;
+use function Laravel\Prompts\spin;
+
 class EnvPushCommand extends Command
 {
     use Concerns\InteractsWithEnvironmentFiles;
@@ -31,9 +35,10 @@ class EnvPushCommand extends Command
     {
         $siteId = $this->askForSite('Which site would you like to upload the environment file to');
 
+        $organization = $this->currentOrganization();
         $server = $this->currentServer();
         $file = $this->getEnvironmentFile(
-            $site = $this->forge->site($server->id, $siteId)
+            $site = $this->forge->organizationSite($organization, (int) $siteId)
         );
 
         abort_unless(
@@ -42,24 +47,26 @@ class EnvPushCommand extends Command
             'The environment variables for that site have not been downloaded.'
         );
 
-        if (is_null($this->argument('file')) && ! $this->confirmStep(
-            ['Would You Like Update The Site Environment File With The Contents Of The File %s', basename($file)]
+        if (is_null($this->argument('file')) && ! confirm(
+            'Would you like to update the site environment file with the contents of '.basename($file).'?'
         )) {
             return 0;
         }
 
-        $this->step(['Uploading %s Environment File', basename($file)]);
-
-        $this->forge->updateSiteEnvironmentFile(
-            $this->currentServer()->id,
-            $site->id,
-            File::get($file)
+        spin(
+            fn () => $this->forge->updateSiteEnvironment(
+                $organization,
+                $server->id,
+                $site->id,
+                File::get($file),
+            ),
+            'Uploading '.basename($file),
         );
 
-        $this->successfulStep(['Environment variables uploaded successfully to %s', $site->name]);
-        $this->step('You may need to deploy the site for the new variables to take effect.');
+        info('Environment variables uploaded successfully to '.$site->name);
+        info('You may need to deploy the site for the new variables to take effect.');
 
-        if (is_null($this->argument('file')) && $this->confirmStep(['Would you like to delete the environment file %s from your machine', basename($file)])) {
+        if (is_null($this->argument('file')) && confirm('Would you like to delete the environment file '.basename($file).' from your machine?')) {
             File::delete($file);
         }
     }

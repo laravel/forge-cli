@@ -4,6 +4,10 @@ namespace App\Commands;
 
 use Illuminate\Support\Facades\File;
 
+use function Laravel\Prompts\confirm;
+use function Laravel\Prompts\info;
+use function Laravel\Prompts\spin;
+
 class EnvPullCommand extends Command
 {
     use Concerns\InteractsWithEnvironmentFiles;
@@ -31,13 +35,14 @@ class EnvPullCommand extends Command
     {
         $siteId = $this->askForSite('Which site would you like to download the environment file from');
 
+        $organization = $this->currentOrganization();
         $server = $this->currentServer();
         $file = $this->getEnvironmentFile(
-            $site = $this->forge->site($server->id, $siteId)
+            $site = $this->forge->organizationSite($organization, (int) $siteId)
         );
 
-        if (is_null($this->argument('file')) && File::exists($file) && ! $this->confirmStep(
-            ['File already exists with the name: %s. Would you like to overwrite it?', basename($file)]
+        if (is_null($this->argument('file')) && File::exists($file) && ! confirm(
+            'File already exists with the name '.basename($file).'. Would you like to overwrite it?'
         )) {
             return 0;
         }
@@ -46,9 +51,12 @@ class EnvPullCommand extends Command
 
         File::put(
             $file,
-            $this->forge->siteEnvironmentFile($this->currentServer()->id, $site->id),
+            spin(
+                fn () => $this->forge->siteEnvironment($organization, $server->id, $site->id),
+                'Downloading environment file',
+            ),
         );
 
-        $this->successfulStep(['Environment variables written to %s', basename($file)]);
+        info('Environment variables written to '.basename($file));
     }
 }
