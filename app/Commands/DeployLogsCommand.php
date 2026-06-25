@@ -2,6 +2,8 @@
 
 namespace App\Commands;
 
+use function Laravel\Prompts\info;
+
 class DeployLogsCommand extends Command
 {
     use Concerns\InteractsWithLogs;
@@ -27,19 +29,26 @@ class DeployLogsCommand extends Command
      */
     public function handle()
     {
-        $siteId = $this->askForSite('Which site would you like to retrieve the deployment logs from');
+        $siteId = (int) $this->askForSite('Which site would you like to retrieve the deployment logs from');
+        $organization = $this->currentOrganization();
+        $server = $this->currentServer();
 
-        $this->step('Retrieving the latest deployment logs');
+        info('Retrieving the latest deployment logs');
 
-        $lastDeploymentId = optional(collect($this->forge->siteDeployments(
-            $this->currentServer()->id,
+        $deployment = collect($this->forge->deployments(
+            $organization,
+            $server->id,
             $siteId,
-        ))->first())['id'];
+        )->lazy())->first();
 
-        abort_if(is_null($lastDeploymentId), 1, 'This site has not been deployed.');
+        abort_if(is_null($deployment), 1, 'This site has not been deployed.');
+
+        $this->newLine();
 
         $this->displayLogs(
-            $this->forge->siteDeploymentOutput($this->currentServer()->id, $siteId, $lastDeploymentId)
+            $this->forge->deploymentLog($organization, $server->id, $siteId, $deployment->id)
         );
+
+        $this->newLine();
     }
 }
