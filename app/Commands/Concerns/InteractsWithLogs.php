@@ -62,20 +62,20 @@ trait InteractsWithLogs
     }
 
     /**
-     * Shows the given daemon logs.
+     * Shows the given background process logs.
      *
-     * @param  string|int  $daemonId
+     * @param  string|int  $processId
      * @param  string  $username
      * @param  bool  $follow
      * @return void
      */
-    protected function showDaemonLogs($daemonId, $username, $follow)
+    protected function showBackgroundProcessLogs($processId, $username, $follow)
     {
-        abort_if($username == 'root', 1, 'Requesting logs from daemons run by [root] is not supported.');
+        abort_if($username == 'root', 1, 'Following logs from background processes run by [root] is not supported.');
 
-        $this->step('Retrieving the latest daemon logs');
+        info('Retrieving the latest background process logs');
 
-        $this->showRemoteLogs('/home/'.$username.'/.forge/daemon-'.$daemonId.'.log', $follow);
+        $this->showRemoteLogs('/home/'.$username.'/.forge/daemon-'.$processId.'.log', $follow);
     }
 
     /**

@@ -142,23 +142,23 @@ trait InteractsWithIO
     }
 
     /**
-     * Prompt the user for an "daemon" input.
+     * Prompt the user for a "background process" input.
      *
      * @param  string  $question
      * @return string|int
      */
-    public function askForDaemon($question)
+    public function askForBackgroundProcess($question)
     {
-        $command = $this->argument('daemon');
-
+        $command = $this->argument('backgroundProcess');
+        $organization = $this->currentOrganization();
         $server = $this->currentServer();
 
         $answers = spin(
-            fn () => collect($this->forge->daemons($server->id)),
-            'Retrieving daemons',
+            fn () => collect($this->forge->backgroundProcesses($organization, $server->id)->lazy()),
+            'Retrieving background processes',
         );
 
-        abort_if($answers->isEmpty(), 1, 'This server does not have any daemons.');
+        abort_if($answers->isEmpty(), 1, 'This server does not have any background processes.');
 
         if (! is_null($command)) {
             return optional($answers->where('command', $command)->first())->id ?: $command;
@@ -166,11 +166,11 @@ trait InteractsWithIO
 
         return search($question, function (string $value) use ($answers) {
             return $answers
-                ->filter(function ($daemon) use ($value) {
-                    return str_contains(strtolower($daemon->command), strtolower($value));
+                ->filter(function ($process) use ($value) {
+                    return str_contains(strtolower($process->command), strtolower($value));
                 })
-                ->mapWithKeys(function ($daemon) {
-                    return [$daemon->id => $daemon->command];
+                ->mapWithKeys(function ($process) {
+                    return [$process->id => $process->command];
                 })
                 ->all();
         });
