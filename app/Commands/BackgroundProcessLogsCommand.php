@@ -26,7 +26,7 @@ class BackgroundProcessLogsCommand extends Command
     /**
      * The aliases of the command.
      *
-     * @var array
+     * @var array<string>
      */
     protected $aliases = [
         'daemon:logs',

@@ -23,7 +23,7 @@ abstract class Command extends BaseCommand
     /**
      * The aliases of the command.
      *
-     * @var array
+     * @var array<string>
      */
     protected $aliases = [];
 

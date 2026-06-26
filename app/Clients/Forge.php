@@ -77,8 +77,6 @@ class Forge extends BaseForge
 
     /**
      * Handle the request error.
-     *
-     * @return void
      */
     protected function handleRequestError(ResponseInterface $response): never
     {

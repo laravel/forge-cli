@@ -33,7 +33,6 @@ class DatabaseLogsCommand extends Command
 
         $server = $this->currentServer();
 
-        // @phpstan-ignore-next-line
         $databaseType = $server->databaseType;
         $logKey = $this->databaseLogKey($databaseType);
 

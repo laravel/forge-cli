@@ -35,7 +35,6 @@ class DatabaseShellCommand extends Command
 
         $server = $this->currentServer();
 
-        // @phpstan-ignore-next-line
         $databaseType = $server->databaseType;
         $engine = $this->databaseEngine($databaseType);
 
