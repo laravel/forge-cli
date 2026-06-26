@@ -36,10 +36,15 @@ class TinkerCommand extends Command
 
         info('Establishing tinker connection');
 
+        $directory = sprintf('/home/%s/%s', $site->user, $site->name);
+
+        if ($site->zeroDowntimeDeployments) {
+            $directory .= '/current';
+        }
+
         return $this->remote->passthru(sprintf(
-            'cd /home/%s/%s && %s artisan tinker',
-            $site->user,
-            $site->name,
+            'cd %s && %s artisan tinker',
+            $directory,
             PhpVersion::of($site->phpVersion)->binary()
         ));
     }
