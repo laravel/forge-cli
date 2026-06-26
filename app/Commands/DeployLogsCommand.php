@@ -38,6 +38,7 @@ class DeployLogsCommand extends Command
                 $organization,
                 $server->id,
                 $siteId,
+                ['sort' => '-created_at'],
             )->lazy())->first(),
             'Retrieving deployments',
         );

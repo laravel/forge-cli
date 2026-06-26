@@ -22,6 +22,7 @@ it('allows to switch the organization with a menu', function () {
         ->expectsPromptsInfo('Current organization changed successfully to Acme Inc');
 
     expect($this->config->get('organization'))->toBe('acme');
+    expect($this->config->get('server'))->toBeNull();
 });
 
 it('allows to switch the organization with the slug as an argument', function () {
@@ -33,4 +34,5 @@ it('allows to switch the organization with the slug as an argument', function ()
         ->expectsPromptsInfo('Current organization changed successfully to Acme Inc');
 
     expect($this->config->get('organization'))->toBe('acme');
+    expect($this->config->get('server'))->toBeNull();
 });

@@ -31,9 +31,9 @@ class OpenCommand extends Command
     {
         $siteId = (int) $this->askForSite('Which site would you like to open');
         $organization = $this->currentOrganization();
-        $serverId = $this->currentServer()->id;
+        $server = $this->currentServer();
 
-        $url = "https://forge.laravel.com/orgs/$organization/servers/$serverId/sites/$siteId";
+        $url = "https://forge.laravel.com/{$organization}/{$server->slug}/{$siteId}";
 
         $os = strtolower(php_uname(PHP_OS));
 

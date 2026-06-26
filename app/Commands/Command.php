@@ -118,10 +118,14 @@ abstract class Command extends BaseCommand
     public function currentServer()
     {
         return once(function () {
+            $serverId = $this->config->get('server');
+
+            abort_if(is_null($serverId), 1, 'You have not selected a server. Use the \'server:switch\' command.');
+
             return spin(
                 fn () => $this->forge->server(
                     $this->currentOrganization(),
-                    $this->config->get('server')
+                    $serverId
                 ),
                 'Retrieving server',
             );

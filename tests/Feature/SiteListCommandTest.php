@@ -32,3 +32,9 @@ it('warns when there are no sites', function () {
     $this->artisan('site:list')
         ->expectsPromptsWarning('No sites found.');
 });
+
+it('aborts when no server is selected', function () {
+    $this->config->forget('server');
+
+    $this->artisan('site:list');
+})->throws('You have not selected a server. Use the \'server:switch\' command.');

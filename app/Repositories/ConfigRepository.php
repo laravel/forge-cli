@@ -84,4 +84,21 @@ class ConfigRepository
 
         return $this;
     }
+
+    /**
+     * Remove a given configuration value.
+     *
+     * @param  string  $key
+     * @return $this
+     */
+    public function forget($key)
+    {
+        $config = $this->all();
+
+        Arr::forget($config, $key);
+
+        file_put_contents($this->path, json_encode($config, JSON_PRETTY_PRINT));
+
+        return $this;
+    }
 }

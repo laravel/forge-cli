@@ -14,7 +14,7 @@ it('can retrieve deployment logs from sites with an menu', function () {
         new Site(['id' => 2, 'name' => 'something.com']),
     ]));
 
-    $this->client->shouldReceive('deployments')->with('personal', 1, 2)->once()->andReturn(fakePaginator([
+    $this->client->shouldReceive('deployments')->with('personal', 1, 2, ['sort' => '-created_at'])->once()->andReturn(fakePaginator([
         new Deployment(['id' => 3]),
     ]));
 
@@ -42,7 +42,7 @@ it('can retrieve deployment logs from sites with an option', function () {
         new Site(['id' => 2, 'name' => 'something.com']),
     ]));
 
-    $this->client->shouldReceive('deployments')->with('personal', 1, 1)->once()->andReturn(fakePaginator([
+    $this->client->shouldReceive('deployments')->with('personal', 1, 1, ['sort' => '-created_at'])->once()->andReturn(fakePaginator([
         new Deployment(['id' => 4]),
     ]));
 
@@ -64,7 +64,7 @@ it('can not display the status when there is no deployments', function () {
         new Site(['id' => 2, 'name' => 'something.com']),
     ]));
 
-    $this->client->shouldReceive('deployments')->with('personal', 1, 1)->once()->andReturn(fakePaginator([]));
+    $this->client->shouldReceive('deployments')->with('personal', 1, 1, ['sort' => '-created_at'])->once()->andReturn(fakePaginator([]));
 
     $this->artisan('deploy:logs', ['site' => 1]);
 })->throws('This site has not been deployed.');

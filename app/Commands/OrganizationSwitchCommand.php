@@ -43,6 +43,7 @@ class OrganizationSwitchCommand extends Command
         $organization = $this->forge->organization($slug);
 
         $this->config->set('organization', $organization->slug);
+        $this->config->forget('server');
 
         Once::flush();
 
