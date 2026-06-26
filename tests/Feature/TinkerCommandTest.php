@@ -1,17 +1,20 @@
 <?php
 
+use Laravel\Forge\Resources\Server;
+use Laravel\Forge\Resources\Site;
+
 it('can tinker with sites', function () {
-    $this->client->shouldReceive('server')->andReturn(
-        (object) ['id' => 1, 'name' => 'production', 'databaseType' => 'mysql'],
+    $this->client->shouldReceive('server')->with('personal', 1)->andReturn(
+        new Server(['id' => 1]),
     );
 
-    $this->client->shouldReceive('sites')->once()->andReturn([
-        (object) ['id' => 1, 'name' => 'pestphp.com'],
-        (object) ['id' => 2, 'name' => 'something.com'],
-    ]);
+    $this->client->shouldReceive('serverSites')->with('personal', 1)->once()->andReturn(fakePaginator([
+        new Site(['id' => 1, 'name' => 'pestphp.com']),
+        new Site(['id' => 2, 'name' => 'something.com']),
+    ]));
 
-    $this->client->shouldReceive('site')->with(1, 2)->once()->andReturn(
-        (object) ['id' => 2, 'name' => 'something.com', 'phpVersion' => 'php71', 'username' => 'user-in-isolation'],
+    $this->client->shouldReceive('organizationSite')->with('personal', 2)->once()->andReturn(
+        new Site(['id' => 2, 'name' => 'something.com', 'phpVersion' => 'php71', 'user' => 'user-in-isolation']),
     );
 
     $this->remote
@@ -21,5 +24,5 @@ it('can tinker with sites', function () {
 
     $this->artisan('tinker', ['site' => 2])
         ->assertExitCode(0)
-        ->expectsOutput('==> Establishing Tinker Connection');
+        ->expectsPromptsInfo('Establishing tinker connection');
 });

@@ -2,11 +2,15 @@
 
 namespace App\Commands;
 
-use Laravel\Forge\Resources\SiteCommand;
+use Laravel\Forge\Resources\Command as SiteCommand;
+
+use function Laravel\Prompts\info;
+use function Laravel\Prompts\spin;
+use function Laravel\Prompts\text;
 
 class CommandCommand extends Command
 {
-    use Concerns\InteractsWithEvents;
+    use Concerns\InteractsWithLogs;
 
     /**
      * The signature of the command.
@@ -31,42 +35,41 @@ class CommandCommand extends Command
      */
     public function handle()
     {
-        $siteId = $this->askForSite('Which site would you like to run the command on');
-
-        $command = $this->option('command') ?? $this->askStep('What command would you like to execute');
-
-        $this->step('Queuing Command');
-
+        $siteId = (int) $this->askForSite('Which site would you like to run the command on');
+        $organization = $this->currentOrganization();
         $server = $this->currentServer();
 
-        $command = $this->forge->executeSiteCommand($server->id, $siteId, [
-            'command' => $command,
-        ]);
+        $command = $this->option('command') ?? text('What command would you like to execute');
 
-        $this->step('Waiting For Command To Run');
+        $command = spin(function () use ($organization, $server, $siteId, $command) {
+            $this->forge->createCommand($organization, $server->id, $siteId, [
+                'command' => $command,
+            ]);
 
-        do {
-            $this->time->sleep(1);
+            return collect($this->forge->commands($organization, $server->id, $siteId)->lazy())->first();
+        }, 'Queuing command');
 
-            /** @var SiteCommand $command */
-            $command = collect($this->forge->getSiteCommand($server->id, $siteId, $command->id))->first();
-        } while ($command->status == 'waiting');
+        $command = spin(function () use ($organization, $server, $siteId, $command) {
+            while (in_array($command->status, ['waiting', 'running'])) {
+                $this->time->sleep(1);
 
-        $this->step('Running');
+                /** @var SiteCommand $command */
+                $command = $this->forge->command($organization, $server->id, $siteId, $command->id);
+            }
 
-        $eventId = $this->findEventId('Running Custom Command.');
+            return $command;
+        }, 'Running command');
 
-        $username = $this->forge->site($server->id, $siteId)->username;
+        $output = $this->forge->commandOutput($organization, $server->id, $siteId, $command->id);
 
-        $this->displayEventOutput($username, $eventId, function () use ($server, $siteId, &$command) {
-            $command = collect($this->forge->getSiteCommand($server->id, $siteId, $command->id))->first();
+        $this->newLine();
 
-            /** @var SiteCommand $command */
-            return $command->status == 'running';
-        });
+        $this->displayLogs($output);
 
-        abort_if($command->status == 'failed', 1, 'The command failed.');
+        $this->newLine();
 
-        $this->successfulStep('Command Run Successfully.');
+        abort_if($command->status !== 'finished', 1, 'The command failed.');
+
+        info('Command run successfully.');
     }
 }
