@@ -1,6 +1,28 @@
 # Release Notes
 
-## [Unreleased](https://github.com/laravel/forge-cli/compare/v1.8.3...master)
+## [Unreleased](https://github.com/laravel/forge-cli/compare/v2.0.0...master)
+
+## [v2.0.0](https://github.com/laravel/forge-cli/compare/v1.8.3...v2.0.0) - 2026-06-29
+
+### What's Changed
+
+* GitHub Actions hardening by [@nunomaduro](https://github.com/nunomaduro) in https://github.com/laravel/forge-cli/pull/153
+* Bump actions/checkout from 4.3.1 to 6.0.3 in the github-actions group by [@dependabot](https://github.com/dependabot)[bot] in https://github.com/laravel/forge-cli/pull/154
+* Add Dependabot cooldown of 5 days by [@nunomaduro](https://github.com/nunomaduro) in https://github.com/laravel/forge-cli/pull/155
+* Enable Dependabot auto-merge by [@nunomaduro](https://github.com/nunomaduro) in https://github.com/laravel/forge-cli/pull/156
+* Fix reusable workflow pin to match granted permissions by [@nunomaduro](https://github.com/nunomaduro) in https://github.com/laravel/forge-cli/pull/157
+* Bump shivammathur/setup-php from 2.37.1 to 2.37.2 in the github-actions group by [@dependabot](https://github.com/dependabot)[bot] in https://github.com/laravel/forge-cli/pull/159
+* Bump actions/checkout from 6.0.3 to 7.0.0 in the github-actions group by [@dependabot](https://github.com/dependabot)[bot] in https://github.com/laravel/forge-cli/pull/161
+* Update CLI docs URL on README.md by [@xavizera](https://github.com/xavizera) in https://github.com/laravel/forge-cli/pull/103
+* Migrate to Forge v2 API by [@A5hleyRich](https://github.com/A5hleyRich) in https://github.com/laravel/forge-cli/pull/160
+
+### New Contributors
+
+* [@dependabot](https://github.com/dependabot)[bot] made their first contribution in https://github.com/laravel/forge-cli/pull/154
+* [@xavizera](https://github.com/xavizera) made their first contribution in https://github.com/laravel/forge-cli/pull/103
+* [@A5hleyRich](https://github.com/A5hleyRich) made their first contribution in https://github.com/laravel/forge-cli/pull/160
+
+**Full Changelog**: https://github.com/laravel/forge-cli/compare/v1.8.3...v2.0.0
 
 ## [v1.8.3](https://github.com/laravel/forge-cli/compare/v1.8.2...v1.8.3) - 2024-09-30
 
