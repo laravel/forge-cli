@@ -2,6 +2,10 @@
 
 namespace App\Commands;
 
+use function Laravel\Prompts\info;
+use function Laravel\Prompts\password;
+use function Laravel\Prompts\spin;
+
 class DatabaseShellCommand extends Command
 {
     use Concerns\InteractsWithDatabase;
@@ -31,33 +35,31 @@ class DatabaseShellCommand extends Command
 
         $server = $this->currentServer();
 
-        // @phpstan-ignore-next-line
         $databaseType = $server->databaseType;
+        $engine = $this->databaseEngine($databaseType);
+
+        abort_if(is_null($engine), 1, 'Starting a ['.$databaseType.'] database shell is not supported.');
 
         $user = $this->option('user');
 
-        $database = $this->argument('database') ?? optional(
-            collect($this->forge->databases($server->id))->first()
-        )->name;
+        $database = $this->argument('database') ?? optional(spin(
+            fn () => collect($this->forge->databases($this->currentOrganization(), $server->id)->lazy())->first(),
+            'Retrieving databases',
+        ))->name;
 
         abort_if(is_null($database), 1, 'No databases found.');
 
-        $this->step([
-            'Establishing shell connection to %s database',
-            $server->name.'@'.$database,
-        ]);
+        info('Establishing shell connection to '.$server->name.'@'.$database.' database');
 
-        $password = $this->secretStep(['Enter The Database User %s Password', $user]);
+        $password = password('Enter the password for database user '.$user);
 
-        abort_if(is_null($password), 1, 'Password can not be empty.');
+        abort_if($password === '', 1, 'Password can not be empty.');
 
-        if (in_array($databaseType, ['mysql', 'mysql8', 'mariadb'])) {
+        if ($engine == 'mysql') {
             return $this->connectToMysql($server->id, $user, $password, $database);
-        } elseif (in_array($databaseType, ['postgres', 'postgres13'])) {
-            return $this->connectToPostgres($server->id, $user, $password, $database);
         }
 
-        abort(1, 'Starting a ['.$databaseType.'] database shell is not supported.');
+        return $this->connectToPostgres($server->id, $user, $password, $database);
     }
 
     /**

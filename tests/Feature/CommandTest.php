@@ -4,9 +4,9 @@ use App\Commands\Command;
 use Laravel\Forge\Resources\Server;
 
 beforeEach(function () {
-    $this->client->shouldReceive('servers')->andReturn([
+    $this->client->shouldReceive('servers')->andReturn(fakePaginator([
         new Server(['id' => 1, 'name' => 'production', 'ipAddress' => '123.456.789.000']),
-    ]);
+    ]));
 });
 
 afterEach(function () {

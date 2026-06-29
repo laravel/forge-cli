@@ -2,6 +2,8 @@
 
 namespace App\Commands;
 
+use function Laravel\Prompts\spin;
+
 class SiteLogsCommand extends Command
 {
     use Concerns\InteractsWithLogs;
@@ -30,7 +32,10 @@ class SiteLogsCommand extends Command
     {
         $siteId = $this->askForSite('Which site would you like to retrieve the logs from');
 
-        $site = $this->forge->site($this->currentServer()->id, $siteId);
+        $site = spin(
+            fn () => $this->forge->organizationSite($this->currentOrganization(), (int) $siteId),
+            'Retrieving site',
+        );
 
         $this->showSiteLogs($site, $this->option('follow'));
     }

@@ -2,7 +2,10 @@
 
 namespace App\Commands;
 
-use Spatie\Once;
+use Illuminate\Support\Once;
+
+use function Laravel\Prompts\info;
+use function Laravel\Prompts\spin;
 
 class ServerSwitchCommand extends Command
 {
@@ -23,7 +26,7 @@ class ServerSwitchCommand extends Command
     /**
      * The aliases of the command.
      *
-     * @var array
+     * @var array<string>
      */
     protected $aliases = [
         'switch',
@@ -38,14 +41,15 @@ class ServerSwitchCommand extends Command
     {
         $serverId = $this->askForServer('Which server would you like to switch to');
 
-        $server = $this->forge->server($serverId);
+        $server = spin(
+            fn () => $this->forge->server($this->currentOrganization(), $serverId),
+            'Retrieving server',
+        );
 
         $this->config->set('server', $server->id);
 
-        Once\Cache::getInstance()->flush();
+        Once::flush();
 
-        $this->successfulStep(
-            'Current server context changed successfully to <comment>['.$server->name.']</comment>'
-        );
+        info("Current server context changed successfully to {$server->name}");
     }
 }

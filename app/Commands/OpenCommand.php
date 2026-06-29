@@ -4,10 +4,10 @@ namespace App\Commands;
 
 use Symfony\Component\Process\Process;
 
+use function Laravel\Prompts\info;
+
 class OpenCommand extends Command
 {
-    use Concerns\InteractsWithEvents;
-
     /**
      * The signature of the command.
      *
@@ -29,10 +29,11 @@ class OpenCommand extends Command
      */
     public function handle()
     {
-        $siteId = $this->askForSite('Which site would you like to open');
-        $serverId = $this->currentServer()->id;
+        $siteId = (int) $this->askForSite('Which site would you like to open');
+        $organization = $this->currentOrganization();
+        $server = $this->currentServer();
 
-        $url = "https://forge.laravel.com/servers/$serverId/sites/$siteId";
+        $url = "https://forge.laravel.com/{$organization}/{$server->slug}/{$siteId}";
 
         $os = strtolower(php_uname(PHP_OS));
 
@@ -41,12 +42,12 @@ class OpenCommand extends Command
         } elseif (strpos($os, 'linux') !== false) {
             $open = 'xdg-open';
         } else {
-            $this->step("Can't open your browser, you'll have to manually navigate to {$url}");
+            info("Can't open your browser, you'll have to manually navigate to {$url}");
 
             return;
         }
 
-        $this->step('Opening site in your browser...');
+        info('Opening site in your browser...');
 
         $command = [$open, $url];
 

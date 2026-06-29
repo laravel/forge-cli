@@ -1,20 +1,22 @@
 <?php
 
+use Laravel\Forge\Resources\Server;
+
 it('can create ssh keys', function () {
     $this->config->set('server', 1);
 
-    $this->client->shouldReceive('servers')->andReturn([
-        (object) ['id' => 1, 'name' => 'production'],
-        (object) ['id' => 2, 'name' => 'staging'],
-    ]);
+    $this->client->shouldReceive('servers')->with('personal')->andReturn(fakePaginator([
+        new Server(['id' => 1, 'name' => 'production', 'revoked' => false]),
+        new Server(['id' => 2, 'name' => 'staging', 'revoked' => false]),
+    ]));
 
-    $this->forge->shouldReceive('server')
+    $this->client->shouldReceive('server')
         ->once()
-        ->with(1)
-        ->andReturn((object) [
+        ->with('personal', 1)
+        ->andReturn(new Server([
             'id' => 1,
             'name' => 'production',
-        ]);
+        ]));
 
     $this->keys->shouldReceive('keysPath')
         ->andReturn('/home/driesvints/.ssh');
@@ -26,43 +28,48 @@ it('can create ssh keys', function () {
 
     $this->keys->shouldReceive('create')->with('driesvints')->once()->andReturn([
         'driesvints_rsa.pub',
-        'MY KEY Content',
+        "MY KEY Content\n",
     ]);
 
-    $this->forge->shouldReceive('createSSHKey')->with(1, [
+    $this->client->shouldReceive('createSshKey')->with('personal', 1, [
         'name' => 'driesvints',
         'key' => 'MY KEY Content',
         'username' => 'morales2k',
-    ], true)->once();
+    ])->once();
 
     $this->remote->shouldReceive('resolvePrivateKeyUsing')->once();
     $this->remote->shouldReceive('ensureSshIsConfigured')->once();
 
     $this->artisan('ssh:configure')
-        ->expectsQuestion('<fg=yellow>‣</> <options=bold>Which Server Would You Like To Configure The SSH Key Based Secure Authentication</>', 1)
-        ->expectsQuestion('<fg=yellow>‣</> <options=bold>Which Key Would You Like To Use</>', 0)
-        ->expectsQuestion('<fg=yellow>‣</> <options=bold>What Should The SSH Key Be Named</>', 'driesvints')
-        ->expectsQuestion('<fg=yellow>‣</> <options=bold>What Username Should We Use For The Selected Server</>', 'morales2k')
-        ->expectsOutput('==> Creating Key [driesvints_rsa.pub]')
-        ->expectsOutput('==> Adding Key [driesvints_rsa.pub] With The Name [driesvints] To Server [production]')
-        ->expectsOutput('==> SSH Key Based Secure Authentication Configured Successfully');
+        ->expectsSearch(
+            'Which server would you like to configure the SSH key based secure authentication',
+            answer: 1,
+            search: 'production',
+            answers: [1 => 'production'],
+        )
+        ->expectsQuestion('Which key would you like to use', 'create')
+        ->expectsQuestion('What should the SSH key be named', 'driesvints')
+        ->expectsQuestion('What username should we use for the selected server', 'morales2k')
+        ->expectsPromptsInfo('Creating key driesvints_rsa.pub')
+        ->expectsPromptsInfo('Adding key driesvints_rsa.pub with the name driesvints to server production')
+        ->expectsPromptsInfo('SSH key based secure authentication configured successfully');
 });
 
 it('can reuse ssh keys', function () {
     $this->config->set('server', 2);
 
-    $this->client->shouldReceive('servers')->andReturn([
-        (object) ['id' => 1, 'name' => 'production'],
-        (object) ['id' => 2, 'name' => 'staging'],
-    ]);
+    $this->client->shouldReceive('servers')->with('personal')->andReturn(fakePaginator([
+        new Server(['id' => 1, 'name' => 'production', 'revoked' => false]),
+        new Server(['id' => 2, 'name' => 'staging', 'revoked' => false]),
+    ]));
 
-    $this->forge->shouldReceive('server')
+    $this->client->shouldReceive('server')
         ->once()
-        ->with(2)
-        ->andReturn((object) [
+        ->with('personal', 2)
+        ->andReturn(new Server([
             'id' => 2,
-            'name' => 'production',
-        ]);
+            'name' => 'staging',
+        ]));
 
     $this->keys->shouldReceive('keysPath')
         ->andReturn('/home/driesvints/.ssh');
@@ -74,22 +81,67 @@ it('can reuse ssh keys', function () {
 
     $this->keys->shouldReceive('get')->with('/home/driesvints/.ssh/id_rsa.pub')->once()->andReturn([
         'id_rsa.pub',
-        'MY KEY Content',
+        "\nMY KEY Content\n",
     ]);
 
-    $this->forge->shouldReceive('createSSHKey')->with(2, [
+    $this->client->shouldReceive('createSshKey')->with('personal', 2, [
         'name' => 'driesvints',
         'key' => 'MY KEY Content',
         'username' => 'morales2k',
-    ], true)->once();
+    ])->once();
 
     $this->remote->shouldReceive('resolvePrivateKeyUsing')->once();
     $this->remote->shouldReceive('ensureSshIsConfigured')->once();
 
     $this->artisan('ssh:configure', ['server' => 2])
-        ->expectsQuestion('<fg=yellow>‣</> <options=bold>Which Key Would You Like To Use</>', 1)
-        ->expectsQuestion('<fg=yellow>‣</> <options=bold>What Should The SSH Key Be Named In Forge</>', 'driesvints')
-        ->expectsQuestion('<fg=yellow>‣</> <options=bold>What Username Should We Use For The Selected Server</>', 'morales2k')
-        ->expectsOutput('==> Adding Key [id_rsa.pub] With The Name [driesvints] To Server [production]')
-        ->expectsOutput('==> SSH Key Based Secure Authentication Configured Successfully');
+        ->expectsQuestion('Which key would you like to use', '/home/driesvints/.ssh/id_rsa.pub')
+        ->expectsQuestion('What should the SSH key be named in Forge', 'driesvints')
+        ->expectsQuestion('What username should we use for the selected server', 'morales2k')
+        ->expectsPromptsInfo('Adding key id_rsa.pub with the name driesvints to server staging')
+        ->expectsPromptsInfo('SSH key based secure authentication configured successfully');
+});
+
+it('waits for forge to install ssh keys before testing the connection', function () {
+    $this->config->set('server', 1);
+
+    $this->client->shouldReceive('servers')->with('personal')->andReturn(fakePaginator([
+        new Server(['id' => 1, 'name' => 'production', 'revoked' => false]),
+    ]));
+
+    $this->client->shouldReceive('server')
+        ->once()
+        ->with('personal', 1)
+        ->andReturn(new Server([
+            'id' => 1,
+            'name' => 'production',
+        ]));
+
+    $this->keys->shouldReceive('keysPath')
+        ->andReturn('/home/driesvints/.ssh');
+
+    $this->keys->shouldReceive('get')->with('/home/driesvints/.ssh/id_rsa.pub')->once()->andReturn([
+        'id_rsa.pub',
+        "MY KEY Content\n",
+    ]);
+
+    $this->client->shouldReceive('createSshKey')->with('personal', 1, [
+        'name' => 'driesvints',
+        'key' => 'MY KEY Content',
+        'username' => 'morales2k',
+    ])->once();
+
+    $this->remote->shouldReceive('resolvePrivateKeyUsing')->once();
+    $this->remote->shouldReceive('ensureSshIsConfigured')->once()->andThrow(
+        new Exception('Unable to connect to remote server. Maybe run [ssh:configure] to configure an SSH Key?'),
+    );
+    $this->remote->shouldReceive('ensureSshIsConfigured')->once();
+
+    $this->artisan('ssh:configure', [
+        'server' => 'production',
+        '--key' => '/home/driesvints/.ssh/id_rsa.pub',
+        '--name' => 'driesvints',
+        '--user' => 'morales2k',
+    ])
+        ->expectsPromptsInfo('Adding key id_rsa.pub with the name driesvints to server production')
+        ->expectsPromptsInfo('SSH key based secure authentication configured successfully');
 });

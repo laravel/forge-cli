@@ -2,6 +2,12 @@
 
 namespace App\Commands;
 
+use Laravel\Forge\Resources\Server;
+
+use function Laravel\Prompts\confirm;
+use function Laravel\Prompts\info;
+use function Laravel\Prompts\spin;
+
 class NginxRestartCommand extends Command
 {
     /**
@@ -27,23 +33,23 @@ class NginxRestartCommand extends Command
     {
         $server = $this->currentServer();
 
-        if ($this->restartNginx($server->id)) {
-            $this->successfulStep('Nginx restart initiated successfully.');
+        if ($this->restartNginx($server)) {
+            info('Nginx restart initiated successfully.');
         }
     }
 
     /**
      * Restarts Nginx service.
      *
-     * @param  string|int  $serverId
      * @return bool
      */
-    public function restartNginx($serverId)
+    public function restartNginx(Server $server)
     {
-        if ($restarting = $this->confirm('The sites may become unavailable while the <comment>[Nginx]</comment> service restarts. Continue?')) {
-            $this->step('Restarting Nginx');
-
-            $this->forge->rebootNginx($serverId);
+        if ($restarting = confirm('The sites may become unavailable while the Nginx service restarts. Continue?')) {
+            spin(
+                fn () => $server->rebootNginx(),
+                'Restarting Nginx',
+            );
         }
 
         return $restarting;

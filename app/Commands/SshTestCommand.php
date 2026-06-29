@@ -2,6 +2,9 @@
 
 namespace App\Commands;
 
+use function Laravel\Prompts\info;
+use function Laravel\Prompts\spin;
+
 class SshTestCommand extends Command
 {
     /**
@@ -33,16 +36,17 @@ class SshTestCommand extends Command
             ]);
         }
 
-        $this->step('Establishing secure connection');
-
         if ($this->option('key')) {
             $this->remote->resolvePrivateKeyUsing(function () {
                 return $this->option('key');
             });
         }
 
-        $this->remote->ensureSshIsConfigured();
+        spin(
+            fn () => $this->remote->ensureSshIsConfigured(),
+            'Establishing secure connection',
+        );
 
-        $this->successfulStep('SSH key based secure authentication is configured');
+        info('SSH key based secure authentication is configured');
     }
 }

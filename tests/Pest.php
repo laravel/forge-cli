@@ -8,8 +8,10 @@ use App\Repositories\KeyRepository;
 use App\Repositories\RemoteRepository;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Once;
+use Laravel\Forge\CursorPaginator;
+use Laravel\Forge\Forge as ForgeClient;
 use LaravelZero\Framework\Testing\TestCase;
-use Spatie\Once;
 use Tests\CreatesApplication;
 
 /*
@@ -25,7 +27,7 @@ use Tests\CreatesApplication;
 
 uses(TestCase::class, CreatesApplication::class)
     ->beforeEach(function () {
-        Once\Cache::getInstance()->flush();
+        Once::flush();
 
         (new Filesystem)->deleteDirectory(base_path('tests/.laravel-forge'));
 
@@ -34,6 +36,7 @@ uses(TestCase::class, CreatesApplication::class)
         });
 
         $this->config = resolve(ConfigRepository::class)->set('token', '123123213');
+        $this->config = resolve(ConfigRepository::class)->set('organization', 'personal');
         $this->config = resolve(ConfigRepository::class)->set('server', 1);
 
         $this->keys = resolve(KeyRepository::class);
@@ -77,4 +80,20 @@ expect()->extend('toBeOne', function () {
 |
 */
 
-// ..
+/**
+ * Build a single-page CursorPaginator for the given items.
+ *
+ * v4 collection endpoints return a CursorPaginator; a null cursor means there are
+ * no further pages, so the (unused) Forge client is never asked to fetch more.
+ */
+function fakePaginator(array $items = []): CursorPaginator
+{
+    return new CursorPaginator(
+        items: $items,
+        nextCursor: null,
+        perPage: null,
+        forge: new ForgeClient,
+        uri: '',
+        class: '',
+    );
+}

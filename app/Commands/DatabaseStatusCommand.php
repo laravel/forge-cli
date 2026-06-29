@@ -2,6 +2,9 @@
 
 namespace App\Commands;
 
+use function Laravel\Prompts\info;
+use function Laravel\Prompts\spin;
+
 class DatabaseStatusCommand extends Command
 {
     use Concerns\InteractsWithDatabase;
@@ -31,17 +34,22 @@ class DatabaseStatusCommand extends Command
 
         $server = $this->currentServer();
 
-        // @phpstan-ignore-next-line
         $databaseType = $server->databaseType;
+        $engine = $this->databaseEngine($databaseType);
 
-        if (in_array($databaseType, ['mysql', 'mysql8', 'mariadb'])) {
-            $this->ensureServiceIsRunning($server, 'mysql');
-        } elseif (in_array($databaseType, ['postgres', 'postgres13'])) {
-            $this->ensureServiceIsRunning($server, 'postgres');
-        } else {
+        if (is_null($engine)) {
             abort(1, 'Checking the status of ['.$databaseType.'] databases is not supported.');
         }
 
-        $this->successfulStep('The database is up and running');
+        spin(function () use ($engine) {
+            [$exitCode] = $this->remote->exec(sprintf(
+                'systemctl is-active --quiet %s',
+                $engine,
+            ));
+
+            abort_if($exitCode != 0, 1, 'Service is not running.');
+        }, 'Checking the service status');
+
+        info('The database is up and running');
     }
 }

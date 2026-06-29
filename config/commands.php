@@ -8,6 +8,7 @@ use LaravelZero\Framework\Commands\InstallCommand;
 use LaravelZero\Framework\Commands\MakeCommand;
 use LaravelZero\Framework\Commands\RenameCommand;
 use LaravelZero\Framework\Commands\StubPublishCommand;
+use LaravelZero\Framework\Commands\TestMakeCommand;
 use NunoMaduro\Collision\Adapters\Laravel\Commands\TestCommand;
 use NunoMaduro\LaravelConsoleSummary\SummaryCommand;
 use Symfony\Component\Console\Command\DumpCompletionCommand;
@@ -71,6 +72,7 @@ return [
         // Illuminate...
         ScheduleRunCommand::class,
         ScheduleFinishCommand::class,
+        TestMakeCommand::class,
 
         // Laravel Zero...
         BuildCommand::class,

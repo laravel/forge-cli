@@ -2,6 +2,9 @@
 
 namespace App\Commands;
 
+use function Laravel\Prompts\spin;
+use function Laravel\Prompts\table;
+
 class ServerListCommand extends Command
 {
     /**
@@ -25,22 +28,19 @@ class ServerListCommand extends Command
      */
     public function handle()
     {
-        $this->step('Retrieving the list of servers');
+        $servers = spin(
+            fn () => collect($this->forge->servers($this->currentOrganization())->lazy())
+                ->reject(function ($server) {
+                    return $server->revoked;
+                }),
+            'Retrieving servers',
+        );
 
-        $this->table([
-            'ID', 'Name', 'IP Address',
-        ], collect($this->forge->servers())->map(function ($server) {
-            $name = $server->name;
-
-            if (! empty($tags = $server->tags(', '))) {
-                $name .= " <fg=gray>($tags)</>";
-            }
-
-            return [
-                $server->id,
-                $name,
-                $server->ipAddress,
-            ];
-        })->all());
+        table(
+            ['ID', 'Name', 'IP Address'],
+            $servers->map(function ($server) {
+                return [$server->id, $server->name, $server->ipAddress];
+            })->all(),
+        );
     }
 }

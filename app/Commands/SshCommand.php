@@ -2,6 +2,9 @@
 
 namespace App\Commands;
 
+use function Laravel\Prompts\info;
+use function Laravel\Prompts\spin;
+
 class SshCommand extends Command
 {
     /**
@@ -37,11 +40,12 @@ class SshCommand extends Command
 
         $username = $this->option('user') ?: 'forge';
 
-        $this->step('Establishing secure connection');
+        spin(
+            fn () => $this->remote->ensureSshIsConfigured(),
+            'Establishing secure connection',
+        );
 
-        $this->remote->ensureSshIsConfigured();
-
-        $this->successfulStep('Connected To <comment>['.$server->name.']</comment>');
+        info("Connected to {$server->name}");
 
         $exitCode = $this->remote->passthru(null, $username);
 

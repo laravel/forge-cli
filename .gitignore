@@ -1,3 +1,7 @@
+/.fleet
+/.idea
+/.vscode
+/.zed
 /phpunit.xml
 /tests/.laravel-forge
 /vendor

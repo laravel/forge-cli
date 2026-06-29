@@ -1,58 +1,68 @@
 <?php
 
+use Laravel\Forge\Resources\Organization;
+use Laravel\Forge\Resources\User;
+
 beforeEach(function () {
     $this->config->flush();
 });
 
 it('authenticates users', function () {
-    $this->client->shouldReceive('user')->andReturn((object) [
-        'email' => 'nuno@laravel.com',
-    ]);
+    $this->client->shouldReceive('user')->andReturn(
+        new User(['email' => 'nuno@laravel.com']),
+    );
 
-    $this->client->shouldReceive('servers')->andReturn([
-        (object) ['id' => 1],
-    ]);
+    $this->client->shouldReceive('organizations')->andReturn(fakePaginator([
+        new Organization(['name' => 'Personal', 'slug' => 'personal']),
+    ]));
 
     $this->artisan('login')
-        ->expectsQuestion('<fg=yellow>‣</> <options=bold>Please Enter Your Forge API Token</>', '123123213')
-        ->expectsOutput('==> Authenticated Successfully As [nuno@laravel.com]');
+        ->expectsQuestion('Please enter your Forge API token', '123123213')
+        ->expectsPromptsInfo('Authenticated successfully as nuno@laravel.com');
+
+    expect($this->config->get('token'))->toBe('123123213');
 });
 
 it('authenticates users with token', function () {
-    $this->client->shouldReceive('user')->andReturn((object) [
-        'email' => 'nuno@laravel.com',
-    ]);
+    $this->client->shouldReceive('user')->andReturn(
+        new User(['email' => 'nuno@laravel.com']),
+    );
 
-    $this->client->shouldReceive('servers')->andReturn([
-        (object) ['id' => 1],
-    ]);
+    $this->client->shouldReceive('organizations')->andReturn(fakePaginator([
+        new Organization(['name' => 'Personal', 'slug' => 'personal']),
+    ]));
 
     $this->artisan('login --token 123123123')
-        ->expectsOutput('==> Authenticated Successfully As [nuno@laravel.com]');
+        ->expectsPromptsInfo('Authenticated successfully as nuno@laravel.com');
 
     expect($this->config->get('token'))->toBe('123123123');
 });
 
-it('sets current server', function () {
-    $this->client->shouldReceive('user')->andReturn((object) [
-        'email' => 'nuno@laravel.com',
-    ]);
+it('switches to the organization when the user belongs to only one', function () {
+    $this->client->shouldReceive('user')->andReturn(
+        new User(['email' => 'nuno@laravel.com']),
+    );
 
-    $this->client->shouldReceive('servers')->andReturn([
-        (object) ['id' => 1],
-    ]);
+    $this->client->shouldReceive('organizations')->andReturn(fakePaginator([
+        new Organization(['name' => 'Acme Inc', 'slug' => 'acme']),
+    ]));
 
-    $this->artisan('login')->expectsQuestion('<fg=yellow>‣</> <options=bold>Please Enter Your Forge API Token</>', '123123213');
+    $this->artisan('login --token 123123123');
 
-    expect($this->config->get('server'))->toBe(1);
+    expect($this->config->get('organization'))->toBe('acme');
 });
 
-it('ensures at least one server', function () {
-    $this->client->shouldReceive('user')->andReturn((object) [
-        'email' => 'nuno@laravel.com',
-    ]);
+it('does not switch organization when the user belongs to several', function () {
+    $this->client->shouldReceive('user')->andReturn(
+        new User(['email' => 'nuno@laravel.com']),
+    );
 
-    $this->client->shouldReceive('servers')->andReturn([]);
+    $this->client->shouldReceive('organizations')->andReturn(fakePaginator([
+        new Organization(['name' => 'Personal', 'slug' => 'personal']),
+        new Organization(['name' => 'Acme Inc', 'slug' => 'acme']),
+    ]));
 
-    $this->artisan('login')->expectsQuestion('<fg=yellow>‣</> <options=bold>Please Enter Your Forge API Token</>', '123123213');
-})->throws('Please create a server first.');
+    $this->artisan('login --token 123123123');
+
+    expect($this->config->get('organization'))->toBeNull();
+});

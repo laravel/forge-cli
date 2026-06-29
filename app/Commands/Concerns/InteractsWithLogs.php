@@ -5,6 +5,8 @@ namespace App\Commands\Concerns;
 use Illuminate\Support\Str;
 use Laravel\Forge\Resources\Site;
 
+use function Laravel\Prompts\info;
+
 trait InteractsWithLogs
 {
     /**
@@ -37,9 +39,9 @@ trait InteractsWithLogs
      */
     protected function showSiteLogs($site, $follow)
     {
-        $this->step('Retrieving the latest site logs');
+        info('Retrieving the latest site logs');
 
-        switch (strtolower($site->app)) {
+        switch (strtolower($site->appType)) {
             case 'wordpress':
                 $files = ['public/wp-content/*.log', 'wp-content/*.log'];
                 break;
@@ -48,7 +50,7 @@ trait InteractsWithLogs
                 break;
         }
 
-        $sitePath = '/home/'.$site->username.'/'.$site->name;
+        $sitePath = '/home/'.$site->user.'/'.$site->name;
 
         $sitePath = basename($sitePath) == 'current'
             ? basename($sitePath)
@@ -60,20 +62,20 @@ trait InteractsWithLogs
     }
 
     /**
-     * Shows the given daemon logs.
+     * Shows the given background process logs.
      *
-     * @param  string|int  $daemonId
+     * @param  string|int  $processId
      * @param  string  $username
      * @param  bool  $follow
      * @return void
      */
-    protected function showDaemonLogs($daemonId, $username, $follow)
+    protected function showBackgroundProcessLogs($processId, $username, $follow)
     {
-        abort_if($username == 'root', 1, 'Requesting logs from daemons run by [root] is not supported.');
+        abort_if($username == 'root', 1, 'Following logs from background processes run by [root] is not supported.');
 
-        $this->step('Retrieving the latest daemon logs');
+        info('Retrieving the latest background process logs');
 
-        $this->showRemoteLogs('/home/'.$username.'/.forge/daemon-'.$daemonId.'.log', $follow);
+        $this->showRemoteLogs('/home/'.$username.'/.forge/daemon-'.$processId.'.log', $follow);
     }
 
     /**

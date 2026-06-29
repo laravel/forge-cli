@@ -2,6 +2,8 @@
 
 namespace App\Commands;
 
+use function Laravel\Prompts\spin;
+
 class DatabaseLogsCommand extends Command
 {
     use Concerns\InteractsWithDatabase, Concerns\InteractsWithLogs;
@@ -29,13 +31,30 @@ class DatabaseLogsCommand extends Command
     {
         $this->ensureDatabaseExists();
 
-        // @phpstan-ignore-next-line
-        $databaseType = $this->currentServer()->databaseType;
+        $server = $this->currentServer();
 
-        if (! in_array($databaseType, ['mysql', 'mysql8', 'postgres'])) {
+        $databaseType = $server->databaseType;
+        $logKey = $this->databaseLogKey($databaseType);
+
+        if (is_null($logKey)) {
             abort(1, 'Retrieving logs from ['.$databaseType.'] databases is not supported.');
         }
 
-        $this->showLogs('database');
+        $logs = spin(
+            fn () => $this->forge->serverLog(
+                $this->currentOrganization(),
+                $server->id,
+                $logKey,
+            ),
+            'Retrieving database logs',
+        );
+
+        abort_if(empty($logs), 1, 'The requested logs could not be found or they are empty.');
+
+        $this->newLine();
+
+        $this->displayLogs($logs);
+
+        $this->newLine();
     }
 }

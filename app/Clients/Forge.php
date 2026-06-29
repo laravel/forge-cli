@@ -4,29 +4,14 @@ namespace App\Clients;
 
 use App\Support\Panic;
 use Laravel\Forge\Forge as BaseForge;
-use Laravel\Forge\Resources\Server;
 use Psr\Http\Message\ResponseInterface;
 
 class Forge extends BaseForge
 {
     /**
      * Number of seconds a request is retried.
-     *
-     * @var int
      */
-    public $timeout = 60;
-
-    /**
-     * Get the collection of servers.
-     *
-     * @return Server[]
-     */
-    public function servers()
-    {
-        return collect(parent::servers())->filter(function ($server) {
-            return $server->revoked == false;
-        })->values()->all();
-    }
+    public int $timeout = 60;
 
     /**
      * Get the server logs.
@@ -92,10 +77,8 @@ class Forge extends BaseForge
 
     /**
      * Handle the request error.
-     *
-     * @return void
      */
-    protected function handleRequestError(ResponseInterface $response)
+    protected function handleRequestError(ResponseInterface $response): never
     {
         if ($response->getStatusCode() >= 500) {
             Panic::abort($response->getBody());

@@ -1,17 +1,20 @@
 <?php
 
+use Laravel\Forge\Resources\Server;
+use Laravel\Forge\Resources\Site;
+
 it('can retrieve logs from sites', function () {
-    $this->client->shouldReceive('server')->andReturn(
-        (object) ['id' => 1],
+    $this->client->shouldReceive('server')->with('personal', 1)->andReturn(
+        new Server(['id' => 1]),
     );
 
-    $this->client->shouldReceive('sites')->once()->andReturn([
-        (object) ['id' => 1, 'name' => 'pestphp.com'],
-        (object) ['id' => 2, 'name' => 'something.com'],
-    ]);
+    $this->client->shouldReceive('serverSites')->with('personal', 1)->once()->andReturn(fakePaginator([
+        new Site(['id' => 1, 'name' => 'pestphp.com']),
+        new Site(['id' => 2, 'name' => 'something.com']),
+    ]));
 
-    $this->client->shouldReceive('site')->once()->with(1, 2)->andReturn(
-        (object) ['id' => 1, 'name' => 'something.com', 'username' => 'forge', 'app' => 'php'],
+    $this->client->shouldReceive('organizationSite')->once()->with('personal', 2)->andReturn(
+        new Site(['id' => 2, 'name' => 'something.com', 'user' => 'forge', 'appType' => 'php']),
     );
 
     $files = [
@@ -28,21 +31,27 @@ it('can retrieve logs from sites', function () {
         ]]);
 
     $this->artisan('site:logs')
-        ->expectsQuestion('<fg=yellow>‣</> <options=bold>Which Site Would You Like To Retrieve The Logs From</>', 2);
+        ->expectsSearch(
+            'Which site would you like to retrieve the logs from',
+            answer: 2,
+            search: 'something',
+            answers: [2 => 'something.com'],
+        )
+        ->expectsPromptsInfo('Retrieving the latest site logs');
 });
 
 it('can tail logs from sites', function () {
-    $this->client->shouldReceive('server')->andReturn(
-        (object) ['id' => 1],
+    $this->client->shouldReceive('server')->with('personal', 1)->andReturn(
+        new Server(['id' => 1]),
     );
 
-    $this->client->shouldReceive('sites')->once()->andReturn([
-        (object) ['id' => 1, 'name' => 'pestphp.com'],
-        (object) ['id' => 2, 'name' => 'something.com'],
-    ]);
+    $this->client->shouldReceive('serverSites')->with('personal', 1)->once()->andReturn(fakePaginator([
+        new Site(['id' => 1, 'name' => 'pestphp.com']),
+        new Site(['id' => 2, 'name' => 'something.com']),
+    ]));
 
-    $this->client->shouldReceive('site')->once()->with(1, 1)->andReturn(
-        (object) ['id' => 1, 'name' => 'pestphp.com', 'username' => 'forge', 'app' => 'wordpress'],
+    $this->client->shouldReceive('organizationSite')->once()->with('personal', 1)->andReturn(
+        new Site(['id' => 1, 'name' => 'pestphp.com', 'user' => 'forge', 'appType' => 'wordpress']),
     );
 
     $files = [
@@ -59,21 +68,27 @@ it('can tail logs from sites', function () {
         ]]);
 
     $this->artisan('site:logs', ['--follow' => true])
-        ->expectsQuestion('<fg=yellow>‣</> <options=bold>Which Site Would You Like To Retrieve The Logs From</>', 1);
+        ->expectsSearch(
+            'Which site would you like to retrieve the logs from',
+            answer: 1,
+            search: 'pest',
+            answers: [1 => 'pestphp.com'],
+        )
+        ->expectsPromptsInfo('Retrieving the latest site logs');
 });
 
 it('exits with 0 exit code on control + c', function () {
-    $this->client->shouldReceive('server')->andReturn(
-        (object) ['id' => 1],
+    $this->client->shouldReceive('server')->with('personal', 1)->andReturn(
+        new Server(['id' => 1]),
     );
 
-    $this->client->shouldReceive('sites')->once()->andReturn([
-        (object) ['id' => 1, 'name' => 'pestphp.com'],
-        (object) ['id' => 2, 'name' => 'something.com'],
-    ]);
+    $this->client->shouldReceive('serverSites')->with('personal', 1)->once()->andReturn(fakePaginator([
+        new Site(['id' => 1, 'name' => 'pestphp.com']),
+        new Site(['id' => 2, 'name' => 'something.com']),
+    ]));
 
-    $this->client->shouldReceive('site')->once()->with(1, 1)->andReturn(
-        (object) ['id' => 1, 'name' => 'pestphp.com', 'username' => 'forge', 'app' => 'wordpress'],
+    $this->client->shouldReceive('organizationSite')->once()->with('personal', 1)->andReturn(
+        new Site(['id' => 1, 'name' => 'pestphp.com', 'user' => 'forge', 'appType' => 'wordpress']),
     );
 
     $files = [
@@ -90,21 +105,27 @@ it('exits with 0 exit code on control + c', function () {
         ]]);
 
     $this->artisan('site:logs', ['--follow' => true])
-        ->expectsQuestion('<fg=yellow>‣</> <options=bold>Which Site Would You Like To Retrieve The Logs From</>', 1);
+        ->expectsSearch(
+            'Which site would you like to retrieve the logs from',
+            answer: 1,
+            search: 'pest',
+            answers: [1 => 'pestphp.com'],
+        )
+        ->expectsPromptsInfo('Retrieving the latest site logs');
 });
 
 it('displays errors', function () {
-    $this->client->shouldReceive('server')->andReturn(
-        (object) ['id' => 1],
+    $this->client->shouldReceive('server')->with('personal', 1)->andReturn(
+        new Server(['id' => 1]),
     );
 
-    $this->client->shouldReceive('sites')->once()->andReturn([
-        (object) ['id' => 1, 'name' => 'pestphp.com'],
-        (object) ['id' => 2, 'name' => 'something.com'],
-    ]);
+    $this->client->shouldReceive('serverSites')->with('personal', 1)->once()->andReturn(fakePaginator([
+        new Site(['id' => 1, 'name' => 'pestphp.com']),
+        new Site(['id' => 2, 'name' => 'something.com']),
+    ]));
 
-    $this->client->shouldReceive('site')->once()->with(1, 2)->andReturn(
-        (object) ['id' => 1, 'name' => 'something.com', 'username' => 'user-in-isolation', 'app' => 'php'],
+    $this->client->shouldReceive('organizationSite')->once()->with('personal', 2)->andReturn(
+        new Site(['id' => 2, 'name' => 'something.com', 'user' => 'user-in-isolation', 'appType' => 'php']),
     );
 
     $files = [
@@ -120,5 +141,11 @@ it('displays errors', function () {
         ]]);
 
     $this->artisan('site:logs', ['--follow' => true])
-        ->expectsQuestion('<fg=yellow>‣</> <options=bold>Which Site Would You Like To Retrieve The Logs From</>', 2);
+        ->expectsSearch(
+            'Which site would you like to retrieve the logs from',
+            answer: 2,
+            search: 'something',
+            answers: [2 => 'something.com'],
+        )
+        ->expectsPromptsInfo('Retrieving the latest site logs');
 })->throws('The requested logs could not be found or they are empty.');

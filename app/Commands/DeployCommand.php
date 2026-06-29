@@ -3,12 +3,16 @@
 namespace App\Commands;
 
 use Illuminate\Support\Carbon;
-use Laravel\Forge\Resources\Server;
+use Laravel\Forge\Resources\Deployment;
 use Laravel\Forge\Resources\Site;
+
+use function Laravel\Prompts\info;
+use function Laravel\Prompts\spin;
+use function Laravel\Prompts\table;
 
 class DeployCommand extends Command
 {
-    use Concerns\InteractsWithEvents;
+    use Concerns\InteractsWithLogs;
 
     /**
      * The signature of the command.
@@ -31,105 +35,75 @@ class DeployCommand extends Command
      */
     public function handle()
     {
-        $siteId = $this->askForSite('Which site would you like to deploy');
+        $siteId = (int) $this->askForSite('Which site would you like to deploy');
+        $organization = $this->currentOrganization();
 
-        $site = $this->forge->site($this->currentServer()->id, $siteId);
+        $site = $this->forge->organizationSite($organization, $siteId);
 
         abort_unless(is_null($site->deploymentStatus), 1, 'This site is already deploying.');
 
-        $this->deploy($site);
+        $this->deploy($organization, $site);
     }
 
     /**
-     * Deploy an site.
+     * Deploy a site.
      *
+     * @param  string  $organization
      * @param  Site  $site
      * @return void
      */
-    public function deploy($site)
+    public function deploy($organization, $site)
     {
         $server = $this->currentServer();
 
-        $this->step('Queuing Deployment');
+        $deployment = spin(
+            fn () => $this->forge->createDeployment($organization, $server->id, $site->id),
+            'Queuing deployment',
+        );
 
-        $this->forge->deploySite($server->id, $site->id, false);
+        $deployment = spin(function () use ($organization, $server, $site, $deployment) {
+            while (in_array($deployment->status, ['pending', 'queued', 'deploying'])) {
+                $this->time->sleep(1);
 
-        $deploymentId = $this->ensureDeploymentHaveStarted($site);
+                /** @var Deployment $deployment */
+                $deployment = $this->forge->deployment($organization, $server->id, $site->id, $deployment->id);
+            }
 
-        $deployment = $this->ensureDeploymentHasFinished($server, $site, $deploymentId);
+            return $deployment;
+        }, 'Deploying');
 
-        $output = $this->forge->siteDeploymentOutput($server->id, $site->id, $deploymentId);
-        $output = explode(PHP_EOL, $output);
-        $this->displayOutput(collect($output));
+        $log = $this->forge->deploymentLog($organization, $server->id, $site->id, $deployment->id);
 
-        abort_if($deployment->status == 'failed', 1, 'The deployment failed.');
+        $this->newLine();
+
+        $this->displayLogs($log);
+
+        $this->newLine();
+
+        abort_if(
+            in_array($deployment->status, ['failed', 'failed-build', 'cancelled']),
+            1,
+            'The deployment failed.'
+        );
 
         $this->deploymentSuccess($site, $deployment);
-    }
-
-    /**
-     * Ensure the deployment have started on the server.
-     *
-     * @param  Site  $site
-     * @return int
-     */
-    protected function ensureDeploymentHaveStarted($site)
-    {
-        $this->step('Waiting For Deployment To Start');
-
-        do {
-            $this->time->sleep(1);
-
-            $status = $this->forge->site(
-                $this->currentServer()->id,
-                $site->id
-            )->deploymentStatus;
-        } while ($status == 'queued');
-
-        $this->step('Deploying');
-
-        $deploymentId = collect($this->forge->siteDeployments(
-            $this->currentServer()->id,
-            $site->id,
-        ))->first()['id'];
-
-        return $deploymentId;
-    }
-
-    /**
-     * Ensure the deployment has finished on the server.
-     *
-     * @param  Server  $server
-     * @param  Site  $site
-     * @param  int  $deploymentId
-     * @return object
-     */
-    protected function ensureDeploymentHasFinished($server, $site, $deploymentId)
-    {
-        do {
-            $this->time->sleep(1);
-
-            $deployment = $this->forge->siteDeployment($server->id, $site->id, $deploymentId);
-        } while ($deployment->status == 'deploying');
-
-        return $deployment;
     }
 
     /**
      * Ends the deployment by displaying a deployment success output.
      *
      * @param  Site  $site
-     * @param  object  $deployment
+     * @param  Deployment  $deployment
      * @return void
      */
     protected function deploymentSuccess($site, $deployment)
     {
-        $time = Carbon::parse($deployment->ended_at)
-            ->diffInSeconds(Carbon::parse($deployment->started_at));
+        $time = (int) abs(Carbon::parse($deployment->startedAt)
+            ->diffInSeconds(Carbon::parse($deployment->endedAt)));
 
-        $this->successfulStep('<options=bold>Site Deployed Successfully.</> <fg=#6C7280>('.$time.'s)</>');
+        info("Site deployed successfully. ({$time}s)");
 
-        $this->table([
+        table([
             'Deployment ID',
             'Site URL',
         ], [[

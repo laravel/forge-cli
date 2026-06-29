@@ -13,6 +13,8 @@ use LaravelZero\Framework\Commands\Command as BaseCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+use function Laravel\Prompts\spin;
+
 abstract class Command extends BaseCommand
 {
     use Concerns\InteractsWithIO,
@@ -21,7 +23,7 @@ abstract class Command extends BaseCommand
     /**
      * The aliases of the command.
      *
-     * @var array
+     * @var array<string>
      */
     protected $aliases = [];
 
@@ -86,10 +88,8 @@ abstract class Command extends BaseCommand
 
     /**
      * Execute the console command.
-     *
-     * @return int
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         return tap(parent::execute($input, $output), function () {
             $this->ensureLatestVersion();
@@ -97,19 +97,17 @@ abstract class Command extends BaseCommand
     }
 
     /**
-     * Ensure the current team is set in the configuration file.
+     * Gets the current organization slug.
      *
-     * @return void
+     * @return string
      */
-    protected function ensureCurrentTeamIsSet()
+    public function currentOrganization()
     {
-        if (! $this->config->get('server', false)) {
-            $server = collect($this->forge->servers())->first();
+        $slug = $this->config->get('organization');
 
-            abort_if($server == null, 1, 'Please create a server first.');
+        abort_if(is_null($slug), 1, 'You have not selected an organization. Use the \'organization:switch\' command.');
 
-            $this->config->set('server', $server->id);
-        }
+        return $slug;
     }
 
     /**
@@ -120,10 +118,16 @@ abstract class Command extends BaseCommand
     public function currentServer()
     {
         return once(function () {
-            $this->ensureCurrentTeamIsSet();
+            $serverId = $this->config->get('server');
 
-            return $this->forge->server(
-                $this->config->get('server')
+            abort_if(is_null($serverId), 1, 'You have not selected a server. Use the \'server:switch\' command.');
+
+            return spin(
+                fn () => $this->forge->server(
+                    $this->currentOrganization(),
+                    $serverId
+                ),
+                'Retrieving server',
             );
         });
     }

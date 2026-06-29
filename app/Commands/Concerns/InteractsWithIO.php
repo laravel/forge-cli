@@ -3,8 +3,10 @@
 namespace App\Commands\Concerns;
 
 use Illuminate\Contracts\Support\Arrayable;
-use Laravel\Forge\Resources\Server;
 use Symfony\Component\Console\Question\ChoiceQuestion;
+
+use function Laravel\Prompts\search;
+use function Laravel\Prompts\spin;
 
 trait InteractsWithIO
 {
@@ -45,7 +47,13 @@ trait InteractsWithIO
     {
         $name = $this->argument('site');
 
-        $answers = collect($this->forge->sites($this->currentServer()->id));
+        $organization = $this->currentOrganization();
+        $server = $this->currentServer();
+
+        $answers = spin(
+            fn () => collect($this->forge->serverSites($organization, $server->id)->lazy()),
+            'Retrieving sites',
+        );
 
         abort_if($answers->isEmpty(), 1, 'This server does not have any sites.');
 
@@ -53,9 +61,16 @@ trait InteractsWithIO
             return optional($answers->where('name', $name)->first())->id ?: $name;
         }
 
-        return $this->choiceStep($question, $answers->mapWithKeys(function ($resource) {
-            return [$resource->id => $resource->name];
-        })->all());
+        return search($question, function (string $value) use ($answers) {
+            return $answers
+                ->filter(function ($site) use ($value) {
+                    return str_contains(strtolower($site->name), strtolower($value));
+                })
+                ->mapWithKeys(function ($site) {
+                    return [$site->id => $site->name];
+                })
+                ->all();
+        });
     }
 
     /**
@@ -68,43 +83,97 @@ trait InteractsWithIO
     {
         $name = $this->argument('server');
 
-        $answers = collect($this->forge->servers());
+        $answers = spin(
+            fn () => collect($this->forge->servers($this->currentOrganization())->lazy())
+                ->reject(function ($server) {
+                    return $server->revoked;
+                }),
+            'Retrieving servers',
+        );
 
         abort_if($answers->isEmpty(), 1, 'This account does not have any servers.');
 
         if (! is_null($name)) {
-            return optional($answers->where('name', $name)->first())->id ?: $name;
+            return optional($answers->firstWhere('name', $name))->id ?: $name;
         }
 
-        return $this->choiceStep($question, $answers->mapWithKeys(function ($resource) {
-            /** @var Server $resource */
-            $tags = ! empty($resource->tags) ? " ({$resource->tags()})" : null;
-
-            return [$resource->id => $resource->name.$tags];
-        })->all());
+        return search($question, function (string $value) use ($answers) {
+            return $answers
+                ->filter(function ($server) use ($value) {
+                    return str_contains(strtolower($server->name), strtolower($value));
+                })
+                ->mapWithKeys(function ($server) {
+                    return [$server->id => $server->name];
+                })
+                ->all();
+        });
     }
 
     /**
-     * Prompt the user for an "daemon" input.
+     * Prompt the user for an "organization" input.
+     *
+     * @param  string  $question
+     * @return string
+     */
+    public function askForOrganization($question)
+    {
+        if (! is_null($slug = $this->argument('organization'))) {
+            return $slug;
+        }
+
+        $answers = spin(
+            fn () => collect($this->forge->organizations()),
+            'Retrieving organizations',
+        );
+
+        abort_if($answers->isEmpty(), 1, 'This account does not belong to any organizations.');
+
+        return search($question, function (string $value) use ($answers) {
+            return $answers
+                ->filter(function ($organization) use ($value) {
+                    return str_contains(strtolower($organization->name), strtolower($value))
+                        || str_contains(strtolower($organization->slug), strtolower($value));
+                })
+                ->mapWithKeys(function ($organization) {
+                    return [$organization->slug => $organization->name];
+                })
+                ->all();
+        });
+    }
+
+    /**
+     * Prompt the user for a "background process" input.
      *
      * @param  string  $question
      * @return string|int
      */
-    public function askForDaemon($question)
+    public function askForBackgroundProcess($question)
     {
-        $command = $this->argument('daemon');
+        $command = $this->argument('backgroundProcess');
+        $organization = $this->currentOrganization();
+        $server = $this->currentServer();
 
-        $answers = collect($this->forge->daemons($this->currentServer()->id));
+        $answers = spin(
+            fn () => collect($this->forge->backgroundProcesses($organization, $server->id)->lazy()),
+            'Retrieving background processes',
+        );
 
-        abort_if($answers->isEmpty(), 1, 'This server does not have any daemons.');
+        abort_if($answers->isEmpty(), 1, 'This server does not have any background processes.');
 
         if (! is_null($command)) {
             return optional($answers->where('command', $command)->first())->id ?: $command;
         }
 
-        return $this->choiceStep($question, $answers->mapWithKeys(function ($resource) {
-            return [$resource->id => $resource->command];
-        })->all());
+        return search($question, function (string $value) use ($answers) {
+            return $answers
+                ->filter(function ($process) use ($value) {
+                    return str_contains(strtolower($process->command), strtolower($value));
+                })
+                ->mapWithKeys(function ($process) {
+                    return [$process->id => $process->command];
+                })
+                ->all();
+        });
     }
 
     /**

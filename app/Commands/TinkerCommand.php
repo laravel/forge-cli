@@ -4,6 +4,8 @@ namespace App\Commands;
 
 use App\Support\PhpVersion;
 
+use function Laravel\Prompts\info;
+
 class TinkerCommand extends Command
 {
     /**
@@ -27,19 +29,23 @@ class TinkerCommand extends Command
      */
     public function handle()
     {
-        $siteId = $this->askForSite('Which site would you like to tinker with');
+        $siteId = (int) $this->askForSite('Which site would you like to tinker with');
+        $organization = $this->currentOrganization();
 
-        $site = $this->forge->site($this->currentServer()->id, $siteId);
+        $site = $this->forge->organizationSite($organization, $siteId);
 
-        $this->step('Establishing Tinker Connection');
+        info('Establishing tinker connection');
 
-        $phpVersion = $site->phpVersion;
+        $directory = sprintf('/home/%s/%s', $site->user, $site->name);
+
+        if ($site->zeroDowntimeDeployments) {
+            $directory .= '/current';
+        }
 
         return $this->remote->passthru(sprintf(
-            'cd /home/%s/%s && %s artisan tinker',
-            $site->username,
-            $site->name,
-            PhpVersion::of($phpVersion)->binary()
+            'cd %s && %s artisan tinker',
+            $directory,
+            PhpVersion::of($site->phpVersion)->binary()
         ));
     }
 }

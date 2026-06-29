@@ -2,7 +2,7 @@
 
 namespace App\Commands;
 
-use Laravel\Forge\Resources\Server;
+use function Laravel\Prompts\info;
 
 class ServerCurrentCommand extends Command
 {
@@ -23,7 +23,7 @@ class ServerCurrentCommand extends Command
     /**
      * The aliases of the command.
      *
-     * @var array
+     * @var array<string>
      */
     protected $aliases = [
         'current',
@@ -36,17 +36,12 @@ class ServerCurrentCommand extends Command
      */
     public function handle()
     {
-        $this->ensureCurrentTeamIsSet();
+        $serverId = $this->config->get('server');
 
-        /** @var Server $server */
-        $server = $this->forge->server(
-            $this->config->get('server')
-        );
+        abort_if(is_null($serverId), 1, 'You have not selected a server. Use the \'server:switch\' command.');
 
-        $tags = ! empty($server->tags) ? " ({$server->tags(',')})" : null;
+        $server = $this->currentServer();
 
-        $this->successfulStep(
-            'You are currently within the <comment>['.$server->name.']'.$tags.'</comment> server context.'
-        );
+        info("You are currently within the {$server->name} server context.");
     }
 }
