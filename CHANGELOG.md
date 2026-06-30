@@ -1,6 +1,10 @@
 # Release Notes
 
-## [Unreleased](https://github.com/laravel/forge-cli/compare/v2.0.0...master)
+## [Unreleased](https://github.com/laravel/forge-cli/compare/v2.0.1...master)
+
+## [v2.0.1](https://github.com/laravel/forge-cli/compare/v2.0.0...v2.0.1) - 2026-06-30
+
+**Full Changelog**: https://github.com/laravel/forge-cli/compare/v2.0.0...v2.0.1
 
 ## [v2.0.0](https://github.com/laravel/forge-cli/compare/v1.8.3...v2.0.0) - 2026-06-29
 
