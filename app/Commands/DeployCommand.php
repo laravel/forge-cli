@@ -19,7 +19,9 @@ class DeployCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'deploy {site? : The site name}';
+    protected $signature = 'deploy {site? : The site name}
+        {--interval=5 : The number of seconds to wait between polling for deployment status}
+        {--timeout=900 : The number of seconds to wait for the deployment to finish before timing out (0 for no timeout)}';
 
     /**
      * The description of the command.
@@ -61,9 +63,20 @@ class DeployCommand extends Command
             'Queuing deployment',
         );
 
-        $deployment = spin(function () use ($organization, $server, $site, $deployment) {
+        $interval = (int) $this->option('interval');
+        $timeout = (int) $this->option('timeout');
+
+        $deployment = spin(function () use ($organization, $server, $site, $deployment, $interval, $timeout) {
+            $startedAt = $this->time->now();
+
             while (in_array($deployment->status, ['pending', 'queued', 'deploying'])) {
-                $this->time->sleep(1);
+                abort_if(
+                    $timeout > 0 && ($this->time->now() - $startedAt) >= $timeout,
+                    1,
+                    'Timed out waiting for the deployment to finish.'
+                );
+
+                $this->time->sleep($interval);
 
                 /** @var Deployment $deployment */
                 $deployment = $this->forge->deployment($organization, $server->id, $site->id, $deployment->id);
