@@ -29,7 +29,6 @@ class RemoteServiceProvider extends ServiceProvider
         $this->app->singleton(RemoteRepository::class, function () {
             return isset($_ENV['APP_ENV']) && $_ENV['APP_ENV'] == 'testing'
                 ? tap(Mockery::mock(RemoteRepository::class), function ($mock) {
-                    // @phpstan-ignore-next-line
                     $mock->shouldReceive('resolveServerUsing')->zeroOrMoreTimes();
                 }) : new RemoteRepository($this->ensureSocketsPath());
         });

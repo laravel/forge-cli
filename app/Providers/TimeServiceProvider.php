@@ -41,6 +41,13 @@ class TimeServiceProvider extends ServiceProvider
         return new class extends Time
         {
             /**
+             * The number of seconds that have been slept away.
+             *
+             * @var int
+             */
+            protected $slept = 0;
+
+            /**
              * Delays the code execution for the given number of seconds.
              *
              * @param  int  $seconds
@@ -48,7 +55,17 @@ class TimeServiceProvider extends ServiceProvider
              */
             public function sleep($seconds)
             {
-                // ..
+                $this->slept += $seconds;
+            }
+
+            /**
+             * Get the current monotonic time, in seconds.
+             *
+             * @return float
+             */
+            public function now()
+            {
+                return parent::now() + $this->slept;
             }
         };
     }
