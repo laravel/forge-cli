@@ -1,6 +1,18 @@
 # Release Notes
 
-## [Unreleased](https://github.com/laravel/forge-cli/compare/v2.0.2...master)
+## [Unreleased](https://github.com/laravel/forge-cli/compare/v2.0.3...2.x)
+
+## [v2.0.3](https://github.com/laravel/forge-cli/compare/v2.0.2...v2.0.3) - 2026-09-07
+
+### What's Changed
+
+* Add configurable deploy poll interval and timeout by [@PeteBishwhip](https://github.com/PeteBishwhip) in https://github.com/laravel/forge-cli/pull/167
+
+### New Contributors
+
+* [@PeteBishwhip](https://github.com/PeteBishwhip) made their first contribution in https://github.com/laravel/forge-cli/pull/167
+
+**Full Changelog**: https://github.com/laravel/forge-cli/compare/v1.8.3...v2.0.3
 
 ## [v2.0.2](https://github.com/laravel/forge-cli/compare/v2.0.1...v2.0.2) - 2026-06-30
 
