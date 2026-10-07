@@ -33,13 +33,15 @@ class DeployLogsCommand extends Command
         $organization = $this->currentOrganization();
         $server = $this->currentServer();
 
+        // Only the newest deployment is needed, so request a single item rather
+        // than walking every page of the site's deployment history.
         $deployment = spin(
-            fn () => collect($this->forge->deployments(
+            fn () => $this->forge->deployments(
                 $organization,
                 $server->id,
                 $siteId,
-                ['sort' => '-created_at'],
-            )->lazy())->first(),
+                ['sort' => '-created_at', 'page' => ['size' => 1]],
+            )->items()[0] ?? null,
             'Retrieving deployments',
         );
 
