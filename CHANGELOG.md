@@ -1,6 +1,14 @@
 # Release Notes
 
-## [Unreleased](https://github.com/laravel/forge-cli/compare/v2.0.3...2.x)
+## [Unreleased](https://github.com/laravel/forge-cli/compare/v2.0.4...2.x)
+
+## [v2.0.4](https://github.com/laravel/forge-cli/compare/v2.0.3...v2.0.4) - 2026-10-08
+
+### What's Changed
+
+* Fix `deploy:logs` showing an old deployment's log by [@m074554n](https://github.com/m074554n) in https://github.com/laravel/forge-cli/pull/170
+
+**Full Changelog**: https://github.com/laravel/forge-cli/compare/v2.0.3...v2.0.4
 
 ## [v2.0.3](https://github.com/laravel/forge-cli/compare/v2.0.2...v2.0.3) - 2026-09-07
 
