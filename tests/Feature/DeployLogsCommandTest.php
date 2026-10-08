@@ -1,7 +1,7 @@
 <?php
 
-use Laravel\Forge\Forge as ForgeClient;
 use Laravel\Forge\CursorPaginator;
+use Laravel\Forge\Forge as ForgeClient;
 use Laravel\Forge\Resources\Deployment;
 use Laravel\Forge\Resources\Server;
 use Laravel\Forge\Resources\Site;
