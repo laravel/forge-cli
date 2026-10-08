@@ -1,5 +1,7 @@
 <?php
 
+use Laravel\Forge\CursorPaginator;
+use Laravel\Forge\Forge as ForgeClient;
 use Laravel\Forge\Resources\Deployment;
 use Laravel\Forge\Resources\Server;
 use Laravel\Forge\Resources\Site;
@@ -14,7 +16,7 @@ it('can retrieve deployment logs from sites with an menu', function () {
         new Site(['id' => 2, 'name' => 'something.com']),
     ]));
 
-    $this->client->shouldReceive('deployments')->with('personal', 1, 2, ['sort' => '-created_at'])->once()->andReturn(fakePaginator([
+    $this->client->shouldReceive('deployments')->with('personal', 1, 2, ['sort' => '-created_at', 'page' => ['size' => 1]])->once()->andReturn(fakePaginator([
         new Deployment(['id' => 3]),
     ]));
 
@@ -42,7 +44,7 @@ it('can retrieve deployment logs from sites with an option', function () {
         new Site(['id' => 2, 'name' => 'something.com']),
     ]));
 
-    $this->client->shouldReceive('deployments')->with('personal', 1, 1, ['sort' => '-created_at'])->once()->andReturn(fakePaginator([
+    $this->client->shouldReceive('deployments')->with('personal', 1, 1, ['sort' => '-created_at', 'page' => ['size' => 1]])->once()->andReturn(fakePaginator([
         new Deployment(['id' => 4]),
     ]));
 
@@ -64,7 +66,34 @@ it('can not display the status when there is no deployments', function () {
         new Site(['id' => 2, 'name' => 'something.com']),
     ]));
 
-    $this->client->shouldReceive('deployments')->with('personal', 1, 1, ['sort' => '-created_at'])->once()->andReturn(fakePaginator([]));
+    $this->client->shouldReceive('deployments')->with('personal', 1, 1, ['sort' => '-created_at', 'page' => ['size' => 1]])->once()->andReturn(fakePaginator([]));
 
     $this->artisan('deploy:logs', ['site' => 1]);
 })->throws('This site has not been deployed.');
+
+it('retrieves the logs of the newest deployment when the site has multiple pages of deployments', function () {
+    $this->client->shouldReceive('server')->with('personal', 1)->andReturn(
+        new Server(['id' => 1, 'name' => 'production']),
+    );
+
+    $this->client->shouldReceive('serverSites')->with('personal', 1)->once()->andReturn(fakePaginator([
+        new Site(['id' => 1, 'name' => 'pestphp.com']),
+    ]));
+
+    // The newest deployment is the only item requested, even when more pages exist.
+    $this->client->shouldReceive('deployments')->with('personal', 1, 1, ['sort' => '-created_at', 'page' => ['size' => 1]])->once()->andReturn(new CursorPaginator(
+        items: [new Deployment(['id' => 300])],
+        nextCursor: 'next-page',
+        perPage: 1,
+        forge: new ForgeClient,
+        uri: '',
+        class: '',
+    ));
+
+    $this->client->shouldReceive('deploymentLog')->with('personal', 1, 1, 300)->once()->andReturn(
+        'Restarting FPM...',
+    );
+
+    $this->artisan('deploy:logs', ['site' => 'pestphp.com'])
+        ->expectsOutput('  ▕ Restarting FPM...');
+});
