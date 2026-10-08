@@ -11,6 +11,9 @@
         "composer.json"
     ],
     "exclude-composer-files": false,
+    "blacklist": [
+        "turbo-ext"
+    ],
     "compression": "GZ",
     "compactors": [
         "KevinGH\\Box\\Compactor\\Php",
