@@ -46,8 +46,23 @@ class CommandCommand extends Command
                 'command' => $command,
             ]);
 
-            return collect($this->forge->commands($organization, $server->id, $siteId)->lazy())->first();
+            // createCommand() doesn't return the new command, and the API lists
+            // commands oldest first, so ask for the newest few and pick the one
+            // we just queued (matching on the command text in case another
+            // command was queued on the site at the same moment).
+            $latest = $this->forge->commands(
+                $organization,
+                $server->id,
+                $siteId,
+                ['sort' => '-created_at', 'page' => ['size' => 5]],
+            )->items();
+
+            return collect($latest)->first(fn ($latest) => $latest->command === $command)
+                ?? $latest[0]
+                ?? null;
         }, 'Queuing command');
+
+        abort_if($command === null, 1, 'The command could not be found after queuing it.');
 
         $command = spin(function () use ($organization, $server, $siteId, $command) {
             while (in_array($command->status, ['waiting', 'running'])) {
