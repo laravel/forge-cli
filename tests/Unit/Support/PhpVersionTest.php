@@ -23,6 +23,11 @@ test('forge key', function () {
     expect(PhpVersion::of('PHP 8.4')->forgeKey())->toBe('php84');
 });
 
+test('log key', function () {
+    expect(PhpVersion::of('php74')->logKey())->toBe('php-7.4');
+    expect(PhpVersion::of('PHP 8.4')->logKey())->toBe('php-8.4');
+});
+
 test('service name', function () {
     expect(PhpVersion::of('php74')->serviceName())->toBe('php7.4-fpm');
     expect(PhpVersion::of('PHP 8.4')->serviceName())->toBe('php8.4-fpm');

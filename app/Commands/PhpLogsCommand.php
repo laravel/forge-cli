@@ -52,7 +52,7 @@ class PhpLogsCommand extends Command
             fn () => $this->forge->serverLog(
                 $this->currentOrganization(),
                 $server->id,
-                $version->forgeKey(),
+                $version->logKey(),
             ),
             'Retrieving PHP logs',
         );
