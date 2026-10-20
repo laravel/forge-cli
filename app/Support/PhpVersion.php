@@ -61,6 +61,16 @@ class PhpVersion
     }
 
     /**
+     * Gets the Forge server log key.
+     *
+     * @return string
+     */
+    public function logKey()
+    {
+        return 'php-'.$this->release();
+    }
+
+    /**
      * Gets the systemd service name.
      *
      * @return string

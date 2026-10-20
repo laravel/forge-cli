@@ -8,7 +8,7 @@ it('can retrieve logs from php', function () {
     );
 
     $this->client->shouldReceive('serverLog')
-        ->with('personal', 1, 'php56')
+        ->with('personal', 1, 'php-5.6')
         ->andReturn("   [00:01] FOO\n[00:02] BAR\n   ");
 
     $this->artisan('php:logs')
@@ -22,7 +22,7 @@ it('can retrieve logs from a specific php version', function () {
     );
 
     $this->client->shouldReceive('serverLog')
-        ->with('personal', 1, 'php81')
+        ->with('personal', 1, 'php-8.1')
         ->andReturn("   tail: cannot open '/var/log/php8.1-fpm.log' for reading: No such file or directory\n   ");
 
     $this->artisan('php:logs', ['version' => '8.1'])
