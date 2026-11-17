@@ -66,3 +66,66 @@ it('does not switch organization when the user belongs to several', function () 
 
     expect($this->config->get('organization'))->toBeNull();
 });
+
+it('stores the token for each organization it can access', function () {
+    $this->client->shouldReceive('user')->andReturn(
+        new User(['email' => 'nuno@laravel.com']),
+    );
+
+    $this->client->shouldReceive('organizations')->andReturn(fakePaginator([
+        new Organization(['name' => 'Personal', 'slug' => 'personal']),
+        new Organization(['name' => 'Acme Inc', 'slug' => 'acme']),
+    ]));
+
+    $this->artisan('login --token 123123123');
+
+    expect($this->config->get('tokens'))->toBe([
+        'personal' => '123123123',
+        'acme' => '123123123',
+    ]);
+});
+
+it('keeps the tokens of other organizations', function () {
+    trackApiToken($this);
+
+    $this->config->set('tokens', ['personal' => 'personal-token']);
+    $this->config->set('organization', 'personal');
+
+    $this->client->shouldReceive('user')->andReturnUsing(function () {
+        expect($this->apiToken)->toBe('acme-token');
+
+        return new User(['email' => 'nuno@laravel.com']);
+    });
+
+    $this->client->shouldReceive('organizations')->andReturn(fakePaginator([
+        new Organization(['name' => 'Acme Inc', 'slug' => 'acme']),
+    ]));
+
+    $this->artisan('login --token acme-token');
+
+    expect($this->config->get('tokens'))->toBe([
+        'acme' => 'acme-token',
+        'personal' => 'personal-token',
+    ]);
+    expect($this->config->get('organization'))->toBe('acme');
+});
+
+it('keeps the token of configs without organization tokens', function () {
+    $this->config->set('token', 'personal-token');
+    $this->config->set('organization', 'personal');
+
+    $this->client->shouldReceive('user')->andReturn(
+        new User(['email' => 'nuno@laravel.com']),
+    );
+
+    $this->client->shouldReceive('organizations')->andReturn(fakePaginator([
+        new Organization(['name' => 'Acme Inc', 'slug' => 'acme']),
+    ]));
+
+    $this->artisan('login --token acme-token');
+
+    expect($this->config->get('tokens'))->toBe([
+        'acme' => 'acme-token',
+        'personal' => 'personal-token',
+    ]);
+});

@@ -37,11 +37,23 @@ class LoginCommand extends Command
             );
         }
 
+        [$email, $organizations] = $this->forge->usingToken($token, fn () => [
+            $this->forge->user()->email,
+            collect($this->forge->organizations()),
+        ]);
+
+        $tokens = $this->config->get('tokens', []);
+
+        // Configs written before per-organization tokens only have a single "token",
+        // so pin it to the current organization before it gets replaced...
+        if (! is_null($current = $this->config->get('organization')) && ! is_null($previous = $this->config->get('token'))) {
+            $tokens[$current] ??= $previous;
+        }
+
         $this->config->set('token', $token);
-
-        $email = $this->forge->user()->email;
-
-        $organizations = collect($this->forge->organizations());
+        $this->config->set('tokens', $organizations->mapWithKeys(
+            fn ($organization) => [$organization->slug => $token],
+        )->all() + $tokens);
 
         if ($organizations->count() === 1) {
             $this->config->set('organization', $organizations->first()->slug);

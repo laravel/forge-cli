@@ -122,7 +122,7 @@ trait InteractsWithIO
         }
 
         $answers = spin(
-            fn () => collect($this->forge->organizations()),
+            fn () => $this->forge->organizationsWithTokens()->map(fn ($item) => $item[0]),
             'Retrieving organizations',
         );
 

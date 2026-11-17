@@ -40,7 +40,13 @@ class OrganizationSwitchCommand extends Command
     {
         $slug = $this->askForOrganization('Which organization would you like to switch to');
 
-        $organization = $this->forge->organization($slug);
+        $token = $this->tokenFor($slug);
+
+        $organization = $this->forge->usingToken($token, fn () => $this->forge->organization($slug));
+
+        if ($token !== $this->forge->token($organization->slug)) {
+            $this->config->set('tokens', [$organization->slug => $token] + $this->config->get('tokens', []));
+        }
 
         $this->config->set('organization', $organization->slug);
         $this->config->forget('server');
@@ -48,5 +54,20 @@ class OrganizationSwitchCommand extends Command
         Once::flush();
 
         info("Current organization changed successfully to {$organization->name}");
+    }
+
+    /**
+     * Get the api token that has access to the given organization.
+     *
+     * @param  string  $slug
+     * @return string|null
+     */
+    protected function tokenFor($slug)
+    {
+        if (isset($this->config->get('tokens', [])[$slug]) || count($this->forge->tokens()) <= 1) {
+            return $this->forge->token($slug);
+        }
+
+        return $this->forge->organizationsWithTokens()->get($slug)[1] ?? $this->forge->token($slug);
     }
 }

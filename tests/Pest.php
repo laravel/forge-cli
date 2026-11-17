@@ -97,3 +97,21 @@ function fakePaginator(array $items = []): CursorPaginator
         class: '',
     );
 }
+
+/**
+ * Replace the Forge client with a mock that records the api token in use as "$test->apiToken".
+ */
+function trackApiToken(object $test): void
+{
+    $test->apiToken = null;
+
+    $test->client = Mockery::mock(Forge::class);
+
+    $test->client->shouldReceive('setApiKey')->andReturnUsing(function ($token) use ($test) {
+        $test->apiToken = $token;
+
+        return $test->client;
+    });
+
+    $test->forge->setClient($test->client);
+}
