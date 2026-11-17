@@ -24,3 +24,16 @@ it('ensures current server', function () {
 
     $this->forge->server('personal', 1);
 });
+
+it('uses the token of the current organization', function () {
+    $this->config->set('token', 'default-token');
+    $this->config->set('tokens', ['acme' => 'acme-token']);
+
+    expect($this->forge->token())->toBe('default-token');
+
+    $this->config->set('organization', 'acme');
+
+    expect($this->forge->token())->toBe('acme-token')
+        ->and($this->forge->token('personal'))->toBe('default-token')
+        ->and($this->forge->tokens())->toBe(['acme-token', 'default-token']);
+});

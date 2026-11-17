@@ -11,7 +11,7 @@ class LogoutCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'logout';
+    protected $signature = 'logout {--all : Remove the tokens of all organizations}';
 
     /**
      * The description of the command.
@@ -27,7 +27,30 @@ class LogoutCommand extends Command
      */
     public function handle()
     {
-        $this->config->flush();
+        if ($this->option('all')) {
+            $this->config->flush();
+
+            info('Logged out successfully');
+
+            return;
+        }
+
+        $token = $this->forge->token();
+
+        $this->config->set('tokens', collect($this->config->get('tokens', []))
+            ->reject(fn ($value) => $value === $token)
+            ->all());
+
+        if ($this->config->get('token') === $token) {
+            $this->config->forget('token');
+        }
+
+        $this->config->forget('organization');
+        $this->config->forget('server');
+
+        if (empty($this->config->get('tokens')) && is_null($this->config->get('token'))) {
+            $this->config->flush();
+        }
 
         info('Logged out successfully');
     }
