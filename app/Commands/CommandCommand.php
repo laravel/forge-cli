@@ -46,7 +46,10 @@ class CommandCommand extends Command
                 'command' => $command,
             ]);
 
-            return collect($this->forge->commands($organization, $server->id, $siteId)->lazy())->first();
+            return collect($this->forge->commands($organization, $server->id, $siteId, [
+                'sort' => '-created_at',
+                'page[size]' => 1,
+            ])->lazy())->first();
         }, 'Queuing command');
 
         $command = spin(function () use ($organization, $server, $siteId, $command) {

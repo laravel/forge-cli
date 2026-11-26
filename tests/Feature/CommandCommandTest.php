@@ -16,7 +16,7 @@ it('can run commands on sites with a menu', function () {
 
     $this->client->shouldReceive('createCommand')->with('personal', 1, 1, ['command' => 'php artisan clear'])->once();
 
-    $this->client->shouldReceive('commands')->with('personal', 1, 1)->once()->andReturn(fakePaginator([
+    $this->client->shouldReceive('commands')->with('personal', 1, 1, ['sort' => '-created_at', 'page[size]' => 1])->once()->andReturn(fakePaginator([
         new Command(['id' => 4, 'command' => 'php artisan clear', 'status' => 'running']),
     ]));
 
@@ -52,7 +52,7 @@ it('can run commands with an option', function () {
 
     $this->client->shouldReceive('createCommand')->with('personal', 1, 2, ['command' => 'php artisan list'])->once();
 
-    $this->client->shouldReceive('commands')->with('personal', 1, 2)->once()->andReturn(fakePaginator([
+    $this->client->shouldReceive('commands')->with('personal', 1, 2, ['sort' => '-created_at', 'page[size]' => 1])->once()->andReturn(fakePaginator([
         new Command(['id' => 3, 'command' => 'php artisan list', 'status' => 'running']),
     ]));
 
@@ -81,7 +81,7 @@ it('handles command failures', function () {
 
     $this->client->shouldReceive('createCommand')->with('personal', 1, 2, ['command' => 'php artisan migrate'])->once();
 
-    $this->client->shouldReceive('commands')->with('personal', 1, 2)->once()->andReturn(fakePaginator([
+    $this->client->shouldReceive('commands')->with('personal', 1, 2, ['sort' => '-created_at', 'page[size]' => 1])->once()->andReturn(fakePaginator([
         new Command(['id' => 3, 'command' => 'php artisan migrate', 'status' => 'running']),
     ]));
 
