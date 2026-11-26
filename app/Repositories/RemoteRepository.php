@@ -213,7 +213,9 @@ class RemoteRepository
             'ControlPath' => $this->socketsPath.'/%h-%p-%r',
             'LogLevel' => 'QUIET',
             'StrictHostKeyChecking' => 'no',
-        ])->map(function ($value, $option) {
+        ])->unless($this->supportsConnectionSharing(), function ($options) {
+            return $options->except(['ControlMaster', 'ControlPersist', 'ControlPath']);
+        })->map(function ($value, $option) {
             return "-o $option=$value";
         })->values()->implode(' ');
 
@@ -232,5 +234,17 @@ class RemoteRepository
             $this->server->ipAddress,
             $command,
         ));
+    }
+
+    /**
+     * Determine if the local SSH client supports connection sharing.
+     *
+     * OpenSSH for Windows does not support the ControlMaster option.
+     *
+     * @return bool
+     */
+    protected function supportsConnectionSharing()
+    {
+        return PHP_OS_FAMILY !== 'Windows';
     }
 }
